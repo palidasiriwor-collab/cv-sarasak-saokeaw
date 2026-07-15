@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Academic CV of Surasak Saokaew">
+  <title>Academic CV - Surasak Saokaew</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body { font-family: 'Prompt', sans-serif; background:#f8fafc; color:#0f172a; }
+    .section-content { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
+    .section-content.open { grid-template-rows:1fr; }
+    .section-inner { overflow:hidden; }
+    .lang-btn.active { background:#1e3a5f; color:#fff; }
+    .sidebar { background:linear-gradient(180deg,#eaf1f8 0%,#f8fafc 100%); }
+    .skeleton { animation:pulse 1.4s ease-in-out infinite; background:#e2e8f0; border-radius:.5rem; }
+    @keyframes pulse { 50% { opacity:.45; } }
+  </style>
+</head>
+<body class="min-h-screen w-full">
+  <div class="fixed top-4 right-4 z-50 flex rounded-lg overflow-hidden shadow border border-gray-200 bg-white" aria-label="Language selector">
+    <button id="btn-en" class="lang-btn px-3 py-1.5 text-sm font-medium active" type="button">EN</button>
+    <button id="btn-th" class="lang-btn px-3 py-1.5 text-sm font-medium text-gray-600" type="button">TH</button>
+  </div>
+
+  <div id="status" class="max-w-6xl mx-auto px-6 pt-6 text-sm" role="status" aria-live="polite"></div>
+
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row min-h-screen bg-white shadow-sm">
+    <aside class="sidebar w-full md:w-72 shrink-0 p-6 space-y-6">
+      <div>
+        <h2 id="contacts-heading" class="font-bold text-lg border-b-2 border-current pb-1 mb-3">Contacts</h2>
+        <div id="contact-groups" class="space-y-5"></div>
+        <div id="website-wrap" class="mt-5 hidden items-center gap-2 text-sm">
+          <i data-lucide="globe" class="w-4 h-4 shrink-0"></i>
+          <a id="website-link" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline break-all"></a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-6 md:p-10">
+      <div id="header" class="flex flex-col sm:flex-row items-start gap-6 mb-6">
+        <div id="photo-placeholder" class="skeleton w-40 h-48"></div>
+        <img id="profile-photo" class="hidden w-40 h-48 object-cover rounded shadow-md" alt="Profile photo" loading="lazy">
+        <div class="flex-1 min-w-0">
+          <h1 id="prof-name" class="text-3xl md:text-4xl font-bold text-slate-900"></h1>
+          <p id="prof-credentials" class="mt-1 text-slate-600"></p>
+          <p id="prof-name-th" class="mt-3 font-bold text-slate-800"></p>
+          <div id="identifiers" class="mt-4 text-sm space-y-1 break-words"></div>
+        </div>
+      </div>
+
+      <section id="bio-section" class="mb-8 hidden">
+        <h2 id="bio-heading" class="text-lg font-bold border-b border-gray-300 pb-1 mb-3">Bio-sketch</h2>
+        <p id="bio-text" class="text-sm leading-relaxed"></p>
+      </section>
+
+      <div id="main-sections" class="space-y-3"></div>
+    </main>
+  </div>
+
+  <footer class="text-center py-4 text-sm opacity-60">
+    <p id="footer-text"></p>
+  </footer>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
+
+    const SUPABASE_URL = 'https://zdsjqnpikxdkftqzipsn.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_FQG4OEIgBIewMPVelkFdjg_KmeUPZ0P';
+    const PROFILE_SLUG = 'surasak-saokaew';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+    });
+
+    let currentLang = localStorage.getItem('cv-language') === 'th' ? 'th' : 'en';
+    let profile = null;
+    let sections = [];
+
+    const els = {
+      status: document.getElementById('status'),
+      contactsHeading: document.getElementById('contacts-heading'),
+      contactGroups: document.getElementById('contact-groups'),
+      websiteWrap: document.getElementById('website-wrap'),
+      websiteLink: document.getElementById('website-link'),
+      photo: document.getElementById('profile-photo'),
+      photoPlaceholder: document.getElementById('photo-placeholder'),
+      name: document.getElementById('prof-name'),
+      credentials: document.getElementById('prof-credentials'),
+      nameTh: document.getElementById('prof-name-th'),
+      identifiers: document.getElementById('identifiers'),
+      bioSection: document.getElementById('bio-section'),
+      bioHeading: document.getElementById('bio-heading'),
+      bioText: document.getElementById('bio-text'),
+      sections: document.getElementById('main-sections'),
+      footer: document.getElementById('footer-text'),
+      btnEn: document.getElementById('btn-en'),
+      btnTh: document.getElementById('btn-th')
+    };
+
+    const escapeHtml = (value = '') => String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+
+    function setStatus(message = '', type = 'info') {
+      els.status.textContent = message;
+      els.status.className = `max-w-6xl mx-auto px-6 pt-6 text-sm ${type === 'error' ? 'text-red-700' : 'text-slate-500'}`;
+    }
+
+    function localized(en, th) {
+      return currentLang === 'th' ? (th || en || '') : (en || th || '');
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('cv-language', lang);
+      document.documentElement.lang = lang;
+      els.btnEn.className = `lang-btn px-3 py-1.5 text-sm font-medium ${lang === 'en' ? 'active' : 'text-gray-600'}`;
+      els.btnTh.className = `lang-btn px-3 py-1.5 text-sm font-medium ${lang === 'th' ? 'active' : 'text-gray-600'}`;
+      if (profile) render();
+    }
+
+    function renderContacts() {
+      const contacts = profile.contacts || {};
+      const groups = [contacts.home, contacts.university].filter(Boolean);
+      els.contactsHeading.textContent = currentLang === 'th' ? 'ข้อมูลติดต่อ' : 'Contacts';
+      els.contactGroups.innerHTML = groups.map(group => {
+        const heading = localized(group.heading_en, group.heading_th);
+        const address = localized(group.address_en, group.address_th);
+        const rows = [
+          group.phone ? ['phone', group.phone] : null,
+          group.email ? ['mail', group.email] : null,
+          address ? ['map-pin', address] : null
+        ].filter(Boolean);
+        if (!rows.length) return '';
+        return `<div><h3 class="font-bold mb-2">${escapeHtml(heading)}</h3><ul class="space-y-2 text-sm">${rows.map(([icon, value]) => `<li class="flex items-start gap-2"><i data-lucide="${icon}" class="w-4 h-4 mt-0.5 shrink-0"></i><span>${escapeHtml(value)}</span></li>`).join('')}</ul></div>`;
+      }).join('');
+
+      if (contacts.website) {
+        els.websiteWrap.classList.remove('hidden');
+        els.websiteWrap.classList.add('flex');
+        els.websiteLink.href = contacts.website;
+        els.websiteLink.textContent = contacts.website;
+      } else {
+        els.websiteWrap.classList.add('hidden');
+      }
+    }
+
+    function renderHeader() {
+      els.name.textContent = profile.name_en || '';
+      els.credentials.textContent = profile.credentials_en || '';
+      els.nameTh.textContent = profile.name_th || '';
+
+      if (profile.profile_photo_url) {
+        els.photo.src = profile.profile_photo_url;
+        els.photo.alt = profile.name_en ? `Profile photo of ${profile.name_en}` : 'Profile photo';
+        els.photo.classList.remove('hidden');
+        els.photoPlaceholder.classList.add('hidden');
+      } else {
+        els.photo.classList.add('hidden');
+        els.photoPlaceholder.classList.add('hidden');
+      }
+
+      const identifiers = Array.isArray(profile.identifiers) ? profile.identifiers : [];
+      els.identifiers.innerHTML = identifiers.map(item => {
+        const label = escapeHtml(item.label || '');
+        const value = escapeHtml(item.value || '');
+        return item.url
+          ? `<p><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline"><strong>${label}:</strong> ${value}</a></p>`
+          : `<p><strong>${label}:</strong> ${value}</p>`;
+      }).join('');
+
+      const bio = localized(profile.bio_en, profile.bio_th);
+      if (bio) {
+        els.bioSection.classList.remove('hidden');
+        els.bioHeading.textContent = currentLang === 'th' ? 'ประวัติโดยย่อ' : 'Bio-sketch';
+        els.bioText.textContent = bio;
+      } else {
+        els.bioSection.classList.add('hidden');
+      }
+    }
+
+    function renderTimeline(content) {
+      const items = Array.isArray(content.items) ? content.items : [];
+      return `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[620px]"><tbody>${items.map(item => `<tr class="border-b last:border-0 align-top"><td class="py-3 pr-5 whitespace-nowrap text-slate-600 w-48">${escapeHtml(item.date)}</td><td class="py-3"><strong>${escapeHtml(item.title)}</strong>${item.organization ? `<br>${escapeHtml(item.organization)}` : ''}${item.note ? `<br><span class="text-gray-500">${escapeHtml(item.note)}</span>` : ''}</td></tr>`).join('')}</tbody></table></div>`;
+    }
+
+    function renderContent(section) {
+      const content = section.content || {};
+      const items = Array.isArray(content.items) ? content.items : [];
+      switch (section.content_type) {
+        case 'timeline': return renderTimeline(content);
+        case 'grid': return `<div class="grid md:grid-cols-2 gap-2 text-sm">${items.map(item => `<div class="p-2 rounded bg-gray-50 border border-gray-100">${escapeHtml(item)}</div>`).join('')}</div>`;
+        case 'stats': return `<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">${items.map(item => `<div class="text-center p-3 rounded bg-gray-50 border"><div class="text-xl font-bold text-blue-800">${escapeHtml(item.value)}</div><div class="text-xs text-gray-500">${escapeHtml(item.label)}</div></div>`).join('')}</div>${content.note ? `<p class="text-xs text-gray-500">${escapeHtml(content.note)}</p>` : ''}`;
+        case 'skills': return `<div class="grid md:grid-cols-2 gap-2 text-sm">${items.map(item => `<div class="p-2 rounded bg-gray-50 border border-gray-100"><strong>${escapeHtml(item.label)}:</strong> ${escapeHtml(item.value)}</div>`).join('')}</div>`;
+        case 'list':
+        default: return `<ul class="list-disc pl-5 space-y-1 text-sm">${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>${content.note ? `<p class="text-xs text-gray-400 mt-2">${escapeHtml(content.note)}</p>` : ''}`;
+      }
+    }
+
+    function renderSections() {
+      els.sections.innerHTML = sections.map(section => {
+        const title = localized(section.title_en, section.title_th);
+        const open = Boolean(section.default_open);
+        return `<section class="border border-gray-200 rounded-lg overflow-hidden bg-white" data-section="${escapeHtml(section.section_key)}">
+          <button class="accordion-btn w-full flex items-center justify-between px-5 py-3 text-left font-semibold text-sm hover:bg-gray-50 transition" type="button" aria-expanded="${open}">
+            <span>${escapeHtml(title)}</span>
+            <i data-lucide="${open ? 'chevron-up' : 'chevron-down'}" class="w-4 h-4 opacity-50"></i>
+          </button>
+          <div class="section-content ${open ? 'open' : ''}"><div class="section-inner"><div class="px-5 pb-4">${renderContent(section)}</div></div></div>
+        </section>`;
+      }).join('');
+
+      document.querySelectorAll('.accordion-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const content = btn.nextElementSibling;
+          const isOpen = content.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(isOpen));
+          const icon = btn.querySelector('i');
+          icon.setAttribute('data-lucide', isOpen ? 'chevron-up' : 'chevron-down');
+          window.lucide?.createIcons();
+        });
+      });
+    }
+
+    function render() {
+      renderContacts();
+      renderHeader();
+      renderSections();
+      els.footer.textContent = localized(profile.footer_en, profile.footer_th);
+      window.lucide?.createIcons();
+    }
+
+    async function loadCv() {
+      setStatus(currentLang === 'th' ? 'กำลังโหลดข้อมูล…' : 'Loading CV data…');
+      const { data: profileData, error: profileError } = await supabase
+        .from('cv_profiles')
+        .select('id,slug,name_en,credentials_en,name_th,bio_en,bio_th,profile_photo_url,contacts,identifiers,footer_en,footer_th')
+        .eq('slug', PROFILE_SLUG)
+        .eq('is_published', true)
+        .single();
+
+      if (profileError) throw profileError;
+
+      const { data: sectionData, error: sectionError } = await supabase
+        .from('cv_sections')
+        .select('section_key,title_en,title_th,content_type,content,sort_order,default_open')
+        .eq('profile_id', profileData.id)
+        .eq('is_published', true)
+        .order('sort_order', { ascending: true });
+
+      if (sectionError) throw sectionError;
+      profile = profileData;
+      sections = sectionData || [];
+      setStatus('');
+      render();
+    }
+
+    els.btnEn.addEventListener('click', () => setLanguage('en'));
+    els.btnTh.addEventListener('click', () => setLanguage('th'));
+    setLanguage(currentLang);
+
+    loadCv().catch(error => {
+      console.error('Failed to load CV:', error);
+      setStatus(currentLang === 'th' ? 'ไม่สามารถโหลดข้อมูล CV จากฐานข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อ Supabase และ RLS' : 'Unable to load CV data. Check the Supabase connection and RLS policies.', 'error');
+    });
+  </script>
+</body>
+</html>
