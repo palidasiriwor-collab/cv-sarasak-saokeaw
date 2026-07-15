@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body { font-family: 'Prompt', sans-serif; background:#f8fafc; color:#0f172a; }
     .section-content { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
@@ -18,10 +20,35 @@
     .lang-btn.active { background:#1e3a5f; color:#fff; }
     .sidebar { background:linear-gradient(180deg,#eaf1f8 0%,#f8fafc 100%); }
     .skeleton { animation:pulse 1.4s ease-in-out infinite; background:#e2e8f0; border-radius:.5rem; }
+
+    .metric-card { background:linear-gradient(135deg,#ffffff 0%,#f8fafc 100%); }
+    .metric-value { letter-spacing:-0.03em; }
+    .metric-bar { height:.55rem; border-radius:9999px; background:#e2e8f0; overflow:hidden; }
+    .metric-bar > span { display:block; height:100%; border-radius:9999px; background:#1e3a5f; }
     @keyframes pulse { 50% { opacity:.45; } }
+
+    .export-btn { background:#fff; border:1px solid #cbd5e1; color:#334155; }
+    .export-btn:hover { background:#f8fafc; }
+    .export-a4 { width:210mm; min-height:297mm; box-sizing:border-box; background:#fff; padding:12mm; }
+    .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
+
+    @page { size:A4; margin:12mm; }
+    @media print {
+      body { background:#fff !important; }
+      #export-controls, .lang-btn, #status { display:none !important; }
+      #cv-export { box-shadow:none !important; max-width:none !important; width:100% !important; }
+      .section-content { grid-template-rows:1fr !important; }
+      details { break-inside:avoid; page-break-inside:avoid; }
+      details > * { display:block !important; }
+      section, article, tr { break-inside:avoid; page-break-inside:avoid; }
+    }
   </style>
 </head>
 <body class="min-h-screen w-full">
+  <div id="export-controls" class="fixed top-4 left-4 z-50 flex flex-wrap gap-2 print:hidden">
+    <button id="export-word" type="button" class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm">Word</button>
+    <button id="export-pdf" type="button" class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm">PDF A4</button>
+  </div>
   <div class="fixed top-4 right-4 z-50 flex rounded-lg overflow-hidden shadow border border-gray-200 bg-white" aria-label="Language selector">
     <button id="btn-en" class="lang-btn px-3 py-1.5 text-sm font-medium active" type="button">EN</button>
     <button id="btn-th" class="lang-btn px-3 py-1.5 text-sm font-medium text-gray-600" type="button">TH</button>
@@ -29,7 +56,7 @@
 
   <div id="status" class="max-w-6xl mx-auto px-6 pt-6 text-sm" role="status" aria-live="polite"></div>
 
-  <div class="max-w-6xl mx-auto min-h-screen bg-white shadow-sm">
+  <div id="cv-export" class="max-w-6xl mx-auto min-h-screen bg-white shadow-sm">
     <main class="p-6 md:p-10">
       <div id="header" class="grid grid-cols-1 md:grid-cols-[180px_minmax(0,1fr)] xl:grid-cols-[180px_minmax(0,1fr)_320px] gap-6 xl:gap-8 items-start mb-8">
         <div class="flex justify-center md:justify-start">
@@ -53,6 +80,17 @@
           </div>
         </aside>
       </div>
+
+      <section id="publications-dashboard-top" class="mb-8 hidden">
+        <div class="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-slate-300 pb-2">
+          <div>
+            <p id="publications-dashboard-eyebrow" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Research Impact</p>
+            <h2 id="publications-dashboard-heading" class="text-xl md:text-2xl font-bold text-slate-900">Publications Dashboard</h2>
+          </div>
+          <span id="publications-dashboard-updated" class="text-xs text-slate-400"></span>
+        </div>
+        <div id="publications-dashboard-content"></div>
+      </section>
 
       <section id="bio-section" class="mb-8 hidden">
         <h2 id="bio-heading" class="text-lg font-bold border-b border-gray-300 pb-1 mb-3">Bio-sketch</h2>
@@ -81,6 +119,8 @@
     let currentLang = localStorage.getItem('cv-language') === 'th' ? 'th' : 'en';
     let profile = null;
     let sections = [];
+    let publicationEntries = [];
+    let sectionEntries = [];
 
     const els = {
       status: document.getElementById('status'),
@@ -94,13 +134,20 @@
       credentials: document.getElementById('prof-credentials'),
       nameTh: document.getElementById('prof-name-th'),
       identifiers: document.getElementById('identifiers'),
+      publicationsDashboardTop: document.getElementById('publications-dashboard-top'),
+      publicationsDashboardEyebrow: document.getElementById('publications-dashboard-eyebrow'),
+      publicationsDashboardHeading: document.getElementById('publications-dashboard-heading'),
+      publicationsDashboardUpdated: document.getElementById('publications-dashboard-updated'),
+      publicationsDashboardContent: document.getElementById('publications-dashboard-content'),
       bioSection: document.getElementById('bio-section'),
       bioHeading: document.getElementById('bio-heading'),
       bioText: document.getElementById('bio-text'),
       sections: document.getElementById('main-sections'),
       footer: document.getElementById('footer-text'),
       btnEn: document.getElementById('btn-en'),
-      btnTh: document.getElementById('btn-th')
+      btnTh: document.getElementById('btn-th'),
+      exportWord: document.getElementById('export-word'),
+      exportPdf: document.getElementById('export-pdf')
     };
 
     const escapeHtml = (value = '') => String(value)
@@ -193,12 +240,216 @@
       return `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[620px]"><tbody>${items.map(item => `<tr class="border-b last:border-0 align-top"><td class="py-3 pr-5 whitespace-nowrap text-slate-600 w-48">${escapeHtml(item.date)}</td><td class="py-3"><strong>${escapeHtml(item.title)}</strong>${item.organization ? `<br>${escapeHtml(item.organization)}` : ''}${item.note ? `<br><span class="text-gray-500">${escapeHtml(item.note)}</span>` : ''}</td></tr>`).join('')}</tbody></table></div>`;
     }
 
+
+    function formatEntryDate(entry) {
+      const explicit = localized(entry.date_label_en, entry.date_label_th);
+      if (explicit) return explicit;
+      const fmt = value => {
+        if (!value) return '';
+        const date = new Date(`${value}T00:00:00`);
+        return Number.isNaN(date.getTime())
+          ? value
+          : new Intl.DateTimeFormat(currentLang === 'th' ? 'th-TH' : 'en-GB', {
+              day:'numeric', month:'short', year:'numeric'
+            }).format(date);
+      };
+      const start = fmt(entry.start_date);
+      const end = fmt(entry.end_date);
+      return start && end && start !== end ? `${start} – ${end}` : (start || end || '');
+    }
+
+    function entriesForSection(section) {
+      return sectionEntries
+        .filter(entry => entry.section_id === section.id)
+        .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+    }
+
+    function renderStructuredEntries(section) {
+      const entries = entriesForSection(section);
+      if (!entries.length) return '';
+
+      if (section.content_type === 'timeline') {
+        return `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[620px]"><tbody>${entries.map(entry => {
+          const date = formatEntryDate(entry);
+          const title = localized(entry.title_en, entry.title_th);
+          const subtitle = localized(entry.subtitle_en, entry.subtitle_th);
+          const description = localized(entry.description_en, entry.description_th);
+          return `<tr class="border-b last:border-0 align-top page-break-avoid">
+            <td class="py-3 pr-5 text-slate-600 w-48">${escapeHtml(date)}</td>
+            <td class="py-3">
+              ${title ? `<strong>${escapeHtml(title)}</strong>` : ''}
+              ${subtitle ? `<br>${escapeHtml(subtitle)}` : ''}
+              ${description ? `<br><span class="text-gray-500 whitespace-pre-line">${escapeHtml(description)}</span>` : ''}
+            </td>
+          </tr>`;
+        }).join('')}</tbody></table></div>`;
+      }
+
+      if (section.content_type === 'skills') {
+        return `<div class="grid md:grid-cols-2 gap-2 text-sm">${entries.map(entry => {
+          const title = localized(entry.title_en, entry.title_th);
+          const description = localized(entry.description_en, entry.description_th);
+          return `<div class="p-3 rounded bg-gray-50 border border-gray-100 page-break-avoid">
+            <strong>${escapeHtml(title)}${title ? ':' : ''}</strong> ${escapeHtml(description)}
+          </div>`;
+        }).join('')}</div>`;
+      }
+
+      if (section.content_type === 'grid') {
+        return `<div class="grid md:grid-cols-2 gap-2 text-sm">${entries.map(entry => {
+          const title = localized(entry.title_en, entry.title_th);
+          const description = localized(entry.description_en, entry.description_th);
+          return `<div class="p-3 rounded bg-gray-50 border border-gray-100 page-break-avoid">
+            <div class="whitespace-pre-line">${escapeHtml(title)}</div>
+            ${description ? `<div class="mt-1 text-xs text-slate-500 whitespace-pre-line">${escapeHtml(description)}</div>` : ''}
+          </div>`;
+        }).join('')}</div>`;
+      }
+
+      return `<ol class="list-decimal pl-5 space-y-2 text-sm">${entries.map(entry => {
+        const title = localized(entry.title_en, entry.title_th);
+        const subtitle = localized(entry.subtitle_en, entry.subtitle_th);
+        const description = localized(entry.description_en, entry.description_th);
+        const date = formatEntryDate(entry);
+        return `<li class="pl-1 page-break-avoid">
+          <div class="whitespace-pre-line">${escapeHtml(title)}</div>
+          ${subtitle ? `<div class="text-slate-600 whitespace-pre-line">${escapeHtml(subtitle)}</div>` : ''}
+          ${description ? `<div class="text-slate-500 whitespace-pre-line">${escapeHtml(description)}</div>` : ''}
+          ${date ? `<div class="mt-1 text-xs text-slate-400">${escapeHtml(date)}</div>` : ''}
+        </li>`;
+      }).join('')}</ol>`;
+    }
+
+
+    function renderPublicationGroups() {
+      const groups = [
+        { key: 'book', label: 'Book', labelTh: 'หนังสือ' },
+        { key: 'article_review', label: 'Article & Review', labelTh: 'บทความและบทความปริทัศน์' }
+      ];
+
+      const authorRole = item => {
+        if (item.is_first_author && item.is_corresponding_author) return 'First Author & Corresponding Author';
+        if (item.is_first_author) return 'First Author';
+        if (item.is_corresponding_author) return 'Corresponding Author';
+        return '';
+      };
+
+      return `<div class="mt-7 space-y-4">
+        ${groups.map((group, index) => {
+          const items = publicationEntries
+            .filter(item => item.category === group.key)
+            .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+
+          const title = currentLang === 'th' ? group.labelTh : group.label;
+          return `<details class="rounded-xl border border-slate-200 bg-white" ${index === 0 ? 'open' : ''}>
+            <summary class="cursor-pointer select-none px-5 py-4 font-bold text-slate-800 flex items-center justify-between gap-3">
+              <span>${escapeHtml(title)}</span>
+              <span class="text-xs font-medium text-slate-400">${items.length.toLocaleString('en-US')} items</span>
+            </summary>
+            <div class="border-t border-slate-100 px-5 py-4">
+              ${items.length ? `<ol class="space-y-4 list-decimal pl-6">
+                ${items.map(item => {
+                  const badges = [
+                    item.ranking && item.ranking !== '-' ? item.ranking : null,
+                    item.impact_factor !== null && item.impact_factor !== undefined ? `IF ${item.impact_factor}` : null,
+                    authorRole(item)
+                  ].filter(Boolean);
+                  return `<li class="pl-1 text-sm leading-relaxed text-slate-700">
+                    <div>${escapeHtml(item.citation || '')}</div>
+                    ${badges.length ? `<div class="mt-2 flex flex-wrap gap-2">${badges.map(badge => `<span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">${escapeHtml(badge)}</span>`).join('')}</div>` : ''}
+                  </li>`;
+                }).join('')}
+              </ol>` : `<p class="text-sm text-slate-400">${currentLang === 'th' ? 'ยังไม่มีข้อมูล' : 'No entries yet.'}</p>`}
+            </div>
+          </details>`;
+        }).join('')}
+      </div>`;
+    }
+
+    function renderPublicationDashboard(content) {
+      const items = Array.isArray(content.items) ? content.items : [];
+      const quartiles = Array.isArray(content.quartiles) ? content.quartiles : [];
+      const tci = Array.isArray(content.tci) ? content.tci : [];
+
+      const numberValue = value => {
+        const raw = String(value ?? '');
+        return /^\d+$/.test(raw) ? Number(raw).toLocaleString('en-US') : raw;
+      };
+
+      const metricCards = items.map(item => {
+        const meta = [item.as_of, item.source].filter(Boolean).map(escapeHtml).join(' • ');
+        return `<article class="metric-card rounded-xl border border-slate-200 p-4 shadow-sm">
+          <div class="text-xs font-medium uppercase tracking-wide text-slate-500">${escapeHtml(item.label || '')}</div>
+          <div class="metric-value mt-2 text-3xl font-bold text-[#1e3a5f]">${escapeHtml(numberValue(item.value))}</div>
+          ${meta ? `<div class="mt-2 text-xs text-slate-400">${meta}</div>` : ''}
+        </article>`;
+      }).join('');
+
+      const renderDistribution = (title, rows) => {
+        if (!rows.length) return '';
+        const max = Math.max(...rows.map(row => Number(row.value) || 0), 1);
+        const total = rows.reduce((sum, row) => sum + (Number(row.value) || 0), 0);
+        return `<section class="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+          <div class="mb-4 flex items-center justify-between gap-4">
+            <h3 class="font-bold text-slate-800">${escapeHtml(title)}</h3>
+            <span class="text-xs text-slate-500">Total ${total.toLocaleString('en-US')}</span>
+          </div>
+          <div class="space-y-3">
+            ${rows.map(row => {
+              const value = Number(row.value) || 0;
+              const width = Math.max(4, Math.round((value / max) * 100));
+              return `<div>
+                <div class="mb-1 flex items-center justify-between text-sm">
+                  <span class="font-medium text-slate-700">${escapeHtml(row.label || '')}</span>
+                  <span class="font-bold text-slate-900">${value.toLocaleString('en-US')}</span>
+                </div>
+                <div class="metric-bar"><span style="width:${width}%"></span></div>
+              </div>`;
+            }).join('')}
+          </div>
+        </section>`;
+      };
+
+      return `<div class="space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">${metricCards}</div>
+        <div class="grid md:grid-cols-2 gap-4">
+          ${renderDistribution('Quartiles', quartiles)}
+          ${renderDistribution('TCI', tci)}
+        </div>
+        <p class="text-xs text-slate-400">${currentLang === 'th' ? 'ตัวชี้วัดแต่ละรายการแสดงวันที่รายงานและแหล่งข้อมูลของตนเอง' : 'Each metric retains its own reporting date and source.'}</p>
+      </div>`;
+    }
+
+    function renderTopPublicationDashboard() {
+      const publicationSection = sections.find(section => section.section_key === 'publications');
+      const content = publicationSection?.content || {};
+      const hasDashboardData = Array.isArray(content.items) && content.items.length > 0;
+
+      if (!hasDashboardData) {
+        els.publicationsDashboardTop.classList.add('hidden');
+        els.publicationsDashboardContent.innerHTML = '';
+        return;
+      }
+
+      els.publicationsDashboardEyebrow.textContent = currentLang === 'th' ? 'ผลกระทบด้านการวิจัย' : 'Research Impact';
+      els.publicationsDashboardHeading.textContent = currentLang === 'th' ? 'แดชบอร์ดผลงานตีพิมพ์' : 'Publications Dashboard';
+      els.publicationsDashboardUpdated.textContent = content.updated_at ? `${currentLang === 'th' ? 'อัปเดต' : 'Updated'} ${content.updated_at}` : '';
+      els.publicationsDashboardContent.innerHTML = renderPublicationDashboard(content);
+      els.publicationsDashboardTop.classList.remove('hidden');
+    }
+
     function renderContent(section) {
       const content = section.content || {};
       const items = Array.isArray(content.items) ? content.items : [];
+      if (section.section_key === 'publications') {
+        return renderPublicationGroups();
+      }
+      const structured = renderStructuredEntries(section);
+      if (structured) return structured;
       switch (section.content_type) {
         case 'timeline': return renderTimeline(content);
         case 'grid': return `<div class="grid md:grid-cols-2 gap-2 text-sm">${items.map(item => `<div class="p-2 rounded bg-gray-50 border border-gray-100">${escapeHtml(item)}</div>`).join('')}</div>`;
+        case 'publication_dashboard': return renderPublicationDashboard(content);
         case 'stats': return `<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">${items.map(item => `<div class="text-center p-3 rounded bg-gray-50 border"><div class="text-xl font-bold text-blue-800">${escapeHtml(item.value)}</div><div class="text-xs text-gray-500">${escapeHtml(item.label)}</div></div>`).join('')}</div>${content.note ? `<p class="text-xs text-gray-500">${escapeHtml(content.note)}</p>` : ''}`;
         case 'skills': return `<div class="grid md:grid-cols-2 gap-2 text-sm">${items.map(item => `<div class="p-2 rounded bg-gray-50 border border-gray-100"><strong>${escapeHtml(item.label)}:</strong> ${escapeHtml(item.value)}</div>`).join('')}</div>`;
         case 'list':
@@ -234,6 +485,7 @@
     function render() {
       renderContacts();
       renderHeader();
+      renderTopPublicationDashboard();
       renderSections();
       els.footer.textContent = localized(profile.footer_en, profile.footer_th);
       window.lucide?.createIcons();
@@ -252,20 +504,141 @@
 
       const { data: sectionData, error: sectionError } = await supabase
         .from('cv_sections')
-        .select('section_key,title_en,title_th,content_type,content,sort_order,default_open')
+        .select('id,section_key,title_en,title_th,content_type,content,sort_order,default_open')
         .eq('profile_id', profileData.id)
         .eq('is_published', true)
         .order('sort_order', { ascending: true });
 
       if (sectionError) throw sectionError;
+
+      const { data: entryData, error: entryError } = await supabase
+        .from('cv_section_entries')
+        .select('id,section_id,entry_type,title_en,title_th,subtitle_en,subtitle_th,description_en,description_th,date_label_en,date_label_th,start_date,end_date,display_order')
+        .eq('profile_id', profileData.id)
+        .eq('is_published', true)
+        .order('display_order', { ascending: true });
+
+      if (entryError) throw entryError;
+
+      const { data: publicationData, error: publicationError } = await supabase
+        .from('cv_publication_entries')
+        .select('id,category,citation,impact_factor,ranking,is_first_author,is_corresponding_author,display_order')
+        .eq('profile_id', profileData.id)
+        .eq('is_published', true)
+        .in('category', ['book', 'article_review'])
+        .order('display_order', { ascending: true });
+
+      if (publicationError) throw publicationError;
+
       profile = profileData;
       sections = sectionData || [];
+      sectionEntries = entryData || [];
+      publicationEntries = publicationData || [];
       setStatus('');
       render();
     }
 
+
+    function prepareExportClone() {
+      const source = document.getElementById('cv-export');
+      const clone = source.cloneNode(true);
+      clone.querySelectorAll('.section-content').forEach(node => {
+        node.classList.add('open');
+        node.style.gridTemplateRows = '1fr';
+      });
+      clone.querySelectorAll('details').forEach(node => node.open = true);
+      clone.querySelectorAll('.accordion-btn').forEach(node => {
+        node.setAttribute('aria-expanded', 'true');
+        const icon = node.querySelector('i');
+        if (icon) icon.remove();
+      });
+      clone.classList.add('export-a4');
+      clone.style.boxShadow = 'none';
+      clone.style.maxWidth = 'none';
+      return clone;
+    }
+
+    function exportFileName(ext) {
+      const safe = (profile?.name_en || 'academic-cv').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return `${safe || 'academic-cv'}.${ext}`;
+    }
+
+    function saveBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    async function exportWord() {
+      const clone = prepareExportClone();
+      const wordCss = `
+        @page { size: A4; margin: 14mm; }
+        body { font-family: Arial, sans-serif; color:#0f172a; font-size:10.5pt; line-height:1.45; }
+        h1 { font-size:22pt; margin:0 0 4pt; }
+        h2 { font-size:15pt; border-bottom:1px solid #cbd5e1; padding-bottom:4pt; margin:14pt 0 8pt; }
+        h3 { font-size:11pt; margin:8pt 0 4pt; }
+        table { width:100%; border-collapse:collapse; }
+        td { vertical-align:top; padding:5pt 4pt; border-bottom:1px solid #e2e8f0; }
+        img { max-width:140px; height:auto; }
+        section, article, tr { page-break-inside:avoid; }
+        .section-content { display:block !important; }
+        details > * { display:block !important; }
+        summary { font-weight:bold; margin:10pt 0 6pt; }
+        a { color:#1d4ed8; }
+      `;
+      const html = `<!doctype html><html><head><meta charset="utf-8"><style>${wordCss}</style></head><body>${clone.outerHTML}</body></html>`;
+
+      try {
+        if (window.htmlDocx?.asBlob) {
+          const blob = window.htmlDocx.asBlob(html, { orientation:'portrait', margins:{ top:720, right:720, bottom:720, left:720 } });
+          saveBlob(blob, exportFileName('docx'));
+          return;
+        }
+      } catch (error) {
+        console.warn('DOCX export library failed, using Word-compatible HTML fallback.', error);
+      }
+
+      saveBlob(new Blob(['\ufeff', html], { type:'application/msword' }), exportFileName('doc'));
+    }
+
+    async function exportPdf() {
+      const clone = prepareExportClone();
+      const staging = document.createElement('div');
+      staging.style.position = 'fixed';
+      staging.style.left = '-10000px';
+      staging.style.top = '0';
+      staging.style.width = '210mm';
+      staging.style.background = '#fff';
+      staging.appendChild(clone);
+      document.body.appendChild(staging);
+
+      try {
+        if (!window.html2pdf) throw new Error('html2pdf unavailable');
+        await window.html2pdf().set({
+          margin: [8, 8, 8, 8],
+          filename: exportFileName('pdf'),
+          image: { type:'jpeg', quality:0.98 },
+          html2canvas: { scale:1.5, useCORS:true, logging:false },
+          jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
+          pagebreak: { mode:['css','legacy'], avoid:['tr','article','.page-break-avoid'] }
+        }).from(clone).save();
+      } catch (error) {
+        console.warn('Direct PDF export failed; opening print dialog.', error);
+        window.print();
+      } finally {
+        staging.remove();
+      }
+    }
+
     els.btnEn.addEventListener('click', () => setLanguage('en'));
     els.btnTh.addEventListener('click', () => setLanguage('th'));
+    els.exportWord.addEventListener('click', exportWord);
+    els.exportPdf.addEventListener('click', exportPdf);
     setLanguage(currentLang);
 
     loadCv().catch(error => {
