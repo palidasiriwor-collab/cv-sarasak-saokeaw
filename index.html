@@ -81,7 +81,7 @@
     }
     .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
 
-    @page { size:A4 portrait; margin:25mm 15mm 23mm; }
+    @page { size:A4 portrait; margin:14mm 14mm 16mm; }
     @media print {
       html, body {
         width:auto !important; min-width:0 !important;
@@ -94,23 +94,46 @@
 
       #export-controls, .lang-btn, #status, footer, .admin-ui, #premium-loading, #premium-toast-stack { display:none !important; }
       .cv-print-running-header, .cv-print-running-footer {
-        display:flex !important; position:fixed; left:0; right:0;
-        box-sizing:border-box !important; align-items:center; justify-content:space-between; gap:8mm;
-        color:#64748b; font-size:7.2pt; line-height:1.2; letter-spacing:.02em;
-        background:#fff !important; z-index:9999;
+        display:flex !important;
+        position:static !important;
+        left:auto !important;
+        right:auto !important;
+        box-sizing:border-box !important;
+        align-items:center;
+        justify-content:space-between;
+        gap:8mm;
+        color:#64748b;
+        font-size:7.2pt;
+        line-height:1.25;
+        letter-spacing:.02em;
+        background:#fff !important;
+        z-index:auto !important;
       }
       .cv-print-running-header {
-        top:-18.5mm; min-height:9mm; padding:1.5mm 0 2.4mm;
-        border-bottom:.5pt solid #b9c7d5; color:#334155;
-        text-transform:uppercase; font-weight:700; letter-spacing:.10em;
+        margin:0 0 6mm !important;
+        padding:0 0 2.6mm !important;
+        border-bottom:.65pt solid #9fb1c2;
+        color:#334155;
+        text-transform:uppercase;
+        font-weight:700;
+        letter-spacing:.10em;
+        break-after:avoid !important;
+        page-break-after:avoid !important;
       }
       .cv-print-running-header span:first-child {
-        max-width:58%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-        color:#0f2942; letter-spacing:.035em;
+        max-width:62%;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        color:#0f2942;
+        letter-spacing:.035em;
       }
       .cv-print-running-footer {
-        bottom:-16.5mm; min-height:8mm; padding:2.4mm 0 1mm;
-        border-top:.5pt solid #b9c7d5;
+        margin:9mm 0 0 !important;
+        padding:2.8mm 0 0 !important;
+        border-top:.65pt solid #9fb1c2;
+        break-inside:avoid !important;
+        page-break-inside:avoid !important;
       }
       .cv-print-running-footer span:first-child { color:#475569; }
       .cv-print-running-footer span:last-child { white-space:nowrap; }
@@ -122,6 +145,29 @@
       #cv-export > main { padding:0 !important; overflow:visible !important; }
       #cv-export::before { content:""; display:block; height:.1mm; }
       #main-sections > section:first-child { margin-top:1mm !important; }
+
+      #publications-dashboard-top {
+        break-before:page !important;
+        page-break-before:always !important;
+        break-after:page !important;
+        page-break-after:always !important;
+        break-inside:avoid !important;
+        page-break-inside:avoid !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+
+      #publications-dashboard-content {
+        break-inside:avoid !important;
+        page-break-inside:avoid !important;
+      }
+
+      #publications-dashboard-content .metric-card,
+      #publications-dashboard-content > div > div,
+      #publications-dashboard-content section {
+        break-inside:avoid !important;
+        page-break-inside:avoid !important;
+      }
 
       #header {
         display:grid !important;
@@ -169,7 +215,7 @@
         box-shadow:none !important; background:#fff !important;
         break-inside:avoid !important;
       }
-      .metric-value { font-size:18pt !important; color:#0f2942 !important; }
+      .metric-value { font-size:17pt !important; color:#0f2942 !important; }
 
       #main-sections { display:block !important; }
       #main-sections > section {
@@ -508,7 +554,6 @@
 
   <div id="cv-export" class="max-w-6xl mx-auto min-h-screen bg-white shadow-sm">
     <div class="cv-print-running-header"><span id="cv-print-name"></span><span>Academic Curriculum Vitae</span></div>
-    <div class="cv-print-running-footer"><span>School of Pharmaceutical Sciences · University of Phayao</span><span id="cv-print-generated-date"></span></div>
     <main class="p-6 md:p-10">
       <div id="header" class="grid grid-cols-1 md:grid-cols-[180px_minmax(0,1fr)] xl:grid-cols-[180px_minmax(0,1fr)_320px] gap-6 xl:gap-8 items-start mb-8">
         <div class="flex justify-center md:justify-start">
@@ -553,6 +598,7 @@
 
       <div id="main-sections" class="space-y-3"></div>
     </main>
+    <div class="cv-print-running-footer"><span>School of Pharmaceutical Sciences · University of Phayao</span><span id="cv-print-generated-date"></span></div>
   </div>
 
   <footer class="text-center py-4 text-sm opacity-60">
@@ -692,6 +738,68 @@
         </section>
 
         <section id="admin-tab-publications" class="admin-panel-section">
+          <details class="admin-box mb-4" open>
+            <summary class="cursor-pointer select-none font-bold text-slate-900 flex items-center justify-between gap-3">
+              <span>Publications Dashboard</span>
+              <span class="admin-badge">แก้ไขข้อมูลทุกส่วน</span>
+            </summary>
+            <form id="admin-metrics-form" class="mt-5 space-y-5">
+              <div>
+                <h4 class="mb-3 text-sm font-bold text-slate-700">Main metrics</h4>
+                <div class="admin-grid-3">
+                  <div class="admin-field"><label>Total papers</label><input name="total_papers" type="number" min="0"></div>
+                  <div class="admin-field"><label>Reporting date</label><input name="total_papers_as_of" type="date"></div>
+                  <div></div>
+                  <div class="admin-field"><label>Total citations</label><input name="total_citations" type="number" min="0"></div>
+                  <div class="admin-field"><label>Reporting date</label><input name="total_citations_as_of" type="date"></div>
+                  <div class="admin-field"><label>Source</label><input name="total_citations_source" placeholder="Google Scholar"></div>
+                  <div class="admin-field"><label>Sum of impact factors</label><input name="sum_impact_factors" type="number" min="0" step="0.001"></div>
+                  <div class="admin-field"><label>Reporting date</label><input name="sum_impact_factors_as_of" type="date"></div>
+                  <div></div>
+                  <div class="admin-field"><label>Highest impact factor</label><input name="highest_impact_factor" type="number" min="0" step="0.001"></div>
+                  <div class="admin-field"><label>Reporting date</label><input name="highest_impact_factor_as_of" type="date"></div>
+                  <div></div>
+                  <div class="admin-field"><label>Highest citations for a single paper</label><input name="highest_single_paper_citations" type="number" min="0"></div>
+                  <div class="admin-field"><label>Reporting date</label><input name="highest_single_paper_citations_as_of" type="date"></div>
+                  <div class="admin-field"><label>Source</label><input name="highest_single_paper_citations_source" placeholder="Scopus"></div>
+                  <div class="admin-field"><label>First author count</label><input name="first_author_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>Corresponding author count</label><input name="corresponding_author_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>Reporting date</label><input name="authorship_as_of" type="date"></div>
+                  <div class="admin-field"><label>H-index</label><input name="h_index" type="number" min="0"></div>
+                  <div class="admin-field"><label>Reporting date</label><input name="h_index_as_of" type="date"></div>
+                  <div class="admin-field"><label>Source</label><input name="h_index_source" placeholder="Scopus"></div>
+                  <div class="admin-field"><label>i10-index</label><input name="i10_index" type="number" min="0"></div>
+                  <div class="admin-field"><label>Reporting date</label><input name="i10_index_as_of" type="date"></div>
+                  <div class="admin-field"><label>Source</label><input name="i10_index_source" placeholder="Google Scholar"></div>
+                </div>
+              </div>
+              <div>
+                <h4 class="mb-3 text-sm font-bold text-slate-700">Quartiles</h4>
+                <div class="admin-grid-3">
+                  <div class="admin-field"><label>Q1</label><input name="q1_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>Q2</label><input name="q2_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>Q3</label><input name="q3_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>Q4</label><input name="q4_count" type="number" min="0"></div>
+                </div>
+              </div>
+              <div>
+                <h4 class="mb-3 text-sm font-bold text-slate-700">TCI</h4>
+                <div class="admin-grid-3">
+                  <div class="admin-field"><label>TCI 1</label><input name="tci1_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>TCI 2</label><input name="tci2_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>TCI 3</label><input name="tci3_count" type="number" min="0"></div>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <button class="admin-btn admin-btn-primary" type="submit">
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                  บันทึก Publications Dashboard
+                </button>
+                <span id="admin-metrics-updated" class="admin-muted"></span>
+              </div>
+            </form>
+          </details>
+
           <div class="admin-toolbar">
             <div class="admin-field min-w-[260px]"><label>ค้นหา Citation</label><input id="admin-publication-search" placeholder="พิมพ์คำค้น"></div>
             <button id="admin-add-publication" class="admin-btn admin-btn-primary" type="button"><i data-lucide="plus" class="w-4 h-4"></i>เพิ่ม Publication</button>
@@ -710,6 +818,7 @@
               <div class="admin-field md:col-span-2"><label>DOI Link</label><input name="doi" type="url" placeholder="https://doi.org/10.1007/s41999-025-01398-3"></div>
                             <div class="admin-field"><label>Impact factor</label><input name="impact_factor" inputmode="decimal"></div>
               <div class="admin-field"><label>ลำดับ</label><input name="display_order" type="number"></div>
+              <label class="flex items-center gap-2 text-sm"><input name="is_author" type="checkbox" checked> Author</label>
               <label class="flex items-center gap-2 text-sm"><input name="is_first_author" type="checkbox"> First Author</label>
               <label class="flex items-center gap-2 text-sm"><input name="is_corresponding_author" type="checkbox"> Corresponding Author</label>
               <label class="flex items-center gap-2 text-sm"><input name="is_published" type="checkbox" checked> แสดงรายการนี้</label>
@@ -1303,6 +1412,7 @@
                   const badges = [
                     item.ranking && item.ranking !== '-' ? item.ranking : null,
                     item.impact_factor !== null && item.impact_factor !== undefined ? `IF ${item.impact_factor}` : null,
+                    item.is_author ? 'Author' : null,
                     authorRole(item)
                   ].filter(Boolean);
                   const doiUrl = normalizeDoiUrl(item.doi);
@@ -1489,7 +1599,7 @@
 
       const { data: publicationData, error: publicationError } = await supabase
         .from('cv_publication_entries')
-        .select('id,category,citation,impact_factor,ranking,is_first_author,is_corresponding_author,display_order,doi')
+        .select('id,category,citation,impact_factor,ranking,is_author,is_first_author,is_corresponding_author,display_order,doi')
         .eq('profile_id', profileData.id)
         .eq('is_published', true)
         .in('category', ['book', 'article_review'])
@@ -1916,6 +2026,8 @@
       publicationForm: document.getElementById('admin-publication-form'),
       publicationsList: document.getElementById('admin-publications-list'),
       publicationSearch: document.getElementById('admin-publication-search'),
+      metricsForm: document.getElementById('admin-metrics-form'),
+      metricsUpdated: document.getElementById('admin-metrics-updated'),
       profileForm: document.getElementById('admin-profile-form'),
       photoForm: document.getElementById('admin-photo-form'),
       photoFile: document.getElementById('admin-photo-file'),
@@ -1969,7 +2081,7 @@
         ? 'login'
         : functionName === 'cv_pin_snapshot'
           ? 'sync'
-          : functionName === 'cv_pin_publication_save'
+          : functionName === 'cv_pin_publication_save' || functionName === 'cv_pin_metrics_save'
             ? 'publication'
             : 'save';
       return withPremiumLoading(async () => {
@@ -2013,6 +2125,7 @@
       renderAdminEntrySectionOptions();
       renderAdminEntries();
       renderAdminPublications();
+      populateAdminMetrics();
       populateAdminProfile();
 
       if (reloadPublic) await loadCv();
@@ -2211,6 +2324,7 @@
       safeReset(adminEls.publicationForm);
       adminEls.publicationForm.elements.id.value = '';
       adminEls.publicationForm.elements.ranking.value = '-';
+      adminEls.publicationForm.elements.is_author.checked = true;
       adminEls.publicationForm.elements.is_published.checked = true;
       adminEls.publicationForm.classList.add('admin-hidden');
     }
@@ -2225,6 +2339,7 @@
       form.elements.ranking.value = item.ranking || '-';
       form.elements.impact_factor.value = item.impact_factor ?? '';
       form.elements.display_order.value = item.display_order ?? '';
+      form.elements.is_author.checked = item.is_author !== false;
       form.elements.is_first_author.checked = Boolean(item.is_first_author);
       form.elements.is_corresponding_author.checked = Boolean(item.is_corresponding_author);
       form.elements.is_published.checked = Boolean(item.is_published);
@@ -2243,6 +2358,7 @@
             <div class="flex flex-wrap items-center gap-2">
               <span class="admin-badge">${escapeHtml(item.category)}</span>
               <span class="admin-badge">${escapeHtml(item.ranking || '-')}</span>
+              ${item.is_author ? '<span class="admin-badge">Author</span>' : ''}
               ${item.impact_factor !== null ? `<span class="admin-badge">IF ${escapeHtml(item.impact_factor)}</span>` : ''}
             </div>
             <p class="mt-2 text-sm leading-relaxed">${escapeHtml(item.citation || '')}</p>
@@ -2256,6 +2372,55 @@
         </article>
       `).join('') : '<p class="admin-muted">ไม่พบ Publication</p>';
       window.lucide?.createIcons();
+    }
+
+    function metricDateValue(value) {
+      return value ? String(value).slice(0, 10) : '';
+    }
+
+    function populateAdminMetrics() {
+      const form = adminEls.metricsForm;
+      if (!form) return;
+      const metrics = adminSnapshot?.metrics || {};
+      const numericFields = [
+        'total_papers','total_citations','sum_impact_factors',
+        'highest_impact_factor','highest_single_paper_citations',
+        'first_author_count','corresponding_author_count',
+        'h_index','i10_index','q1_count','q2_count','q3_count','q4_count',
+        'tci1_count','tci2_count','tci3_count'
+      ];
+      const dateFields = [
+        'total_papers_as_of','total_citations_as_of',
+        'sum_impact_factors_as_of','highest_impact_factor_as_of',
+        'highest_single_paper_citations_as_of','authorship_as_of',
+        'h_index_as_of','i10_index_as_of'
+      ];
+      const textFields = [
+        'total_citations_source','highest_single_paper_citations_source',
+        'h_index_source','i10_index_source'
+      ];
+
+      numericFields.forEach(name => {
+        if (form.elements[name]) form.elements[name].value = metrics[name] ?? 0;
+      });
+      dateFields.forEach(name => {
+        if (form.elements[name]) form.elements[name].value = metricDateValue(metrics[name]);
+      });
+      textFields.forEach(name => {
+        if (form.elements[name]) form.elements[name].value = metrics[name] || '';
+      });
+
+      if (adminEls.metricsUpdated) {
+        const updated = metrics.updated_at
+          ? new Intl.DateTimeFormat(currentLang === 'th' ? 'th-TH' : 'en-GB', {
+              dateStyle:'medium',
+              timeStyle:'short'
+            }).format(new Date(metrics.updated_at))
+          : '';
+        adminEls.metricsUpdated.textContent = updated
+          ? `${currentLang === 'th' ? 'อัปเดตล่าสุด' : 'Last updated'}: ${updated}`
+          : '';
+      }
     }
 
     function populateAdminProfile() {
@@ -2481,6 +2646,48 @@
       } catch (error) { adminSetStatus(error.message, 'error'); }
     });
 
+    adminEls.metricsForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const fields = [
+        'total_papers','total_papers_as_of',
+        'total_citations','total_citations_as_of','total_citations_source',
+        'sum_impact_factors','sum_impact_factors_as_of',
+        'highest_impact_factor','highest_impact_factor_as_of',
+        'highest_single_paper_citations','highest_single_paper_citations_as_of','highest_single_paper_citations_source',
+        'first_author_count','corresponding_author_count','authorship_as_of',
+        'h_index','h_index_as_of','h_index_source',
+        'i10_index','i10_index_as_of','i10_index_source',
+        'q1_count','q2_count','q3_count','q4_count',
+        'tci1_count','tci2_count','tci3_count'
+      ];
+      const payload = {};
+      fields.forEach(name => {
+        payload[name] = form.elements[name]?.value ?? '';
+      });
+
+      try {
+        const result = await adminRpc('cv_pin_metrics_save', {
+          p_token:adminToken,
+          p_profile_slug:PROFILE_SLUG,
+          p_payload:payload
+        });
+        if (!result?.ok) throw new Error('Unable to save Publications Dashboard');
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('บันทึก Publications Dashboard แล้ว', 'success');
+        showPremiumToast(
+          currentLang === 'th'
+            ? 'อัปเดตข้อมูล Publications Dashboard ครบทุกส่วนแล้ว'
+            : 'All Publications Dashboard data has been updated.',
+          'success'
+        );
+      } catch (error) {
+        const message = String(error?.message || error);
+        adminSetStatus(message, 'error');
+        showPremiumToast(message, 'error');
+      }
+    });
+
     document.getElementById('admin-add-publication').addEventListener('click', () => {
       resetPublicationForm();
       adminEls.publicationForm.classList.remove('admin-hidden');
@@ -2499,6 +2706,7 @@
         ranking:form.elements.ranking.value,
         impact_factor:form.elements.impact_factor.value,
         display_order:form.elements.display_order.value,
+        is_author:form.elements.is_author.checked,
         is_first_author:form.elements.is_first_author.checked,
         is_corresponding_author:form.elements.is_corresponding_author.checked,
         is_published:form.elements.is_published.checked
