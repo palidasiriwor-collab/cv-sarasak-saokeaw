@@ -34,11 +34,11 @@
     .invited-speaking-title { font-weight:400 !important; }
     .publication-entry { break-inside:avoid; page-break-inside:avoid; }
     .publication-links { display:flex; flex-wrap:wrap; gap:.45rem 1rem; margin-top:.4rem; }
-    .publication-doi-link, .publication-journal-link {
-      color:#1d4ed8; font-size:.76rem; font-weight:500; text-decoration:none;
+    .publication-doi-link {
+      color:#1d4ed8; font-size:.76rem; font-weight:600; text-decoration:none;
       overflow-wrap:anywhere; word-break:break-word;
     }
-    .publication-doi-link:hover, .publication-journal-link:hover { text-decoration:underline; }
+    .publication-doi-link:hover { text-decoration:underline; }
     .cv-print-running-header, .cv-print-running-footer { display:none; }
 
     .teaching-group + .teaching-group { margin-top:1.75rem; }
@@ -81,7 +81,7 @@
     }
     .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
 
-    @page { size:A4 portrait; margin:17mm 14mm 18mm; }
+    @page { size:A4 portrait; margin:25mm 15mm 23mm; }
     @media print {
       html, body {
         width:auto !important; min-width:0 !important;
@@ -92,25 +92,36 @@
         -webkit-print-color-adjust:exact; print-color-adjust:exact;
       }
 
-      #export-controls, .lang-btn, #status, footer, .admin-ui { display:none !important; }
+      #export-controls, .lang-btn, #status, footer, .admin-ui, #premium-loading, #premium-toast-stack { display:none !important; }
       .cv-print-running-header, .cv-print-running-footer {
         display:flex !important; position:fixed; left:0; right:0;
-        align-items:center; justify-content:space-between;
-        color:#64748b; font-size:7.5pt; letter-spacing:.02em;
+        box-sizing:border-box !important; align-items:center; justify-content:space-between; gap:8mm;
+        color:#64748b; font-size:7.2pt; line-height:1.2; letter-spacing:.02em;
+        background:#fff !important; z-index:9999;
       }
       .cv-print-running-header {
-        top:-11mm; padding-bottom:2mm; border-bottom:.4pt solid #cbd5e1;
-        text-transform:uppercase; font-weight:700; letter-spacing:.12em;
+        top:-18.5mm; min-height:9mm; padding:1.5mm 0 2.4mm;
+        border-bottom:.5pt solid #b9c7d5; color:#334155;
+        text-transform:uppercase; font-weight:700; letter-spacing:.10em;
+      }
+      .cv-print-running-header span:first-child {
+        max-width:58%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+        color:#0f2942; letter-spacing:.035em;
       }
       .cv-print-running-footer {
-        bottom:-12mm; padding-top:2mm; border-top:.4pt solid #cbd5e1;
+        bottom:-16.5mm; min-height:8mm; padding:2.4mm 0 1mm;
+        border-top:.5pt solid #b9c7d5;
       }
+      .cv-print-running-footer span:first-child { color:#475569; }
+      .cv-print-running-footer span:last-child { white-space:nowrap; }
 
       #cv-export {
         width:100% !important; max-width:none !important; min-height:0 !important;
         margin:0 !important; box-shadow:none !important; overflow:visible !important;
       }
       #cv-export > main { padding:0 !important; overflow:visible !important; }
+      #cv-export::before { content:""; display:block; height:.1mm; }
+      #main-sections > section:first-child { margin-top:1mm !important; }
 
       #header {
         display:grid !important;
@@ -207,7 +218,7 @@
       }
       .publication-entry { margin-bottom:2.5mm !important; font-size:8.8pt !important; line-height:1.45 !important; }
       .publication-links { margin-top:1mm !important; gap:1mm 4mm !important; }
-      .publication-doi-link, .publication-journal-link {
+      .publication-doi-link {
         color:#1d4ed8 !important; font-size:7.8pt !important; text-decoration:underline !important;
       }
       .black-bullet-list { list-style-type:disc !important; padding-left:5mm !important; }
@@ -233,6 +244,115 @@
       a { color:#1d4ed8 !important; text-decoration:underline !important; }
     }
   
+
+    /* Premium process feedback */
+    .premium-loading {
+      position:fixed; inset:0; z-index:120;
+      display:flex; align-items:center; justify-content:center;
+      padding:1rem; background:rgba(8,20,35,.52);
+      backdrop-filter:blur(13px) saturate(125%);
+      -webkit-backdrop-filter:blur(13px) saturate(125%);
+      opacity:1; visibility:visible;
+      transition:opacity .28s ease, visibility .28s ease;
+    }
+    .premium-loading.is-hidden { opacity:0; visibility:hidden; pointer-events:none; }
+    .premium-loading-card {
+      position:relative; width:min(92vw,370px); overflow:hidden;
+      border:1px solid rgba(255,255,255,.52);
+      border-radius:1.45rem; padding:2rem 1.7rem 1.55rem;
+      color:#0f2942;
+      background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(241,246,251,.90));
+      box-shadow:0 28px 90px rgba(2,12,27,.30),inset 0 1px 0 rgba(255,255,255,.88);
+      transform:translateY(0) scale(1);
+      transition:transform .3s cubic-bezier(.2,.8,.2,1);
+    }
+    .premium-loading.is-hidden .premium-loading-card { transform:translateY(10px) scale(.97); }
+    .premium-loading-shine {
+      position:absolute; inset:-80% -45%;
+      background:linear-gradient(110deg,transparent 42%,rgba(255,255,255,.72) 50%,transparent 58%);
+      animation:premiumShine 2.7s ease-in-out infinite; pointer-events:none;
+    }
+    .premium-spinner { position:relative; width:74px; height:74px; margin:0 auto 1.1rem; }
+    .premium-spinner::before,.premium-spinner::after {
+      content:""; position:absolute; inset:0; border-radius:50%; border:3px solid transparent;
+    }
+    .premium-spinner::before {
+      border-top-color:#1e3a5f; border-right-color:#4b83b5;
+      animation:premiumSpin 1.05s linear infinite; box-shadow:0 0 24px rgba(30,58,95,.14);
+    }
+    .premium-spinner::after {
+      inset:9px; border-bottom-color:#98b9d5; border-left-color:#d7e5f1;
+      animation:premiumSpinReverse 1.45s linear infinite;
+    }
+    .premium-spinner-core {
+      position:absolute; inset:24px; display:flex; align-items:center; justify-content:center;
+      border-radius:50%; color:#fff; background:linear-gradient(145deg,#1e3a5f,#315f88);
+      box-shadow:0 7px 18px rgba(30,58,95,.28);
+    }
+    .premium-loading-title {
+      position:relative; margin:0; text-align:center; color:#0f2942;
+      font-size:1.02rem; font-weight:700; letter-spacing:.01em;
+    }
+    .premium-loading-detail {
+      position:relative; min-height:1.25rem; margin:.38rem 0 0;
+      text-align:center; color:#64748b; font-size:.8rem; line-height:1.55;
+    }
+    .premium-loading-progress {
+      position:relative; height:3px; margin-top:1.2rem; overflow:hidden;
+      border-radius:999px; background:#dce7f1;
+    }
+    .premium-loading-progress::after {
+      content:""; position:absolute; top:0; bottom:0; width:42%; border-radius:999px;
+      background:linear-gradient(90deg,#8db4d3,#1e3a5f,#8db4d3);
+      animation:premiumProgress 1.25s cubic-bezier(.4,0,.2,1) infinite;
+    }
+    #premium-toast-stack {
+      position:fixed; top:1rem; right:1rem; z-index:140;
+      display:grid; gap:.65rem; width:min(92vw,390px); pointer-events:none;
+    }
+    .premium-toast {
+      display:grid; grid-template-columns:auto minmax(0,1fr) auto;
+      align-items:start; gap:.75rem; padding:.82rem .9rem;
+      border:1px solid #dbe5ee; border-radius:.9rem;
+      color:#334155; background:rgba(255,255,255,.96);
+      box-shadow:0 16px 42px rgba(15,23,42,.16);
+      backdrop-filter:blur(10px); animation:premiumToastIn .32s cubic-bezier(.2,.8,.2,1);
+      pointer-events:auto;
+    }
+    .premium-toast.warning { border-color:#f5d48b; background:#fffaf0; }
+    .premium-toast.error { border-color:#fecaca; background:#fff7f7; }
+    .premium-toast.success { border-color:#a7e4cf; background:#f4fcf8; }
+    .premium-toast-icon {
+      display:flex; width:2rem; height:2rem; align-items:center; justify-content:center;
+      border-radius:.65rem; color:#1e3a5f; background:#e9f1f8;
+    }
+    .premium-toast.warning .premium-toast-icon { color:#a16207; background:#fef3c7; }
+    .premium-toast.error .premium-toast-icon { color:#b91c1c; background:#fee2e2; }
+    .premium-toast.success .premium-toast-icon { color:#047857; background:#d1fae5; }
+    .premium-toast-title { font-size:.82rem; font-weight:700; color:#0f172a; }
+    .premium-toast-message { margin-top:.15rem; font-size:.76rem; line-height:1.5; color:#64748b; }
+    .premium-toast-close { color:#94a3b8; padding:.1rem; }
+    .premium-toast.is-leaving { animation:premiumToastOut .24s ease forwards; }
+    button.is-processing { cursor:wait; opacity:.78; }
+    @keyframes premiumSpin { to { transform:rotate(360deg); } }
+    @keyframes premiumSpinReverse { to { transform:rotate(-360deg); } }
+    @keyframes premiumShine {
+      0%,55% { transform:translateX(-35%) rotate(8deg); opacity:0; }
+      68% { opacity:.8; }
+      100% { transform:translateX(35%) rotate(8deg); opacity:0; }
+    }
+    @keyframes premiumProgress { 0% { left:-45%; } 100% { left:105%; } }
+    @keyframes premiumToastIn {
+      from { opacity:0; transform:translateY(-8px) scale(.97); }
+      to { opacity:1; transform:none; }
+    }
+    @keyframes premiumToastOut { to { opacity:0; transform:translateX(16px) scale(.97); } }
+    @media (prefers-reduced-motion:reduce) {
+      .premium-loading,.premium-loading-card,.premium-toast { transition:none; }
+      .premium-spinner::before,.premium-spinner::after,
+      .premium-loading-shine,.premium-loading-progress::after { animation-duration:2.4s; }
+    }
+
     /* Integrated Password Admin */
     body.admin-open { overflow:hidden; }
     .admin-ui { font-family:'Prompt',sans-serif; }
@@ -362,6 +482,19 @@
   </style>
 </head>
 <body class="min-h-screen w-full">
+
+  <div id="premium-loading" class="premium-loading is-hidden" role="status" aria-live="polite" aria-busy="true">
+    <div class="premium-loading-card">
+      <div class="premium-loading-shine"></div>
+      <div class="premium-spinner" aria-hidden="true">
+        <div class="premium-spinner-core"><i data-lucide="sparkles" class="w-4 h-4"></i></div>
+      </div>
+      <p id="premium-loading-title" class="premium-loading-title">กำลังประมวลผล</p>
+      <p id="premium-loading-detail" class="premium-loading-detail">โปรดรอสักครู่</p>
+      <div class="premium-loading-progress" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div id="premium-toast-stack" aria-live="polite" aria-atomic="false"></div>
   <div id="export-controls" class="fixed top-4 left-4 z-50 flex flex-wrap gap-2 print:hidden">
     <button id="export-word" type="button" class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm">Word</button>
     <button id="export-pdf" type="button" class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm">PDF A4</button>
@@ -374,8 +507,8 @@
   <div id="status" class="max-w-6xl mx-auto px-6 pt-6 text-sm" role="status" aria-live="polite"></div>
 
   <div id="cv-export" class="max-w-6xl mx-auto min-h-screen bg-white shadow-sm">
-    <div class="cv-print-running-header"><span>Academic Curriculum Vitae</span><span id="cv-print-name"></span></div>
-    <div class="cv-print-running-footer"><span id="cv-print-footer-name"></span><span>Academic CV</span></div>
+    <div class="cv-print-running-header"><span id="cv-print-name"></span><span>Academic Curriculum Vitae</span></div>
+    <div class="cv-print-running-footer"><span>School of Pharmaceutical Sciences · University of Phayao</span><span id="cv-print-generated-date"></span></div>
     <main class="p-6 md:p-10">
       <div id="header" class="grid grid-cols-1 md:grid-cols-[180px_minmax(0,1fr)] xl:grid-cols-[180px_minmax(0,1fr)_320px] gap-6 xl:gap-8 items-start mb-8">
         <div class="flex justify-center md:justify-start">
@@ -575,8 +708,7 @@
               </div>
               <div class="admin-field md:col-span-2"><label>Citation (NLM)</label><textarea name="citation" rows="5" required></textarea></div>
               <div class="admin-field md:col-span-2"><label>DOI Link</label><input name="doi" type="url" placeholder="https://doi.org/10.1007/s41999-025-01398-3"></div>
-              <div class="admin-field md:col-span-2"><label>Journal URL (ไม่บังคับ)</label><input name="url" type="url" placeholder="https://journal.example/article"></div>
-              <div class="admin-field"><label>Impact factor</label><input name="impact_factor" inputmode="decimal"></div>
+                            <div class="admin-field"><label>Impact factor</label><input name="impact_factor" inputmode="decimal"></div>
               <div class="admin-field"><label>ลำดับ</label><input name="display_order" type="number"></div>
               <label class="flex items-center gap-2 text-sm"><input name="is_first_author" type="checkbox"> First Author</label>
               <label class="flex items-center gap-2 text-sm"><input name="is_corresponding_author" type="checkbox"> Corresponding Author</label>
@@ -690,6 +822,105 @@
     function setStatus(message = '', type = 'info') {
       els.status.textContent = message;
       els.status.className = `max-w-6xl mx-auto px-6 pt-6 text-sm ${type === 'error' ? 'text-red-700' : 'text-slate-500'}`;
+    }
+
+    const premiumLoadingEls = {
+      overlay:document.getElementById('premium-loading'),
+      title:document.getElementById('premium-loading-title'),
+      detail:document.getElementById('premium-loading-detail'),
+      toastStack:document.getElementById('premium-toast-stack')
+    };
+    let premiumLoadingDepth = 0;
+    let premiumLoadingStartedAt = 0;
+    let premiumLoadingHideTimer = null;
+
+    function premiumLoadingCopy(context = 'process') {
+      const th = {
+        load:['กำลังโหลด Academic CV','กำลังจัดเตรียมข้อมูลและรูปแบบเอกสาร'],
+        login:['กำลังตรวจสอบสิทธิ์','เชื่อมต่อระบบจัดการอย่างปลอดภัย'],
+        sync:['กำลังซิงก์ข้อมูล','อัปเดตข้อมูลล่าสุดจากฐานข้อมูล'],
+        save:['กำลังบันทึกข้อมูล','ตรวจสอบความถูกต้องและจัดเก็บการเปลี่ยนแปลง'],
+        delete:['กำลังลบข้อมูล','โปรดรอจนกว่ากระบวนการจะเสร็จสมบูรณ์'],
+        image:['กำลังปรับรูปภาพ CV','บีบอัดและอัปโหลดรูปภาพอย่างเหมาะสม'],
+        word:['กำลังสร้างไฟล์ Word','จัดหน้าเอกสาร CV และเตรียมไฟล์ดาวน์โหลด'],
+        pdf:['กำลังเตรียม PDF A4','เปิดรายละเอียดและจัดหน้าสำหรับการพิมพ์'],
+        publication:['กำลังตรวจสอบ Publications','ตรวจ Citation และ DOI ซ้ำก่อนบันทึก'],
+        process:['กำลังประมวลผล','โปรดรอสักครู่']
+      };
+      const en = {
+        load:['Loading Academic CV','Preparing data and document layout'],
+        login:['Verifying access','Connecting securely to the administration system'],
+        sync:['Synchronizing data','Retrieving the latest database records'],
+        save:['Saving changes','Validating and storing the updated information'],
+        delete:['Deleting record','Please wait until the operation is complete'],
+        image:['Optimizing CV photo','Compressing and uploading the image'],
+        word:['Creating Word document','Formatting the CV and preparing the download'],
+        pdf:['Preparing A4 PDF','Expanding sections and optimizing the print layout'],
+        publication:['Checking publications','Validating duplicate citations and DOI records'],
+        process:['Processing','Please wait a moment']
+      };
+      return (currentLang === 'th' ? th : en)[context] || (currentLang === 'th' ? th.process : en.process);
+    }
+
+    function showPremiumLoading(options = {}) {
+      premiumLoadingDepth += 1;
+      clearTimeout(premiumLoadingHideTimer);
+      const [defaultTitle,defaultDetail] = premiumLoadingCopy(options.context);
+      premiumLoadingEls.title.textContent = options.title || defaultTitle;
+      premiumLoadingEls.detail.textContent = options.detail || defaultDetail;
+      if (premiumLoadingDepth === 1) premiumLoadingStartedAt = performance.now();
+      premiumLoadingEls.overlay.classList.remove('is-hidden');
+      document.documentElement.setAttribute('aria-busy','true');
+      window.lucide?.createIcons();
+    }
+
+    function updatePremiumLoading(options = {}) {
+      const [defaultTitle,defaultDetail] = premiumLoadingCopy(options.context);
+      premiumLoadingEls.title.textContent = options.title || defaultTitle;
+      premiumLoadingEls.detail.textContent = options.detail || defaultDetail;
+    }
+
+    function hidePremiumLoading({ force = false } = {}) {
+      premiumLoadingDepth = force ? 0 : Math.max(0,premiumLoadingDepth - 1);
+      if (premiumLoadingDepth > 0) return;
+      const elapsed = performance.now() - premiumLoadingStartedAt;
+      const delay = Math.max(0,430 - elapsed);
+      clearTimeout(premiumLoadingHideTimer);
+      premiumLoadingHideTimer = setTimeout(() => {
+        premiumLoadingEls.overlay.classList.add('is-hidden');
+        document.documentElement.removeAttribute('aria-busy');
+      },delay);
+    }
+
+    async function withPremiumLoading(task, options = {}) {
+      showPremiumLoading(options);
+      try { return await task(); }
+      finally { hidePremiumLoading(); }
+    }
+
+    function showPremiumToast(message, type = 'info', title = '') {
+      const icons = { info:'info',warning:'triangle-alert',error:'circle-alert',success:'circle-check' };
+      const defaults = currentLang === 'th'
+        ? { info:'แจ้งเตือน',warning:'โปรดตรวจสอบ',error:'ไม่สามารถดำเนินการได้',success:'ดำเนินการสำเร็จ' }
+        : { info:'Notice',warning:'Please review',error:'Unable to complete',success:'Completed' };
+      const toast = document.createElement('div');
+      toast.className = `premium-toast ${type}`;
+      toast.innerHTML = `
+        <div class="premium-toast-icon"><i data-lucide="${icons[type] || icons.info}" class="w-4 h-4"></i></div>
+        <div>
+          <div class="premium-toast-title">${escapeHtml(title || defaults[type] || defaults.info)}</div>
+          <div class="premium-toast-message">${escapeHtml(message)}</div>
+        </div>
+        <button class="premium-toast-close" type="button" aria-label="Close"><i data-lucide="x" class="w-4 h-4"></i></button>`;
+      premiumLoadingEls.toastStack.appendChild(toast);
+      window.lucide?.createIcons();
+      const remove = () => {
+        if (!toast.isConnected) return;
+        toast.classList.add('is-leaving');
+        setTimeout(() => toast.remove(),240);
+      };
+      toast.querySelector('button').addEventListener('click',remove);
+      setTimeout(remove,type === 'error' || type === 'warning' ? 6500 : 4200);
     }
 
     function localized(en, th) {
@@ -1016,17 +1247,6 @@
     }
 
 
-    function safeExternalUrl(value) {
-      if (!value) return '';
-      try {
-        const url = new URL(String(value).trim(), window.location.href);
-        if (!['http:', 'https:'].includes(url.protocol)) return '';
-        return url.href;
-      } catch (_) {
-        return '';
-      }
-    }
-
     function normalizeDoiUrl(value) {
       if (!value) return '';
       let raw = String(value).trim().replace(/^doi:\s*/i, '');
@@ -1085,12 +1305,9 @@
                     item.impact_factor !== null && item.impact_factor !== undefined ? `IF ${item.impact_factor}` : null,
                     authorRole(item)
                   ].filter(Boolean);
-                  const doiUrl = normalizeDoiUrl(item.doi || (String(item.url || '').includes('doi.org/') ? item.url : ''));
-                  const journalUrl = safeExternalUrl(item.url);
-                  const separateJournalUrl = journalUrl && journalUrl !== doiUrl ? journalUrl : '';
+                  const doiUrl = normalizeDoiUrl(item.doi);
                   const links = [
-                    doiUrl ? `<a class="publication-doi-link" href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener noreferrer">DOI: ${escapeHtml(doiDisplayText(doiUrl))}</a>` : '',
-                    separateJournalUrl ? `<a class="publication-journal-link" href="${escapeHtml(separateJournalUrl)}" target="_blank" rel="noopener noreferrer">${currentLang === 'th' ? 'ดูบทความในวารสาร' : 'View journal article'}</a>` : ''
+                    doiUrl ? `<a class="publication-doi-link" href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener noreferrer">DOI: ${escapeHtml(doiDisplayText(doiUrl))}</a>` : ''
                   ].filter(Boolean);
                   return `<li class="publication-entry pl-1 text-sm leading-relaxed text-slate-700">
                     <div>${escapeHtml(item.citation || '')}</div>
@@ -1229,9 +1446,15 @@
       els.footer.textContent = localized(profile.footer_en, profile.footer_th);
       const printName = profile.name_en || profile.name_th || 'Academic CV';
       const printNameEl = document.getElementById('cv-print-name');
-      const printFooterNameEl = document.getElementById('cv-print-footer-name');
+      const printGeneratedDateEl = document.getElementById('cv-print-generated-date');
       if (printNameEl) printNameEl.textContent = printName;
-      if (printFooterNameEl) printFooterNameEl.textContent = printName;
+      if (printGeneratedDateEl) {
+        const generatedLabel = currentLang === 'th' ? 'ปรับปรุง' : 'Updated';
+        const generatedDate = new Intl.DateTimeFormat(currentLang === 'th' ? 'th-TH' : 'en-GB', {
+          day:'2-digit',month:'short',year:'numeric'
+        }).format(new Date());
+        printGeneratedDateEl.textContent = `${generatedLabel} ${generatedDate}`;
+      }
       window.lucide?.createIcons();
     }
 
@@ -1266,7 +1489,7 @@
 
       const { data: publicationData, error: publicationError } = await supabase
         .from('cv_publication_entries')
-        .select('id,category,citation,impact_factor,ranking,is_first_author,is_corresponding_author,display_order,doi,url')
+        .select('id,category,citation,impact_factor,ranking,is_first_author,is_corresponding_author,display_order,doi')
         .eq('profile_id', profileData.id)
         .eq('is_published', true)
         .in('category', ['book', 'article_review'])
@@ -1434,9 +1657,9 @@
       const wordCss = `
         @page WordSection1 {
           size:595.3pt 841.9pt;
-          margin:42.5pt 42.5pt 50pt 42.5pt;
-          mso-header-margin:20pt;
-          mso-footer-margin:20pt;
+          margin:50pt 46pt 54pt 46pt;
+          mso-header-margin:24pt;
+          mso-footer-margin:24pt;
         }
         div.WordSection1 { page:WordSection1; }
         body {
@@ -1488,7 +1711,7 @@
         .black-bullet-list { list-style-type:disc; }
         .publication-entry { margin-bottom:7pt; font-size:8.8pt; line-height:1.4; }
         .publication-links { margin-top:2pt; }
-        .publication-doi-link, .publication-journal-link { color:#1d4ed8; text-decoration:underline; font-size:8pt; }
+        .publication-doi-link { display:inline-block; margin-top:2pt; color:#1d4ed8; text-decoration:underline; font-size:8pt; font-weight:600; }
         .metric-card {
           display:inline-block; width:45%; margin:0 2% 7pt 0; padding:6pt;
           border:.5pt solid #cbd5e1; vertical-align:top;
@@ -1644,6 +1867,7 @@
           : 'Preparing the A4 document and expanding all sections...');
 
         await waitForPrintableAssets();
+        updatePremiumLoading({ context:'pdf', detail:currentLang === 'th' ? 'เอกสารพร้อมแล้ว กำลังเปิดหน้าต่างพิมพ์' : 'Document ready. Opening the print dialog.' });
         setStatus('');
 
         /*
@@ -1741,9 +1965,18 @@
     }
 
     async function adminRpc(functionName, args) {
-      const { data, error } = await supabase.rpc(functionName, args);
-      if (error) throw error;
-      return data;
+      const context = functionName === 'cv_pin_login'
+        ? 'login'
+        : functionName === 'cv_pin_snapshot'
+          ? 'sync'
+          : functionName === 'cv_pin_publication_save'
+            ? 'publication'
+            : 'save';
+      return withPremiumLoading(async () => {
+        const { data,error } = await supabase.rpc(functionName,args);
+        if (error) throw error;
+        return data;
+      },{ context });
     }
 
     async function adminAction(action, payload = {}) {
@@ -1908,6 +2141,72 @@
       window.lucide?.createIcons();
     }
 
+
+    function normalizePublicationCitationKey(value) {
+      return String(value || '').toLowerCase()
+        .replace(/\s+/g,' ')
+        .replace(/[“”"'`]/g,'')
+        .replace(/\s*([,;:.()\-])\s*/g,'$1')
+        .trim();
+    }
+
+    function extractPublicationTitleKey(value) {
+      const clean = String(value || '').replace(/\s+/g,' ').trim();
+      const parts = clean.split(/\.\s+/).map(part => part.trim()).filter(Boolean);
+      return normalizePublicationCitationKey(parts.length > 1 ? parts[1] : clean);
+    }
+
+    function normalizePublicationDoiKey(value) {
+      const doiUrl = normalizeDoiUrl(value);
+      return doiUrl ? doiDisplayText(doiUrl).toLowerCase().trim() : '';
+    }
+
+    function findPublicationDuplicate(payload) {
+      const currentId = payload.id || '';
+      const citationKey = normalizePublicationCitationKey(payload.citation);
+      const titleKey = extractPublicationTitleKey(payload.citation);
+      const doiKey = normalizePublicationDoiKey(payload.doi);
+      for (const existing of adminSnapshot?.publications || []) {
+        if (existing.id === currentId) continue;
+        if (citationKey && citationKey === normalizePublicationCitationKey(existing.citation)) {
+          return { type:'citation',existing };
+        }
+        if (titleKey.length >= 12 && titleKey === extractPublicationTitleKey(existing.citation)) {
+          return { type:'title',existing };
+        }
+        if (doiKey && doiKey === normalizePublicationDoiKey(existing.doi)) {
+          return { type:'doi',existing };
+        }
+      }
+      return null;
+    }
+
+    function publicationDuplicateMessage(duplicate) {
+      if (currentLang === 'th') {
+        if (duplicate.type === 'doi') return 'พบ DOI นี้อยู่ในระบบแล้ว กรุณาตรวจสอบรายการเดิมก่อนบันทึก';
+        if (duplicate.type === 'title') return 'พบชื่อผลงานที่เหมือนกันอยู่ในระบบแล้ว กรุณาตรวจสอบก่อนเพิ่มรายการซ้ำ';
+        return 'พบ Citation หรือข้อมูลผลงานซ้ำกับรายการที่มีอยู่แล้ว';
+      }
+      if (duplicate.type === 'doi') return 'This DOI already exists. Review the existing publication before saving.';
+      if (duplicate.type === 'title') return 'A publication with the same title already exists.';
+      return 'This citation duplicates an existing publication.';
+    }
+
+    function publicationSaveErrorMessage(error) {
+      const message = String(error?.message || error || '');
+      if (message.includes('DUPLICATE_PUBLICATION_DOI')) {
+        return currentLang === 'th'
+          ? 'ไม่สามารถบันทึกได้ เนื่องจาก DOI นี้มีอยู่ในระบบแล้ว'
+          : 'Unable to save because this DOI already exists.';
+      }
+      if (message.includes('DUPLICATE_PUBLICATION_TITLE') || message.includes('duplicate key')) {
+        return currentLang === 'th'
+          ? 'ไม่สามารถบันทึกได้ เนื่องจาก Citation หรือชื่อผลงานซ้ำกับข้อมูลเดิม'
+          : 'Unable to save because the citation or publication title already exists.';
+      }
+      return message;
+    }
+
     function resetPublicationForm() {
       safeReset(adminEls.publicationForm);
       adminEls.publicationForm.elements.id.value = '';
@@ -1923,7 +2222,6 @@
       form.elements.category.value = item.category || 'article_review';
       form.elements.citation.value = item.citation || '';
       form.elements.doi.value = item.doi || '';
-      form.elements.url.value = item.url || '';
       form.elements.ranking.value = item.ranking || '-';
       form.elements.impact_factor.value = item.impact_factor ?? '';
       form.elements.display_order.value = item.display_order ?? '';
@@ -1936,7 +2234,7 @@
     function renderAdminPublications() {
       const query = (adminEls.publicationSearch.value || '').trim().toLowerCase();
       const rows = (adminSnapshot?.publications || []).filter(item => {
-        const haystack = [item.citation, item.doi, item.url].filter(Boolean).join(' ').toLowerCase();
+        const haystack = [item.citation, item.doi].filter(Boolean).join(' ').toLowerCase();
         return !query || haystack.includes(query);
       });
       adminEls.publicationsList.innerHTML = rows.length ? rows.map(item => `
@@ -2198,7 +2496,6 @@
         category:form.elements.category.value,
         citation:form.elements.citation.value,
         doi:form.elements.doi.value.trim(),
-        url:form.elements.url.value.trim(),
         ranking:form.elements.ranking.value,
         impact_factor:form.elements.impact_factor.value,
         display_order:form.elements.display_order.value,
@@ -2206,18 +2503,34 @@
         is_corresponding_author:form.elements.is_corresponding_author.checked,
         is_published:form.elements.is_published.checked
       };
+      const duplicate = findPublicationDuplicate(payload);
+      if (duplicate) {
+        const message = publicationDuplicateMessage(duplicate);
+        adminSetStatus(message,'error');
+        showPremiumToast(message,'warning',currentLang === 'th' ? 'ตรวจพบข้อมูลซ้ำ' : 'Duplicate detected');
+        (duplicate.type === 'doi' ? form.elements.doi : form.elements.citation)?.focus();
+        return;
+      }
+
       try {
-        const { data: saveResult, error: saveError } = await supabase.rpc('cv_pin_publication_save', {
-          p_token: adminToken,
-          p_profile_slug: PROFILE_SLUG,
-          p_payload: payload
+        const saveResult = await adminRpc('cv_pin_publication_save',{
+          p_token:adminToken,
+          p_profile_slug:PROFILE_SLUG,
+          p_payload:payload
         });
-        if (saveError) throw saveError;
         if (!saveResult?.ok) throw new Error('Unable to save publication');
         resetPublicationForm();
         await refreshAdminSnapshot({ reloadPublic:true });
-        adminSetStatus('บันทึก Publication แล้ว', 'success');
-      } catch (error) { adminSetStatus(error.message, 'error'); }
+        adminSetStatus('บันทึก Publication แล้ว','success');
+        showPremiumToast(
+          currentLang === 'th' ? 'บันทึกข้อมูลผลงานเรียบร้อยแล้ว' : 'Publication saved successfully.',
+          'success'
+        );
+      } catch (error) {
+        const message = publicationSaveErrorMessage(error);
+        adminSetStatus(message,'error');
+        showPremiumToast(message,'error');
+      }
     });
 
     adminEls.publicationsList.addEventListener('click', async event => {
@@ -2261,7 +2574,7 @@
       if (!file) return adminSetStatus('กรุณาเลือกรูปภาพ', 'error');
       try {
         adminSetStatus('กำลังย่อและอัปโหลดรูป…');
-        const profilePhotoUrl = await compressAdminImage(file);
+        const profilePhotoUrl = await withPremiumLoading(() => compressAdminImage(file), { context:'image' });
         await adminAction('profile_photo', { profile_photo_url:profilePhotoUrl });
         safeReset(form);
         await refreshAdminSnapshot({ reloadPublic:true });
@@ -2313,14 +2626,18 @@
 
     els.btnEn.addEventListener('click', () => setLanguage('en'));
     els.btnTh.addEventListener('click', () => setLanguage('th'));
-    els.exportWord.addEventListener('click', exportWord);
-    els.exportPdf.addEventListener('click', exportPdf);
+    els.exportWord.addEventListener('click', () => withPremiumLoading(() => exportWord(), { context:'word' }));
+    els.exportPdf.addEventListener('click', () => withPremiumLoading(() => exportPdf(), { context:'pdf' }));
     setLanguage(currentLang);
     window.lucide?.createIcons();
 
-    loadCv().catch(error => {
-      console.error('Failed to load CV:', error);
-      setStatus(currentLang === 'th' ? 'ไม่สามารถโหลดข้อมูล CV จากฐานข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อ Supabase และ RLS' : 'Unable to load CV data. Check the Supabase connection and RLS policies.', 'error');
+    withPremiumLoading(() => loadCv(), { context:'load' }).catch(error => {
+      console.error('Failed to load CV:',error);
+      const message = currentLang === 'th'
+        ? 'ไม่สามารถโหลดข้อมูล CV จากฐานข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อ'
+        : 'Unable to load CV data. Please check the database connection.';
+      setStatus(message,'error');
+      showPremiumToast(message,'error');
     });
   </script>
 </body>
