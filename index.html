@@ -233,7 +233,7 @@
       a { color:#1d4ed8 !important; text-decoration:underline !important; }
     }
   
-    /* Integrated PIN Admin */
+    /* Integrated Password Admin */
     body.admin-open { overflow:hidden; }
     .admin-ui { font-family:'Prompt',sans-serif; }
     #admin-key {
@@ -437,14 +437,14 @@
         <div>
           <p class="text-xs font-semibold uppercase tracking-[.18em] text-slate-400">Secure access</p>
           <h2 id="admin-login-title" class="mt-1 text-xl font-bold text-slate-900">เข้าสู่ระบบ Admin</h2>
-          <p class="mt-1 text-sm text-slate-500">กรอก PIN ของ Admin หรือ Subadmin</p>
+          <p class="mt-1 text-sm text-slate-500">กรอก Password ของ Admin หรือ Subadmin</p>
         </div>
         <button id="admin-login-close" class="admin-icon-btn" type="button" aria-label="ปิด"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
       <form id="admin-login-form" class="mt-5 space-y-4">
         <div class="admin-field">
-          <label for="admin-pin">PIN</label>
-          <input id="admin-pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,12}" maxlength="12" autocomplete="current-password" required>
+          <label for="admin-password">Password</label>
+          <input id="admin-password" name="password" type="password" minlength="4" maxlength="64" autocomplete="current-password" required>
         </div>
         <button class="admin-btn admin-btn-primary w-full" type="submit"><i data-lucide="unlock-keyhole" class="w-4 h-4"></i>เข้าสู่ระบบ</button>
       </form>
@@ -470,7 +470,7 @@
         <button class="admin-tab active" data-admin-tab="sections" type="button">หัวข้อ</button>
         <button class="admin-tab" data-admin-tab="entries" type="button">ข้อมูลในหัวข้อ</button>
         <button class="admin-tab" data-admin-tab="publications" type="button">Publications</button>
-        <button class="admin-tab" data-admin-tab="profile" type="button">Profile / PIN</button>
+        <button class="admin-tab" data-admin-tab="profile" type="button">Profile / Password</button>
       </nav>
 
       <div class="admin-body">
@@ -617,13 +617,13 @@
                 </div>
               </form>
 
-              <form id="admin-pin-form" class="admin-box">
-                <h3 class="font-bold text-slate-900">เปลี่ยน PIN</h3>
+              <form id="admin-password-form" class="admin-box">
+                <h3 class="font-bold text-slate-900">เปลี่ยน Password</h3>
                 <div class="mt-4 space-y-3">
-                  <div id="admin-pin-target-wrap" class="admin-field"><label>บัญชี</label><select name="target_role"><option value="admin">Admin</option><option value="subadmin">Subadmin</option></select></div>
-                  <div class="admin-field"><label>PIN ใหม่ (4–12 ตัวเลข)</label><input name="new_pin" type="password" inputmode="numeric" pattern="[0-9]{4,12}" maxlength="12" required></div>
-                  <div class="admin-field"><label>ยืนยัน PIN ใหม่</label><input name="confirm_pin" type="password" inputmode="numeric" pattern="[0-9]{4,12}" maxlength="12" required></div>
-                  <button class="admin-btn admin-btn-primary" type="submit">เปลี่ยน PIN</button>
+                  <div id="admin-password-target-wrap" class="admin-field"><label>บัญชี</label><select name="target_role"><option value="admin">Admin</option><option value="subadmin">Subadmin</option></select></div>
+                  <div class="admin-field"><label>Password ใหม่</label><input name="new_password" type="password" minlength="4" maxlength="64" autocomplete="new-password" required></div>
+                  <div class="admin-field"><label>ยืนยัน Password ใหม่</label><input name="confirm_password" type="password" minlength="4" maxlength="64" autocomplete="new-password" required></div>
+                  <button class="admin-btn admin-btn-primary" type="submit">เปลี่ยน Password</button>
                 </div>
               </form>
             </div>
@@ -1665,7 +1665,7 @@
 
 
     // -----------------------------------------------------------------
-    // Integrated PIN Admin CMS
+    // Integrated Password Admin CMS
     // -----------------------------------------------------------------
     let adminToken = sessionStorage.getItem('cv-admin-token') || '';
     let adminRole = sessionStorage.getItem('cv-admin-role') || '';
@@ -1696,8 +1696,8 @@
       photoForm: document.getElementById('admin-photo-form'),
       photoFile: document.getElementById('admin-photo-file'),
       photoPreview: document.getElementById('admin-photo-preview'),
-      pinForm: document.getElementById('admin-pin-form'),
-      pinTargetWrap: document.getElementById('admin-pin-target-wrap')
+      passwordForm: document.getElementById('admin-password-form'),
+      passwordTargetWrap: document.getElementById('admin-password-target-wrap')
     };
 
     function adminSetStatus(message = '', type = '') {
@@ -1705,11 +1705,20 @@
       adminEls.globalStatus.className = `admin-status mb-2 ${type}`;
     }
 
+    function safeReset(form) {
+      if (form && typeof form.reset === 'function') {
+        form.reset();
+        return true;
+      }
+      console.warn('Unable to reset form because the form element is unavailable.');
+      return false;
+    }
+
     function adminOpenLogin() {
       adminEls.loginStatus.textContent = '';
       adminEls.loginOverlay.classList.remove('admin-hidden');
       document.body.classList.add('admin-open');
-      setTimeout(() => document.getElementById('admin-pin')?.focus(), 50);
+      setTimeout(() => document.getElementById('admin-password')?.focus(), 50);
       window.lucide?.createIcons();
     }
 
@@ -1765,7 +1774,7 @@
       adminRole = snapshot.role;
       sessionStorage.setItem('cv-admin-role', adminRole);
       adminEls.roleLabel.textContent = adminRole === 'admin' ? 'Admin' : 'Subadmin';
-      adminEls.pinTargetWrap.classList.toggle('admin-hidden', adminRole !== 'admin');
+      adminEls.passwordTargetWrap.classList.toggle('admin-hidden', adminRole !== 'admin');
 
       renderAdminSections();
       renderAdminEntrySectionOptions();
@@ -1787,7 +1796,7 @@
     }
 
     function resetSectionForm() {
-      adminEls.sectionForm.reset();
+      safeReset(adminEls.sectionForm);
       adminEls.sectionForm.elements.id.value = '';
       adminEls.sectionForm.elements.sort_order.value = '0';
       adminEls.sectionForm.elements.is_published.checked = true;
@@ -1847,7 +1856,7 @@
 
     function resetEntryForm() {
       const sectionId = adminSelectedSectionId || adminEls.entrySectionSelect.value;
-      adminEls.entryForm.reset();
+      safeReset(adminEls.entryForm);
       adminEls.entryForm.elements.id.value = '';
       adminEls.entryForm.elements.section_id.value = sectionId;
       adminEls.entryForm.elements.display_order.value = '0';
@@ -1900,7 +1909,7 @@
     }
 
     function resetPublicationForm() {
-      adminEls.publicationForm.reset();
+      safeReset(adminEls.publicationForm);
       adminEls.publicationForm.elements.id.value = '';
       adminEls.publicationForm.elements.ranking.value = '-';
       adminEls.publicationForm.elements.is_published.checked = true;
@@ -1958,7 +1967,9 @@
       });
       adminEls.photoPreview.src = p.profile_photo_url || PROFILE_PHOTO_FALLBACK;
       if (adminRole !== 'admin') {
-        adminEls.pinForm.elements.target_role.value = 'subadmin';
+        if (adminEls.passwordForm?.elements?.target_role) {
+          adminEls.passwordForm.elements.target_role.value = 'subadmin';
+        }
       }
     }
 
@@ -2012,25 +2023,26 @@
 
     adminEls.loginForm.addEventListener('submit', async event => {
       event.preventDefault();
+      const form = event.currentTarget;
       adminEls.loginStatus.className = 'admin-status';
-      adminEls.loginStatus.textContent = 'กำลังตรวจสอบ PIN…';
+      adminEls.loginStatus.textContent = 'กำลังตรวจสอบ Password…';
       try {
-        const pin = event.currentTarget.elements.pin.value.trim();
+        const password = form.elements.password.value;
         const result = await adminRpc('cv_pin_login', {
           p_profile_slug: PROFILE_SLUG,
-          p_pin: pin
+          p_pin: password
         });
         if (!result?.ok) {
           const message = result?.error === 'temporarily_locked'
-            ? 'มีการลอง PIN ผิดหลายครั้ง ระบบล็อกชั่วคราว 10 นาที'
-            : 'PIN ไม่ถูกต้อง';
+            ? 'มีการลอง Password ผิดหลายครั้ง ระบบล็อกชั่วคราว 10 นาที'
+            : 'Password ไม่ถูกต้อง';
           throw new Error(message);
         }
         adminToken = result.token;
         adminRole = result.role;
         sessionStorage.setItem('cv-admin-token', adminToken);
         sessionStorage.setItem('cv-admin-role', adminRole);
-        event.currentTarget.reset();
+        safeReset(form);
         await refreshAdminSnapshot();
         adminCloseLogin();
         adminOpenPanel();
@@ -2244,37 +2256,58 @@
 
     adminEls.photoForm.addEventListener('submit', async event => {
       event.preventDefault();
+      const form = event.currentTarget;
       const file = adminEls.photoFile.files?.[0];
       if (!file) return adminSetStatus('กรุณาเลือกรูปภาพ', 'error');
       try {
         adminSetStatus('กำลังย่อและอัปโหลดรูป…');
         const profilePhotoUrl = await compressAdminImage(file);
         await adminAction('profile_photo', { profile_photo_url:profilePhotoUrl });
-        event.currentTarget.reset();
+        safeReset(form);
         await refreshAdminSnapshot({ reloadPublic:true });
         adminSetStatus('อัปเดตรูปภาพ CV แล้ว', 'success');
       } catch (error) { adminSetStatus(error.message, 'error'); }
     });
 
-    adminEls.pinForm.addEventListener('submit', async event => {
+    adminEls.passwordForm.addEventListener('submit', async event => {
       event.preventDefault();
       const form = event.currentTarget;
-      const newPin = form.elements.new_pin.value.trim();
-      const confirmPin = form.elements.confirm_pin.value.trim();
-      if (newPin !== confirmPin) return adminSetStatus('PIN ใหม่และการยืนยันไม่ตรงกัน', 'error');
-      const targetRole = adminRole === 'admin' ? form.elements.target_role.value : 'subadmin';
+      const newPassword = form.elements.new_password.value;
+      const confirmPassword = form.elements.confirm_password.value;
+
+      if (newPassword !== confirmPassword) {
+        return adminSetStatus('Password ใหม่และการยืนยันไม่ตรงกัน', 'error');
+      }
+      if (newPassword.length < 4 || newPassword.length > 64) {
+        return adminSetStatus('Password ต้องมีความยาว 4–64 ตัวอักษร', 'error');
+      }
+
+      const targetRole = adminRole === 'admin'
+        ? form.elements.target_role.value
+        : 'subadmin';
+
       try {
-        const result = await adminAction('pin_change', { target_role:targetRole, new_pin:newPin });
-        form.reset();
+        const result = await adminAction('pin_change', {
+          target_role: targetRole,
+          new_pin: newPassword
+        });
+        safeReset(form);
+
         if (result?.reauth_required) {
           clearAdminSession();
           adminClosePanel();
           adminOpenLogin();
-          adminEls.loginStatus.textContent = 'เปลี่ยน PIN แล้ว กรุณาเข้าสู่ระบบใหม่';
+          adminEls.loginStatus.textContent = 'เปลี่ยน Password แล้ว กรุณาเข้าสู่ระบบใหม่';
         } else {
-          adminSetStatus(`เปลี่ยน PIN ของ ${targetRole} แล้ว`, 'success');
+          adminSetStatus(`เปลี่ยน Password ของ ${targetRole} แล้ว`, 'success');
         }
-      } catch (error) { adminSetStatus(error.message, 'error'); }
+      } catch (error) {
+        const message = String(error?.message || error);
+        const normalized = message.includes('PIN must contain')
+          ? 'ระบบฐานข้อมูลกำหนดให้ Password มีความยาว 4–12 ตัวเลข'
+          : message;
+        adminSetStatus(normalized, 'error');
+      }
     });
 
 
