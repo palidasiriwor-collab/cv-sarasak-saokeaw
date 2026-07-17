@@ -29,8 +29,48 @@
     .export-btn { background:#fff; border:1px solid #cbd5e1; color:#334155; }
     .export-btn:hover { background:#f8fafc; }
     .export-a4 { width:210mm; min-height:297mm; box-sizing:border-box; background:#fff; padding:12mm; }
-    .references-list { list-style-type:disc; padding-left:1.25rem; }
-    .references-list li::marker { color:#000; font-size:1em; }
+    .black-bullet-list { list-style-type:disc; padding-left:1.25rem; }
+    .black-bullet-list li::marker { color:#000; font-size:1em; }
+    .invited-speaking-title { font-weight:400 !important; }
+
+    .teaching-group + .teaching-group { margin-top:1.75rem; }
+    .teaching-group-title {
+      margin-bottom:.65rem;
+      font-size:1rem;
+      font-weight:700;
+      color:#0f172a;
+    }
+    .teaching-table {
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+      font-size:.875rem;
+    }
+    .teaching-table th {
+      padding:.55rem .65rem;
+      border-bottom:1px solid #94a3b8;
+      text-align:left;
+      font-weight:700;
+      color:#0f172a;
+      vertical-align:bottom;
+    }
+    .teaching-table td {
+      padding:.48rem .65rem;
+      border-bottom:1px solid #e2e8f0;
+      vertical-align:top;
+      line-height:1.55;
+    }
+    .teaching-table .academic-year-col { width:17%; }
+    .teaching-table .course-code-col { width:18%; }
+    .teaching-table .course-title-col { width:65%; }
+    .teaching-table .external-course-col { width:58%; }
+    .teaching-table .institution-col { width:42%; }
+    .teaching-table .repeat-year { color:transparent; user-select:none; }
+    .teaching-table tbody tr:last-child td { border-bottom:0; }
+
+    @media (max-width:640px) {
+      .teaching-table { min-width:650px; }
+    }
     .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
 
     @page { size:A4 portrait; margin:10mm; }
@@ -167,11 +207,188 @@
         cursor:default !important;
       }
 
+      .black-bullet-list {
+        list-style-type:disc !important;
+        padding-left:5mm !important;
+      }
+
+      .black-bullet-list li::marker {
+        color:#000 !important;
+      }
+
+      .invited-speaking-title {
+        font-weight:400 !important;
+      }
+
+      .teaching-group {
+        break-inside:auto !important;
+        page-break-inside:auto !important;
+        margin-top:0 !important;
+        margin-bottom:5mm !important;
+      }
+
+      .teaching-group-title {
+        break-after:avoid !important;
+        page-break-after:avoid !important;
+      }
+
+      .teaching-table {
+        width:100% !important;
+        min-width:0 !important;
+        table-layout:fixed !important;
+        font-size:9pt !important;
+      }
+
+      .teaching-table thead {
+        display:table-header-group !important;
+      }
+
+      .teaching-table tr {
+        break-inside:avoid !important;
+        page-break-inside:avoid !important;
+      }
+
+      .teaching-table th,
+      .teaching-table td {
+        padding:2.2mm 2mm !important;
+      }
+
+      .teaching-table .repeat-year {
+        color:transparent !important;
+      }
+
       a {
         color:inherit !important;
         text-decoration:none !important;
       }
     }
+  
+    /* Integrated PIN Admin */
+    body.admin-open { overflow:hidden; }
+    .admin-ui { font-family:'Prompt',sans-serif; }
+    #admin-key {
+      position:fixed; right:1.15rem; bottom:1.15rem; z-index:70;
+      width:2.75rem; height:2.75rem; border-radius:999px;
+      display:flex; align-items:center; justify-content:center;
+      color:#0f172a; background:rgba(255,255,255,.34);
+      border:1px solid rgba(148,163,184,.34);
+      box-shadow:0 8px 24px rgba(15,23,42,.10);
+      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      opacity:.24; transition:.18s ease;
+    }
+    #admin-key:hover, #admin-key:focus-visible {
+      opacity:.92; transform:translateY(-1px);
+      background:rgba(255,255,255,.92);
+    }
+    .admin-overlay {
+      position:fixed; inset:0; z-index:80; display:flex;
+      align-items:center; justify-content:center;
+      padding:1rem; background:rgba(15,23,42,.46);
+      backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+    }
+    .admin-hidden { display:none !important; }
+    .admin-card {
+      width:min(100%, 31rem); max-height:92vh; overflow:auto;
+      border:1px solid #e2e8f0; border-radius:1rem;
+      background:#fff; box-shadow:0 24px 80px rgba(15,23,42,.22);
+    }
+    .admin-shell {
+      width:min(96vw, 1180px); height:min(94vh, 920px);
+      display:flex; flex-direction:column; overflow:hidden;
+      border:1px solid #cbd5e1; border-radius:1rem;
+      background:#f8fafc; box-shadow:0 28px 90px rgba(15,23,42,.28);
+    }
+    .admin-shell-header {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:1rem; padding:.9rem 1rem; color:#fff; background:#0f2942;
+    }
+    .admin-tabs {
+      display:flex; gap:.4rem; padding:.65rem .75rem;
+      overflow:auto; border-bottom:1px solid #e2e8f0; background:#fff;
+    }
+    .admin-tab {
+      flex:0 0 auto; border:1px solid #cbd5e1; border-radius:.65rem;
+      padding:.5rem .75rem; color:#475569; background:#fff;
+      font-size:.82rem; font-weight:600;
+    }
+    .admin-tab.active { color:#fff; border-color:#1e3a5f; background:#1e3a5f; }
+    .admin-body { flex:1; overflow:auto; padding:1rem; }
+    .admin-panel-section { display:none; }
+    .admin-panel-section.active { display:block; }
+    .admin-box {
+      border:1px solid #e2e8f0; border-radius:.85rem;
+      background:#fff; padding:1rem;
+    }
+    .admin-grid-2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem; }
+    .admin-grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; }
+    .admin-field label {
+      display:block; margin-bottom:.3rem; color:#475569;
+      font-size:.76rem; font-weight:600;
+    }
+    .admin-field input, .admin-field textarea, .admin-field select {
+      width:100%; border:1px solid #cbd5e1; border-radius:.65rem;
+      padding:.58rem .68rem; color:#0f172a; background:#fff;
+      font:inherit; font-size:.86rem;
+    }
+    .admin-field textarea { resize:vertical; }
+    .admin-field input:focus, .admin-field textarea:focus, .admin-field select:focus {
+      outline:2px solid #93c5fd; border-color:#60a5fa;
+    }
+    .admin-btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:.38rem;
+      border-radius:.62rem; padding:.52rem .72rem;
+      font-size:.8rem; font-weight:600; transition:.15s ease;
+    }
+    .admin-btn-primary { color:#fff; background:#1e3a5f; }
+    .admin-btn-primary:hover { background:#152f4d; }
+    .admin-btn-light { color:#334155; border:1px solid #cbd5e1; background:#fff; }
+    .admin-btn-light:hover { background:#f8fafc; }
+    .admin-btn-danger { color:#be123c; border:1px solid #fecdd3; background:#fff1f2; }
+    .admin-list { display:grid; gap:.55rem; }
+    .admin-row {
+      display:grid; grid-template-columns:minmax(0,1fr) auto;
+      gap:.7rem; align-items:start; padding:.72rem;
+      border:1px solid #e2e8f0; border-radius:.75rem; background:#fff;
+    }
+    .admin-row.is-private { opacity:.58; background:#f8fafc; }
+    .admin-row-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:.35rem; }
+    .admin-icon-btn {
+      display:inline-flex; width:2rem; height:2rem; align-items:center; justify-content:center;
+      border:1px solid #cbd5e1; border-radius:.55rem; color:#475569; background:#fff;
+    }
+    .admin-icon-btn:hover { background:#f1f5f9; }
+    .admin-icon-btn.eye-on { color:#047857; border-color:#a7f3d0; background:#ecfdf5; }
+    .admin-icon-btn.eye-off { color:#64748b; background:#f1f5f9; }
+    .admin-muted { color:#64748b; font-size:.76rem; }
+    .admin-toolbar {
+      display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between;
+      gap:.75rem; margin-bottom:.8rem;
+    }
+    .admin-form-wrap { margin-bottom:1rem; }
+    .admin-status {
+      min-height:1.1rem; margin-top:.55rem; font-size:.78rem; color:#475569;
+    }
+    .admin-status.error { color:#b91c1c; }
+    .admin-status.success { color:#047857; }
+    .admin-photo-preview {
+      width:150px; height:185px; object-fit:cover; object-position:top;
+      border:1px solid #cbd5e1; border-radius:.8rem; background:#f8fafc;
+    }
+    .admin-badge {
+      display:inline-flex; align-items:center; border-radius:999px;
+      padding:.18rem .5rem; font-size:.68rem; font-weight:700;
+      color:#334155; background:#e2e8f0;
+    }
+    @media (max-width:760px) {
+      .admin-grid-2, .admin-grid-3 { grid-template-columns:1fr; }
+      .admin-shell { width:100%; height:96vh; }
+      .admin-row { grid-template-columns:1fr; }
+      .admin-row-actions { justify-content:flex-start; }
+    }
+    @media print {
+      .admin-ui, #admin-key { display:none !important; }
+    }
+
   </style>
 </head>
 <body class="min-h-screen w-full">
@@ -237,12 +454,219 @@
     <p id="footer-text"></p>
   </footer>
 
+
+  <button id="admin-key" class="admin-ui print:hidden" type="button" aria-label="เปิดระบบผู้ดูแล" title="Admin">
+    <i data-lucide="key-round" class="w-5 h-5"></i>
+  </button>
+
+  <div id="admin-login-overlay" class="admin-ui admin-overlay admin-hidden" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+    <div class="admin-card p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-slate-400">Secure access</p>
+          <h2 id="admin-login-title" class="mt-1 text-xl font-bold text-slate-900">เข้าสู่ระบบ Admin</h2>
+          <p class="mt-1 text-sm text-slate-500">กรอก PIN ของ Admin หรือ Subadmin</p>
+        </div>
+        <button id="admin-login-close" class="admin-icon-btn" type="button" aria-label="ปิด"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="admin-login-form" class="mt-5 space-y-4">
+        <div class="admin-field">
+          <label for="admin-pin">PIN</label>
+          <input id="admin-pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,12}" maxlength="12" autocomplete="current-password" required>
+        </div>
+        <button class="admin-btn admin-btn-primary w-full" type="submit"><i data-lucide="unlock-keyhole" class="w-4 h-4"></i>เข้าสู่ระบบ</button>
+      </form>
+      <p id="admin-login-status" class="admin-status"></p>
+    </div>
+  </div>
+
+  <div id="admin-panel-overlay" class="admin-ui admin-overlay admin-hidden" role="dialog" aria-modal="true" aria-labelledby="admin-panel-title">
+    <div class="admin-shell">
+      <header class="admin-shell-header">
+        <div>
+          <h2 id="admin-panel-title" class="font-bold">CV Admin CMS</h2>
+          <p class="text-xs text-white/70">สิทธิ์: <span id="admin-role-label">—</span></p>
+        </div>
+        <div class="flex gap-2">
+          <button id="admin-refresh" class="admin-btn border border-white/25 text-white hover:bg-white/10" type="button"><i data-lucide="refresh-cw" class="w-4 h-4"></i>รีเฟรช</button>
+          <button id="admin-logout" class="admin-btn border border-white/25 text-white hover:bg-white/10" type="button">ออกจากระบบ</button>
+          <button id="admin-panel-close" class="admin-icon-btn border-white/25 bg-transparent text-white" type="button" aria-label="ปิด"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+      </header>
+
+      <nav class="admin-tabs" aria-label="Admin tabs">
+        <button class="admin-tab active" data-admin-tab="sections" type="button">หัวข้อ</button>
+        <button class="admin-tab" data-admin-tab="entries" type="button">ข้อมูลในหัวข้อ</button>
+        <button class="admin-tab" data-admin-tab="publications" type="button">Publications</button>
+        <button class="admin-tab" data-admin-tab="profile" type="button">Profile / PIN</button>
+      </nav>
+
+      <div class="admin-body">
+        <p id="admin-global-status" class="admin-status mb-2"></p>
+
+        <section id="admin-tab-sections" class="admin-panel-section active">
+          <div class="admin-toolbar">
+            <div>
+              <h3 class="font-bold text-slate-900">จัดการหัวข้อทั้งหมด</h3>
+              <p class="admin-muted">เพิ่ม แก้ไข ลบ จัดลำดับ และเปิด/ปิดด้วยปุ่มรูปตา</p>
+            </div>
+            <button id="admin-add-section" class="admin-btn admin-btn-primary" type="button"><i data-lucide="plus" class="w-4 h-4"></i>เพิ่มหัวข้อ</button>
+          </div>
+
+          <form id="admin-section-form" class="admin-box admin-form-wrap admin-hidden">
+            <input type="hidden" name="id">
+            <div class="admin-grid-2">
+              <div class="admin-field"><label>ชื่อหัวข้อ (EN)</label><input name="title_en" required></div>
+              <div class="admin-field"><label>ชื่อหัวข้อ (TH)</label><input name="title_th"></div>
+              <div class="admin-field"><label>Section key</label><input name="section_key" placeholder="สร้างอัตโนมัติเมื่อเว้นว่าง"></div>
+              <div class="admin-field"><label>รูปแบบเนื้อหา</label>
+                <select name="content_type">
+                  <option value="timeline">Timeline</option>
+                  <option value="list">List</option>
+                  <option value="grid">Grid</option>
+                  <option value="skills">Skills</option>
+                  <option value="stats">Stats</option>
+                  <option value="publication_dashboard">Publication dashboard</option>
+                </select>
+              </div>
+              <div class="admin-field"><label>ลำดับ</label><input name="sort_order" type="number" value="0"></div>
+              <div class="flex flex-wrap items-center gap-5 pt-5 text-sm">
+                <label class="flex items-center gap-2"><input name="default_open" type="checkbox"> เปิดเริ่มต้น</label>
+                <label class="flex items-center gap-2"><input name="is_published" type="checkbox" checked> แสดงหัวข้อ</label>
+              </div>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button class="admin-btn admin-btn-primary" type="submit">บันทึกหัวข้อ</button>
+              <button id="admin-cancel-section" class="admin-btn admin-btn-light" type="button">ยกเลิก</button>
+            </div>
+          </form>
+          <div id="admin-sections-list" class="admin-list"></div>
+        </section>
+
+        <section id="admin-tab-entries" class="admin-panel-section">
+          <div class="admin-toolbar">
+            <div class="admin-field min-w-[260px]">
+              <label>เลือกหัวข้อ</label>
+              <select id="admin-entry-section-select"></select>
+            </div>
+            <button id="admin-add-entry" class="admin-btn admin-btn-primary" type="button"><i data-lucide="plus" class="w-4 h-4"></i>เพิ่มข้อมูล</button>
+          </div>
+
+          <form id="admin-entry-form" class="admin-box admin-form-wrap admin-hidden">
+            <input type="hidden" name="id">
+            <input type="hidden" name="section_id">
+            <div class="admin-grid-2">
+              <div class="admin-field"><label>ประเภท</label>
+                <select name="entry_type">
+                  <option value="item">Item</option>
+                  <option value="timeline">Timeline</option>
+                  <option value="group_heading">Group heading</option>
+                  <option value="skill">Skill</option>
+                </select>
+              </div>
+              <div class="admin-field"><label>ลำดับ</label><input name="display_order" type="number" value="0"></div>
+              <div class="admin-field"><label>ชื่อ/หัวข้อ (EN)</label><textarea name="title_en" rows="2"></textarea></div>
+              <div class="admin-field"><label>ชื่อ/หัวข้อ (TH)</label><textarea name="title_th" rows="2"></textarea></div>
+              <div class="admin-field"><label>Subtitle/รหัส/หน่วยงาน (EN)</label><textarea name="subtitle_en" rows="2"></textarea></div>
+              <div class="admin-field"><label>Subtitle/รหัส/หน่วยงาน (TH)</label><textarea name="subtitle_th" rows="2"></textarea></div>
+              <div class="admin-field"><label>รายละเอียด (EN)</label><textarea name="description_en" rows="3"></textarea></div>
+              <div class="admin-field"><label>รายละเอียด (TH)</label><textarea name="description_th" rows="3"></textarea></div>
+              <div class="admin-field"><label>ข้อความวันที่ (EN)</label><input name="date_label_en"></div>
+              <div class="admin-field"><label>ข้อความวันที่ (TH)</label><input name="date_label_th"></div>
+              <div class="admin-field"><label>วันที่เริ่มต้น</label><input name="start_date" type="date"></div>
+              <div class="admin-field"><label>วันที่สิ้นสุด</label><input name="end_date" type="date"></div>
+              <div class="admin-field md:col-span-2"><label>Metadata (JSON)</label><textarea name="metadata" rows="2" placeholder='{}'></textarea></div>
+              <label class="flex items-center gap-2 text-sm"><input name="is_published" type="checkbox" checked> แสดงรายการนี้</label>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button class="admin-btn admin-btn-primary" type="submit">บันทึกข้อมูล</button>
+              <button id="admin-cancel-entry" class="admin-btn admin-btn-light" type="button">ยกเลิก</button>
+            </div>
+          </form>
+          <div id="admin-entries-list" class="admin-list"></div>
+        </section>
+
+        <section id="admin-tab-publications" class="admin-panel-section">
+          <div class="admin-toolbar">
+            <div class="admin-field min-w-[260px]"><label>ค้นหา Citation</label><input id="admin-publication-search" placeholder="พิมพ์คำค้น"></div>
+            <button id="admin-add-publication" class="admin-btn admin-btn-primary" type="button"><i data-lucide="plus" class="w-4 h-4"></i>เพิ่ม Publication</button>
+          </div>
+
+          <form id="admin-publication-form" class="admin-box admin-form-wrap admin-hidden">
+            <input type="hidden" name="id">
+            <div class="admin-grid-2">
+              <div class="admin-field"><label>หมวด</label>
+                <select name="category"><option value="article_review">Article & Review</option><option value="book">Book</option><option value="book_chapter">Book chapter</option><option value="other">Other</option></select>
+              </div>
+              <div class="admin-field"><label>Ranking</label>
+                <select name="ranking"><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option><option>TCI1</option><option>TCI2</option><option>TCI3</option><option value="-">-</option></select>
+              </div>
+              <div class="admin-field md:col-span-2"><label>Citation (NLM)</label><textarea name="citation" rows="5" required></textarea></div>
+              <div class="admin-field"><label>Impact factor</label><input name="impact_factor" inputmode="decimal"></div>
+              <div class="admin-field"><label>ลำดับ</label><input name="display_order" type="number"></div>
+              <label class="flex items-center gap-2 text-sm"><input name="is_first_author" type="checkbox"> First Author</label>
+              <label class="flex items-center gap-2 text-sm"><input name="is_corresponding_author" type="checkbox"> Corresponding Author</label>
+              <label class="flex items-center gap-2 text-sm"><input name="is_published" type="checkbox" checked> แสดงรายการนี้</label>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button class="admin-btn admin-btn-primary" type="submit">บันทึก Publication</button>
+              <button id="admin-cancel-publication" class="admin-btn admin-btn-light" type="button">ยกเลิก</button>
+            </div>
+          </form>
+          <div id="admin-publications-list" class="admin-list"></div>
+        </section>
+
+        <section id="admin-tab-profile" class="admin-panel-section">
+          <div class="grid gap-4 lg:grid-cols-2">
+            <form id="admin-profile-form" class="admin-box">
+              <h3 class="font-bold text-slate-900">ข้อมูล Profile</h3>
+              <div class="mt-4 space-y-3">
+                <div class="admin-field"><label>Name (EN)</label><input name="name_en"></div>
+                <div class="admin-field"><label>Name (TH)</label><input name="name_th"></div>
+                <div class="admin-field"><label>Credentials</label><input name="credentials_en"></div>
+                <div class="admin-field"><label>Bio (EN)</label><textarea name="bio_en" rows="5"></textarea></div>
+                <div class="admin-field"><label>Bio (TH)</label><textarea name="bio_th" rows="5"></textarea></div>
+                <button class="admin-btn admin-btn-primary" type="submit">บันทึก Profile</button>
+              </div>
+            </form>
+
+            <div class="space-y-4">
+              <form id="admin-photo-form" class="admin-box">
+                <h3 class="font-bold text-slate-900">เปลี่ยนรูปภาพ CV</h3>
+                <div class="mt-4 flex flex-wrap gap-4">
+                  <img id="admin-photo-preview" class="admin-photo-preview" alt="Profile preview">
+                  <div class="min-w-[220px] flex-1">
+                    <div class="admin-field"><label>เลือกรูป JPG / PNG / WebP</label><input id="admin-photo-file" type="file" accept="image/jpeg,image/png,image/webp" required></div>
+                    <p class="mt-2 admin-muted">ระบบจะย่อรูปอัตโนมัติและบันทึกใน Supabase จึงไม่ต้องมีไฟล์ภาพแยก</p>
+                    <button class="admin-btn admin-btn-primary mt-4" type="submit">อัปเดตรูปภาพ</button>
+                  </div>
+                </div>
+              </form>
+
+              <form id="admin-pin-form" class="admin-box">
+                <h3 class="font-bold text-slate-900">เปลี่ยน PIN</h3>
+                <div class="mt-4 space-y-3">
+                  <div id="admin-pin-target-wrap" class="admin-field"><label>บัญชี</label><select name="target_role"><option value="admin">Admin</option><option value="subadmin">Subadmin</option></select></div>
+                  <div class="admin-field"><label>PIN ใหม่ (4–12 ตัวเลข)</label><input name="new_pin" type="password" inputmode="numeric" pattern="[0-9]{4,12}" maxlength="12" required></div>
+                  <div class="admin-field"><label>ยืนยัน PIN ใหม่</label><input name="confirm_pin" type="password" inputmode="numeric" pattern="[0-9]{4,12}" maxlength="12" required></div>
+                  <button class="admin-btn admin-btn-primary" type="submit">เปลี่ยน PIN</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
 
     const SUPABASE_URL = 'https://zdsjqnpikxdkftqzipsn.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_FQG4OEIgBIewMPVelkFdjg_KmeUPZ0P';
     const PROFILE_SLUG = 'surasak-saokaew';
+    const PROFILE_PHOTO_FALLBACK = "data:image/jpeg;base64,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onnjUzOsuEdBhscAwgN1lbwVHV28HM/h/wA7Hb0FBqEqbQ9PBFgjiTbUNKuEd2C4rBwSl61nb0MBn3nOLNk76KVBnHEqt+YOh+2XIFgDYdCZ8XBna/6iG2luo3+kIQ1PTZDihtGDEwapAkvyWYgo8QSDZcTfH2RetMTbjvAp0N6eETFk1e3y/UzAf5e73hpaB8wwGhtKh6lixpFHZHRalDKG7v6OD5WtE7xqptHfRuS/SC3nl/UzYj/L/mIoktHmG227NtB0XaX6L0cosa9UTQgwxmPVcSpziWeaOPyb7nUgjPsNG5TtBCkd3+fmXoGN3abrjQZjl8Er08/Er07Jleih0DMTGhpcwTBdZZobU9ARpZ3qCJFsd4c1HnB6VxybX6w/cEy9LebNDWob7Q1Y6TcQmDFHiJqaEdDzrDTuljEQJWm+4GmUGAev/JeemWVMboMzCptD0HPnS9GMcWYF9ZWB01Qyahpc+5Fel8aZR3KYJynKZPRFNleKA6EKWx2uD0r02eh9CpD3RqXGzN0w1q0HQed3izm+dgG5n5ftEgxoegVdWqbdB6FabGUVDRYzbrC+sgvN1h7MlfMRm7pmZ6RjT//aAAwDAQACAAMAAAAQ8888886l1y88888888888888Sq59EO0888888888888uLARdAM8888888888sxJucxPDq8888888888o6J+daW6S8888888888oq0kHvF9V8888888888oU6l5QmBr88888888888OJ+qg5NQ88888888888dX+1XiYe88888888888+qvmkTx8888888888888KoHzioW888888888888oTD4p0qk788888884nZm3Ic7UCk47Kx888pbKMbPiy22QgoWW208+Bc2KI5bxs60Auoq2f87Cwcw9JtQowEoCEi2389Nq+KvThcCMgwcgia105GvUyrQ+QwAKiwS6ya3u0/MEyJgoMmYO8auuVfU1jy43gKosweyEmq+/daSbOauucAm6mOc8cOy0CI+o2zMwKAi+iki4aCmAgecAAA8eCcCCcB8ei+//EAB8RAQACAgMBAAMAAAAAAAAAAAEAESExEDBBIEBRYf/aAAgBAwEBPxD7uX+FUr8BtYr7P6xf3MnK7QvEABwXiNwy5DtqJU7ivUYHsZeJbX23GHqlTBc1C5UoUlwXE7LoEQZgsYSsoiEI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";
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
@@ -333,20 +757,39 @@
       }
     }
 
+
+    function applyProfilePhoto() {
+      const sources = [
+        profile?.profile_photo_url,
+        PROFILE_PHOTO_FALLBACK
+      ].filter(Boolean);
+
+      let sourceIndex = 0;
+      els.photo.alt = profile?.name_en ? `Profile photo of ${profile.name_en}` : 'Profile photo';
+
+      const loadNext = () => {
+        if (sourceIndex >= sources.length) {
+          els.photo.classList.add('hidden');
+          els.photoPlaceholder.classList.add('hidden');
+          return;
+        }
+        els.photo.src = sources[sourceIndex++];
+      };
+
+      els.photo.onload = () => {
+        els.photo.classList.remove('hidden');
+        els.photoPlaceholder.classList.add('hidden');
+      };
+      els.photo.onerror = loadNext;
+      loadNext();
+    }
+
     function renderHeader() {
       els.name.textContent = profile.name_en || '';
       els.credentials.textContent = profile.credentials_en || '';
       els.nameTh.textContent = profile.name_th || '';
 
-      if (profile.profile_photo_url) {
-        els.photo.src = profile.profile_photo_url;
-        els.photo.alt = profile.name_en ? `Profile photo of ${profile.name_en}` : 'Profile photo';
-        els.photo.classList.remove('hidden');
-        els.photoPlaceholder.classList.add('hidden');
-      } else {
-        els.photo.classList.add('hidden');
-        els.photoPlaceholder.classList.add('hidden');
-      }
+      applyProfilePhoto();
 
       const identifiers = Array.isArray(profile.identifiers) ? profile.identifiers : [];
       els.identifiers.innerHTML = identifiers.map(item => {
@@ -396,9 +839,118 @@
         .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
     }
 
+    function renderTeachingExperience(entries) {
+      const groups = [];
+      let currentGroup = null;
+
+      entries.forEach(entry => {
+        if (entry.entry_type === 'group_heading') {
+          currentGroup = {
+            heading: localized(entry.title_en, entry.title_th),
+            rows: []
+          };
+          groups.push(currentGroup);
+          return;
+        }
+
+        if (!currentGroup) {
+          currentGroup = {
+            heading: currentLang === 'th' ? 'ประสบการณ์ด้านการสอน' : 'Teaching Experience',
+            rows: []
+          };
+          groups.push(currentGroup);
+        }
+
+        currentGroup.rows.push(entry);
+      });
+
+      const labels = currentLang === 'th'
+        ? {
+            academicYear: 'ปีการศึกษา',
+            courseCode: 'รหัสวิชา',
+            courseTitle: 'ชื่อวิชา',
+            courseProgram: 'หลักสูตร/รายวิชา',
+            institution: 'สถาบัน'
+          }
+        : {
+            academicYear: 'Academic Year',
+            courseCode: 'Course Code',
+            courseTitle: 'Course Title',
+            courseProgram: 'Course / Program',
+            institution: 'Institution'
+          };
+
+      return `<div class="teaching-experience">${groups.map(group => {
+        const isExternal = group.rows.length > 0 &&
+          group.rows.every(row => !localized(row.date_label_en, row.date_label_th));
+
+        if (isExternal) {
+          return `<section class="teaching-group page-break-avoid">
+            <h3 class="teaching-group-title">${escapeHtml(group.heading)}</h3>
+            <div class="overflow-x-auto">
+              <table class="teaching-table">
+                <thead>
+                  <tr>
+                    <th class="external-course-col">${escapeHtml(labels.courseProgram)}</th>
+                    <th class="institution-col">${escapeHtml(labels.institution)}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${group.rows.map(row => {
+                    const course = localized(row.title_en, row.title_th);
+                    const institution = localized(row.subtitle_en, row.subtitle_th);
+                    return `<tr class="page-break-avoid">
+                      <td>${escapeHtml(course)}</td>
+                      <td>${escapeHtml(institution)}</td>
+                    </tr>`;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </section>`;
+        }
+
+        let previousYear = null;
+        return `<section class="teaching-group">
+          <h3 class="teaching-group-title">${escapeHtml(group.heading)}</h3>
+          <div class="overflow-x-auto">
+            <table class="teaching-table">
+              <thead>
+                <tr>
+                  <th class="academic-year-col">${escapeHtml(labels.academicYear)}</th>
+                  <th class="course-code-col">${escapeHtml(labels.courseCode)}</th>
+                  <th class="course-title-col">${escapeHtml(labels.courseTitle)}</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${group.rows.map(row => {
+                  const year = localized(row.date_label_en, row.date_label_th);
+                  const courseCode = localized(row.subtitle_en, row.subtitle_th);
+                  const courseTitle = localized(row.title_en, row.title_th);
+                  const showYear = year !== previousYear;
+                  previousYear = year;
+
+                  return `<tr class="page-break-avoid">
+                    <td${showYear ? '' : ' class="repeat-year"'}>${escapeHtml(showYear ? year : '—')}</td>
+                    <td>${escapeHtml(courseCode)}</td>
+                    <td>${escapeHtml(courseTitle)}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </section>`;
+      }).join('')}</div>`;
+    }
+
+
     function renderStructuredEntries(section) {
       const entries = entriesForSection(section);
       if (!entries.length) return '';
+
+      if (section.section_key === 'teaching_experience') {
+        return renderTeachingExperience(entries);
+      }
 
       if (section.content_type === 'timeline') {
         return `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[620px]"><tbody>${entries.map(entry => {
@@ -406,15 +958,46 @@
           const title = localized(entry.title_en, entry.title_th);
           const subtitle = localized(entry.subtitle_en, entry.subtitle_th);
           const description = localized(entry.description_en, entry.description_th);
+          const titleHtml = title
+            ? (section.section_key === 'speaking'
+                ? `<span class="invited-speaking-title">${escapeHtml(title)}</span>`
+                : `<strong>${escapeHtml(title)}</strong>`)
+            : '';
+
           return `<tr class="border-b last:border-0 align-top page-break-avoid">
             <td class="py-3 pr-5 text-slate-600 w-48">${escapeHtml(date)}</td>
             <td class="py-3">
-              ${title ? `<strong>${escapeHtml(title)}</strong>` : ''}
+              ${titleHtml}
               ${subtitle ? `<br>${escapeHtml(subtitle)}` : ''}
               ${description ? `<br><span class="text-gray-500 whitespace-pre-line">${escapeHtml(description)}</span>` : ''}
             </td>
           </tr>`;
         }).join('')}</tbody></table></div>`;
+      }
+
+      const blackBulletSections = new Set([
+        'memberships',
+        'skills',
+        'editorial_boards',
+        'journal_reviewer',
+        'proposal_reviewer',
+        'expert_committees',
+        'references'
+      ]);
+
+      if (blackBulletSections.has(section.section_key)) {
+        return `<ul class="black-bullet-list space-y-3 text-sm">${entries.map(entry => {
+          const title = localized(entry.title_en, entry.title_th);
+          const subtitle = localized(entry.subtitle_en, entry.subtitle_th);
+          const description = localized(entry.description_en, entry.description_th);
+          const date = formatEntryDate(entry);
+          return `<li class="pl-1 page-break-avoid">
+            <div class="whitespace-pre-line">${escapeHtml(title)}</div>
+            ${subtitle ? `<div class="text-slate-600 whitespace-pre-line">${escapeHtml(subtitle)}</div>` : ''}
+            ${description ? `<div class="text-slate-500 whitespace-pre-line">${escapeHtml(description)}</div>` : ''}
+            ${date ? `<div class="mt-1 text-xs text-slate-400">${escapeHtml(date)}</div>` : ''}
+          </li>`;
+        }).join('')}</ul>`;
       }
 
       if (section.content_type === 'skills') {
@@ -438,10 +1021,10 @@
         }).join('')}</div>`;
       }
 
-      const isReferences = section.section_key === 'references';
-      const listTag = isReferences ? 'ul' : 'ol';
-      const listClass = isReferences
-        ? 'references-list space-y-4 text-sm'
+      const useBlackBullets = blackBulletSections.has(section.section_key);
+      const listTag = useBlackBullets ? 'ul' : 'ol';
+      const listClass = useBlackBullets
+        ? 'black-bullet-list space-y-3 text-sm'
         : 'list-decimal pl-5 space-y-2 text-sm';
 
       return `<${listTag} class="${listClass}">${entries.map(entry => {
@@ -762,8 +1345,20 @@
         details > * { display:block !important; }
         summary { font-weight:bold; margin:10pt 0 6pt; }
         a { color:#1d4ed8; }
-        .references-list { list-style-type:disc; padding-left:18pt; }
-        .references-list li::marker { color:#000; }
+        .black-bullet-list { list-style-type:disc; padding-left:18pt; }
+        .black-bullet-list li::marker { color:#000; }
+        .invited-speaking-title { font-weight:400 !important; }
+        .teaching-group { margin-bottom:14pt; }
+        .teaching-group-title { font-size:11pt; font-weight:700; margin:8pt 0 5pt; }
+        .teaching-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:9.5pt; }
+        .teaching-table th { padding:5pt; border-bottom:1pt solid #94a3b8; text-align:left; font-weight:700; }
+        .teaching-table td { padding:4pt 5pt; border-bottom:.5pt solid #e2e8f0; vertical-align:top; }
+        .teaching-table .academic-year-col { width:17%; }
+        .teaching-table .course-code-col { width:18%; }
+        .teaching-table .course-title-col { width:65%; }
+        .teaching-table .external-course-col { width:58%; }
+        .teaching-table .institution-col { width:42%; }
+        .teaching-table .repeat-year { color:#fff; }
       `;
       const html = `<!doctype html><html><head><meta charset="utf-8"><style>${wordCss}</style></head><body>${clone.outerHTML}</body></html>`;
 
@@ -917,11 +1512,615 @@
       }
     }
 
+
+    // -----------------------------------------------------------------
+    // Integrated PIN Admin CMS
+    // -----------------------------------------------------------------
+    let adminToken = sessionStorage.getItem('cv-admin-token') || '';
+    let adminRole = sessionStorage.getItem('cv-admin-role') || '';
+    let adminSnapshot = null;
+    let adminSelectedSectionId = '';
+
+    const adminEls = {
+      key: document.getElementById('admin-key'),
+      loginOverlay: document.getElementById('admin-login-overlay'),
+      loginClose: document.getElementById('admin-login-close'),
+      loginForm: document.getElementById('admin-login-form'),
+      loginStatus: document.getElementById('admin-login-status'),
+      panelOverlay: document.getElementById('admin-panel-overlay'),
+      panelClose: document.getElementById('admin-panel-close'),
+      roleLabel: document.getElementById('admin-role-label'),
+      refresh: document.getElementById('admin-refresh'),
+      logout: document.getElementById('admin-logout'),
+      globalStatus: document.getElementById('admin-global-status'),
+      sectionForm: document.getElementById('admin-section-form'),
+      sectionsList: document.getElementById('admin-sections-list'),
+      entrySectionSelect: document.getElementById('admin-entry-section-select'),
+      entryForm: document.getElementById('admin-entry-form'),
+      entriesList: document.getElementById('admin-entries-list'),
+      publicationForm: document.getElementById('admin-publication-form'),
+      publicationsList: document.getElementById('admin-publications-list'),
+      publicationSearch: document.getElementById('admin-publication-search'),
+      profileForm: document.getElementById('admin-profile-form'),
+      photoForm: document.getElementById('admin-photo-form'),
+      photoFile: document.getElementById('admin-photo-file'),
+      photoPreview: document.getElementById('admin-photo-preview'),
+      pinForm: document.getElementById('admin-pin-form'),
+      pinTargetWrap: document.getElementById('admin-pin-target-wrap')
+    };
+
+    function adminSetStatus(message = '', type = '') {
+      adminEls.globalStatus.textContent = message;
+      adminEls.globalStatus.className = `admin-status mb-2 ${type}`;
+    }
+
+    function adminOpenLogin() {
+      adminEls.loginStatus.textContent = '';
+      adminEls.loginOverlay.classList.remove('admin-hidden');
+      document.body.classList.add('admin-open');
+      setTimeout(() => document.getElementById('admin-pin')?.focus(), 50);
+      window.lucide?.createIcons();
+    }
+
+    function adminCloseLogin() {
+      adminEls.loginOverlay.classList.add('admin-hidden');
+      if (adminEls.panelOverlay.classList.contains('admin-hidden')) {
+        document.body.classList.remove('admin-open');
+      }
+    }
+
+    function adminOpenPanel() {
+      adminEls.panelOverlay.classList.remove('admin-hidden');
+      document.body.classList.add('admin-open');
+      window.lucide?.createIcons();
+    }
+
+    function adminClosePanel() {
+      adminEls.panelOverlay.classList.add('admin-hidden');
+      document.body.classList.remove('admin-open');
+    }
+
+    async function adminRpc(functionName, args) {
+      const { data, error } = await supabase.rpc(functionName, args);
+      if (error) throw error;
+      return data;
+    }
+
+    async function adminAction(action, payload = {}) {
+      if (!adminToken) throw new Error('Admin session is missing');
+      return adminRpc('cv_pin_action', {
+        p_token: adminToken,
+        p_profile_slug: PROFILE_SLUG,
+        p_action: action,
+        p_payload: payload
+      });
+    }
+
+    function clearAdminSession() {
+      adminToken = '';
+      adminRole = '';
+      adminSnapshot = null;
+      sessionStorage.removeItem('cv-admin-token');
+      sessionStorage.removeItem('cv-admin-role');
+    }
+
+    async function refreshAdminSnapshot({ reloadPublic = false } = {}) {
+      if (!adminToken) throw new Error('Admin session is missing');
+      const snapshot = await adminRpc('cv_pin_snapshot', {
+        p_token: adminToken,
+        p_profile_slug: PROFILE_SLUG
+      });
+      adminSnapshot = snapshot;
+      adminRole = snapshot.role;
+      sessionStorage.setItem('cv-admin-role', adminRole);
+      adminEls.roleLabel.textContent = adminRole === 'admin' ? 'Admin' : 'Subadmin';
+      adminEls.pinTargetWrap.classList.toggle('admin-hidden', adminRole !== 'admin');
+
+      renderAdminSections();
+      renderAdminEntrySectionOptions();
+      renderAdminEntries();
+      renderAdminPublications();
+      populateAdminProfile();
+
+      if (reloadPublic) await loadCv();
+      window.lucide?.createIcons();
+    }
+
+    function showAdminTab(tabName) {
+      document.querySelectorAll('.admin-tab').forEach(button => {
+        button.classList.toggle('active', button.dataset.adminTab === tabName);
+      });
+      document.querySelectorAll('.admin-panel-section').forEach(panel => {
+        panel.classList.toggle('active', panel.id === `admin-tab-${tabName}`);
+      });
+    }
+
+    function resetSectionForm() {
+      adminEls.sectionForm.reset();
+      adminEls.sectionForm.elements.id.value = '';
+      adminEls.sectionForm.elements.sort_order.value = '0';
+      adminEls.sectionForm.elements.is_published.checked = true;
+      adminEls.sectionForm.elements.section_key.disabled = false;
+      adminEls.sectionForm.classList.add('admin-hidden');
+    }
+
+    function editSection(section) {
+      const form = adminEls.sectionForm;
+      form.classList.remove('admin-hidden');
+      form.elements.id.value = section.id;
+      form.elements.title_en.value = section.title_en || '';
+      form.elements.title_th.value = section.title_th || '';
+      form.elements.section_key.value = section.section_key || '';
+      form.elements.section_key.disabled = true;
+      form.elements.content_type.value = section.content_type || 'list';
+      form.elements.sort_order.value = section.sort_order ?? 0;
+      form.elements.default_open.checked = Boolean(section.default_open);
+      form.elements.is_published.checked = Boolean(section.is_published);
+      form.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+
+    function renderAdminSections() {
+      const rows = adminSnapshot?.sections || [];
+      adminEls.sectionsList.innerHTML = rows.length ? rows.map(section => `
+        <article class="admin-row ${section.is_published ? '' : 'is-private'}" data-section-id="${escapeHtml(section.id)}">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <strong>${escapeHtml(section.title_en || section.title_th || 'Untitled')}</strong>
+              <span class="admin-badge">${escapeHtml(section.content_type)}</span>
+            </div>
+            <p class="admin-muted mt-1">${escapeHtml(section.title_th || '')}</p>
+            <p class="admin-muted mt-1">${escapeHtml(section.section_key)} · order ${section.sort_order ?? 0}</p>
+          </div>
+          <div class="admin-row-actions">
+            <button class="admin-icon-btn ${section.is_published ? 'eye-on' : 'eye-off'}" data-section-action="toggle" title="เปิด/ปิดการแสดง" type="button">
+              <i data-lucide="${section.is_published ? 'eye' : 'eye-off'}" class="w-4 h-4"></i>
+            </button>
+            <button class="admin-icon-btn" data-section-action="edit" title="แก้ไข" type="button"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+            <button class="admin-icon-btn text-rose-700" data-section-action="delete" title="ลบ" type="button"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+        </article>
+      `).join('') : '<p class="admin-muted">ยังไม่มีหัวข้อ</p>';
+    }
+
+    function renderAdminEntrySectionOptions() {
+      const sections = adminSnapshot?.sections || [];
+      const previous = adminSelectedSectionId || adminEls.entrySectionSelect.value;
+      adminEls.entrySectionSelect.innerHTML = sections.map(section =>
+        `<option value="${escapeHtml(section.id)}">${escapeHtml(section.title_en || section.title_th)}</option>`
+      ).join('');
+      if (sections.some(section => section.id === previous)) {
+        adminEls.entrySectionSelect.value = previous;
+      }
+      adminSelectedSectionId = adminEls.entrySectionSelect.value || '';
+    }
+
+    function resetEntryForm() {
+      const sectionId = adminSelectedSectionId || adminEls.entrySectionSelect.value;
+      adminEls.entryForm.reset();
+      adminEls.entryForm.elements.id.value = '';
+      adminEls.entryForm.elements.section_id.value = sectionId;
+      adminEls.entryForm.elements.display_order.value = '0';
+      adminEls.entryForm.elements.metadata.value = '{}';
+      adminEls.entryForm.elements.is_published.checked = true;
+      adminEls.entryForm.classList.add('admin-hidden');
+    }
+
+    function entriesForAdminSection() {
+      return (adminSnapshot?.entries || [])
+        .filter(entry => entry.section_id === adminSelectedSectionId)
+        .sort((a,b) => (a.display_order || 0) - (b.display_order || 0));
+    }
+
+    function editEntry(entry) {
+      const form = adminEls.entryForm;
+      form.classList.remove('admin-hidden');
+      form.elements.id.value = entry.id;
+      form.elements.section_id.value = entry.section_id;
+      form.elements.entry_type.value = entry.entry_type || 'item';
+      ['title_en','title_th','subtitle_en','subtitle_th','description_en','description_th','date_label_en','date_label_th','start_date','end_date'].forEach(name => {
+        form.elements[name].value = entry[name] || '';
+      });
+      form.elements.display_order.value = entry.display_order ?? 0;
+      form.elements.is_published.checked = Boolean(entry.is_published);
+      form.elements.metadata.value = JSON.stringify(entry.metadata || {}, null, 2);
+      form.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+
+    function renderAdminEntries() {
+      const rows = entriesForAdminSection();
+      adminEls.entriesList.innerHTML = rows.length ? rows.map(entry => `
+        <article class="admin-row ${entry.is_published ? '' : 'is-private'}" data-entry-id="${escapeHtml(entry.id)}">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <strong class="whitespace-pre-line">${escapeHtml(entry.title_th || entry.title_en || '(ไม่มีชื่อ)')}</strong>
+              <span class="admin-badge">${escapeHtml(entry.entry_type || 'item')}</span>
+            </div>
+            <p class="admin-muted mt-1 whitespace-pre-line">${escapeHtml(entry.subtitle_th || entry.subtitle_en || '')}</p>
+            <p class="admin-muted mt-1">${escapeHtml(entry.date_label_th || entry.date_label_en || '')} · order ${entry.display_order ?? 0}</p>
+          </div>
+          <div class="admin-row-actions">
+            <button class="admin-icon-btn ${entry.is_published ? 'eye-on' : 'eye-off'}" data-entry-action="toggle" type="button" title="เปิด/ปิด"><i data-lucide="${entry.is_published ? 'eye' : 'eye-off'}" class="w-4 h-4"></i></button>
+            <button class="admin-icon-btn" data-entry-action="edit" type="button" title="แก้ไข"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+            <button class="admin-icon-btn text-rose-700" data-entry-action="delete" type="button" title="ลบ"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+        </article>
+      `).join('') : '<p class="admin-muted">ยังไม่มีข้อมูลในหัวข้อนี้</p>';
+      window.lucide?.createIcons();
+    }
+
+    function resetPublicationForm() {
+      adminEls.publicationForm.reset();
+      adminEls.publicationForm.elements.id.value = '';
+      adminEls.publicationForm.elements.ranking.value = '-';
+      adminEls.publicationForm.elements.is_published.checked = true;
+      adminEls.publicationForm.classList.add('admin-hidden');
+    }
+
+    function editPublication(item) {
+      const form = adminEls.publicationForm;
+      form.classList.remove('admin-hidden');
+      form.elements.id.value = item.id;
+      form.elements.category.value = item.category || 'article_review';
+      form.elements.citation.value = item.citation || '';
+      form.elements.ranking.value = item.ranking || '-';
+      form.elements.impact_factor.value = item.impact_factor ?? '';
+      form.elements.display_order.value = item.display_order ?? '';
+      form.elements.is_first_author.checked = Boolean(item.is_first_author);
+      form.elements.is_corresponding_author.checked = Boolean(item.is_corresponding_author);
+      form.elements.is_published.checked = Boolean(item.is_published);
+      form.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+
+    function renderAdminPublications() {
+      const query = (adminEls.publicationSearch.value || '').trim().toLowerCase();
+      const rows = (adminSnapshot?.publications || []).filter(item =>
+        !query || String(item.citation || '').toLowerCase().includes(query)
+      );
+      adminEls.publicationsList.innerHTML = rows.length ? rows.map(item => `
+        <article class="admin-row ${item.is_published ? '' : 'is-private'}" data-publication-id="${escapeHtml(item.id)}">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="admin-badge">${escapeHtml(item.category)}</span>
+              <span class="admin-badge">${escapeHtml(item.ranking || '-')}</span>
+              ${item.impact_factor !== null ? `<span class="admin-badge">IF ${escapeHtml(item.impact_factor)}</span>` : ''}
+            </div>
+            <p class="mt-2 text-sm leading-relaxed">${escapeHtml(item.citation || '')}</p>
+          </div>
+          <div class="admin-row-actions">
+            <button class="admin-icon-btn ${item.is_published ? 'eye-on' : 'eye-off'}" data-publication-action="toggle" type="button"><i data-lucide="${item.is_published ? 'eye' : 'eye-off'}" class="w-4 h-4"></i></button>
+            <button class="admin-icon-btn" data-publication-action="edit" type="button"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+            <button class="admin-icon-btn text-rose-700" data-publication-action="delete" type="button"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+        </article>
+      `).join('') : '<p class="admin-muted">ไม่พบ Publication</p>';
+      window.lucide?.createIcons();
+    }
+
+    function populateAdminProfile() {
+      const p = adminSnapshot?.profile || {};
+      ['name_en','name_th','credentials_en','bio_en','bio_th'].forEach(name => {
+        adminEls.profileForm.elements[name].value = p[name] || '';
+      });
+      adminEls.photoPreview.src = p.profile_photo_url || PROFILE_PHOTO_FALLBACK;
+      if (adminRole !== 'admin') {
+        adminEls.pinForm.elements.target_role.value = 'subadmin';
+      }
+    }
+
+    async function compressAdminImage(file) {
+      if (!file.type.startsWith('image/')) throw new Error('กรุณาเลือกไฟล์รูปภาพ');
+      const objectUrl = URL.createObjectURL(file);
+      try {
+        const image = new Image();
+        image.src = objectUrl;
+        await image.decode();
+        const maxWidth = 720;
+        const maxHeight = 900;
+        const scale = Math.min(1, maxWidth / image.naturalWidth, maxHeight / image.naturalHeight);
+        const width = Math.max(1, Math.round(image.naturalWidth * scale));
+        const height = Math.max(1, Math.round(image.naturalHeight * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d', { alpha:false });
+        context.fillStyle = '#ffffff';
+        context.fillRect(0,0,width,height);
+        context.drawImage(image,0,0,width,height);
+        return canvas.toDataURL('image/jpeg', .86);
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    }
+
+    adminEls.key.addEventListener('click', async () => {
+      if (!adminToken) {
+        adminOpenLogin();
+        return;
+      }
+      try {
+        adminSetStatus('กำลังโหลดระบบ Admin…');
+        await refreshAdminSnapshot();
+        adminSetStatus('');
+        adminOpenPanel();
+      } catch (error) {
+        console.warn('Stored admin session is invalid:', error);
+        clearAdminSession();
+        adminOpenLogin();
+      }
+    });
+
+    adminEls.loginClose.addEventListener('click', adminCloseLogin);
+    adminEls.panelClose.addEventListener('click', adminClosePanel);
+    adminEls.loginOverlay.addEventListener('click', event => {
+      if (event.target === adminEls.loginOverlay) adminCloseLogin();
+    });
+
+    adminEls.loginForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      adminEls.loginStatus.className = 'admin-status';
+      adminEls.loginStatus.textContent = 'กำลังตรวจสอบ PIN…';
+      try {
+        const pin = event.currentTarget.elements.pin.value.trim();
+        const result = await adminRpc('cv_pin_login', {
+          p_profile_slug: PROFILE_SLUG,
+          p_pin: pin
+        });
+        if (!result?.ok) {
+          const message = result?.error === 'temporarily_locked'
+            ? 'มีการลอง PIN ผิดหลายครั้ง ระบบล็อกชั่วคราว 10 นาที'
+            : 'PIN ไม่ถูกต้อง';
+          throw new Error(message);
+        }
+        adminToken = result.token;
+        adminRole = result.role;
+        sessionStorage.setItem('cv-admin-token', adminToken);
+        sessionStorage.setItem('cv-admin-role', adminRole);
+        event.currentTarget.reset();
+        await refreshAdminSnapshot();
+        adminCloseLogin();
+        adminOpenPanel();
+      } catch (error) {
+        adminEls.loginStatus.className = 'admin-status error';
+        adminEls.loginStatus.textContent = error.message || 'เข้าสู่ระบบไม่สำเร็จ';
+      }
+    });
+
+    adminEls.refresh.addEventListener('click', async () => {
+      try {
+        adminSetStatus('กำลังรีเฟรช…');
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('อัปเดตข้อมูลแล้ว', 'success');
+      } catch (error) {
+        adminSetStatus(error.message, 'error');
+      }
+    });
+
+    adminEls.logout.addEventListener('click', async () => {
+      try { if (adminToken) await adminAction('logout'); } catch (_) {}
+      clearAdminSession();
+      adminClosePanel();
+    });
+
+    document.querySelectorAll('.admin-tab').forEach(button => {
+      button.addEventListener('click', () => showAdminTab(button.dataset.adminTab));
+    });
+
+    document.getElementById('admin-add-section').addEventListener('click', () => {
+      resetSectionForm();
+      adminEls.sectionForm.classList.remove('admin-hidden');
+      adminEls.sectionForm.elements.title_en.focus();
+    });
+    document.getElementById('admin-cancel-section').addEventListener('click', resetSectionForm);
+
+    adminEls.sectionForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const payload = {
+        id: form.elements.id.value || null,
+        title_en: form.elements.title_en.value.trim(),
+        title_th: form.elements.title_th.value.trim(),
+        section_key: form.elements.section_key.value.trim(),
+        content_type: form.elements.content_type.value,
+        sort_order: Number(form.elements.sort_order.value || 0),
+        default_open: form.elements.default_open.checked,
+        is_published: form.elements.is_published.checked
+      };
+      try {
+        adminSetStatus('กำลังบันทึกหัวข้อ…');
+        await adminAction('section_save', payload);
+        resetSectionForm();
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('บันทึกหัวข้อแล้ว', 'success');
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+    adminEls.sectionsList.addEventListener('click', async event => {
+      const button = event.target.closest('[data-section-action]');
+      if (!button) return;
+      const row = button.closest('[data-section-id]');
+      const section = (adminSnapshot.sections || []).find(item => item.id === row.dataset.sectionId);
+      if (!section) return;
+      const action = button.dataset.sectionAction;
+      if (action === 'edit') return editSection(section);
+      if (action === 'delete' && !confirm(`ลบหัวข้อ “${section.title_en || section.title_th}” และข้อมูลภายในทั้งหมดหรือไม่?`)) return;
+      try {
+        adminSetStatus('กำลังบันทึก…');
+        if (action === 'toggle') await adminAction('section_toggle', { id:section.id, is_published:!section.is_published });
+        if (action === 'delete') await adminAction('section_delete', { id:section.id });
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('อัปเดตหัวข้อแล้ว', 'success');
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+    adminEls.entrySectionSelect.addEventListener('change', () => {
+      adminSelectedSectionId = adminEls.entrySectionSelect.value;
+      resetEntryForm();
+      renderAdminEntries();
+    });
+
+    document.getElementById('admin-add-entry').addEventListener('click', () => {
+      resetEntryForm();
+      adminEls.entryForm.classList.remove('admin-hidden');
+      adminEls.entryForm.elements.section_id.value = adminSelectedSectionId;
+    });
+    document.getElementById('admin-cancel-entry').addEventListener('click', resetEntryForm);
+
+    adminEls.entryForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      let metadata = {};
+      try { metadata = JSON.parse(form.elements.metadata.value || '{}'); }
+      catch (_) { return adminSetStatus('Metadata ต้องเป็น JSON ที่ถูกต้อง', 'error'); }
+
+      const payload = {
+        id:form.elements.id.value || null,
+        section_id:form.elements.section_id.value || adminSelectedSectionId,
+        entry_type:form.elements.entry_type.value,
+        title_en:form.elements.title_en.value,
+        title_th:form.elements.title_th.value,
+        subtitle_en:form.elements.subtitle_en.value,
+        subtitle_th:form.elements.subtitle_th.value,
+        description_en:form.elements.description_en.value,
+        description_th:form.elements.description_th.value,
+        date_label_en:form.elements.date_label_en.value,
+        date_label_th:form.elements.date_label_th.value,
+        start_date:form.elements.start_date.value,
+        end_date:form.elements.end_date.value,
+        display_order:Number(form.elements.display_order.value || 0),
+        is_published:form.elements.is_published.checked,
+        metadata
+      };
+      try {
+        adminSetStatus('กำลังบันทึกข้อมูล…');
+        await adminAction('entry_save', payload);
+        resetEntryForm();
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('บันทึกข้อมูลแล้ว', 'success');
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+    adminEls.entriesList.addEventListener('click', async event => {
+      const button = event.target.closest('[data-entry-action]');
+      if (!button) return;
+      const row = button.closest('[data-entry-id]');
+      const entry = (adminSnapshot.entries || []).find(item => item.id === row.dataset.entryId);
+      if (!entry) return;
+      const action = button.dataset.entryAction;
+      if (action === 'edit') return editEntry(entry);
+      if (action === 'delete' && !confirm('ลบข้อมูลรายการนี้หรือไม่?')) return;
+      try {
+        if (action === 'toggle') await adminAction('entry_toggle', { id:entry.id, is_published:!entry.is_published });
+        if (action === 'delete') await adminAction('entry_delete', { id:entry.id });
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('อัปเดตข้อมูลแล้ว', 'success');
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+    document.getElementById('admin-add-publication').addEventListener('click', () => {
+      resetPublicationForm();
+      adminEls.publicationForm.classList.remove('admin-hidden');
+    });
+    document.getElementById('admin-cancel-publication').addEventListener('click', resetPublicationForm);
+    adminEls.publicationSearch.addEventListener('input', renderAdminPublications);
+
+    adminEls.publicationForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const payload = {
+        id:form.elements.id.value || null,
+        category:form.elements.category.value,
+        citation:form.elements.citation.value,
+        ranking:form.elements.ranking.value,
+        impact_factor:form.elements.impact_factor.value,
+        display_order:form.elements.display_order.value,
+        is_first_author:form.elements.is_first_author.checked,
+        is_corresponding_author:form.elements.is_corresponding_author.checked,
+        is_published:form.elements.is_published.checked
+      };
+      try {
+        await adminAction('publication_save', payload);
+        resetPublicationForm();
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('บันทึก Publication แล้ว', 'success');
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+    adminEls.publicationsList.addEventListener('click', async event => {
+      const button = event.target.closest('[data-publication-action]');
+      if (!button) return;
+      const row = button.closest('[data-publication-id]');
+      const item = (adminSnapshot.publications || []).find(publication => publication.id === row.dataset.publicationId);
+      if (!item) return;
+      const action = button.dataset.publicationAction;
+      if (action === 'edit') return editPublication(item);
+      if (action === 'delete' && !confirm('ลบ Publication นี้หรือไม่?')) return;
+      try {
+        if (action === 'toggle') await adminAction('publication_toggle', { id:item.id, is_published:!item.is_published });
+        if (action === 'delete') await adminAction('publication_delete', { id:item.id });
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('อัปเดต Publication แล้ว', 'success');
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+    adminEls.profileForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const payload = {};
+      ['name_en','name_th','credentials_en','bio_en','bio_th'].forEach(name => payload[name] = form.elements[name].value);
+      try {
+        await adminAction('profile_save', payload);
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('บันทึก Profile แล้ว', 'success');
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+    adminEls.photoFile.addEventListener('change', event => {
+      const file = event.target.files?.[0];
+      if (file) adminEls.photoPreview.src = URL.createObjectURL(file);
+    });
+
+    adminEls.photoForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const file = adminEls.photoFile.files?.[0];
+      if (!file) return adminSetStatus('กรุณาเลือกรูปภาพ', 'error');
+      try {
+        adminSetStatus('กำลังย่อและอัปโหลดรูป…');
+        const profilePhotoUrl = await compressAdminImage(file);
+        await adminAction('profile_photo', { profile_photo_url:profilePhotoUrl });
+        event.currentTarget.reset();
+        await refreshAdminSnapshot({ reloadPublic:true });
+        adminSetStatus('อัปเดตรูปภาพ CV แล้ว', 'success');
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+    adminEls.pinForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const newPin = form.elements.new_pin.value.trim();
+      const confirmPin = form.elements.confirm_pin.value.trim();
+      if (newPin !== confirmPin) return adminSetStatus('PIN ใหม่และการยืนยันไม่ตรงกัน', 'error');
+      const targetRole = adminRole === 'admin' ? form.elements.target_role.value : 'subadmin';
+      try {
+        const result = await adminAction('pin_change', { target_role:targetRole, new_pin:newPin });
+        form.reset();
+        if (result?.reauth_required) {
+          clearAdminSession();
+          adminClosePanel();
+          adminOpenLogin();
+          adminEls.loginStatus.textContent = 'เปลี่ยน PIN แล้ว กรุณาเข้าสู่ระบบใหม่';
+        } else {
+          adminSetStatus(`เปลี่ยน PIN ของ ${targetRole} แล้ว`, 'success');
+        }
+      } catch (error) { adminSetStatus(error.message, 'error'); }
+    });
+
+
     els.btnEn.addEventListener('click', () => setLanguage('en'));
     els.btnTh.addEventListener('click', () => setLanguage('th'));
     els.exportWord.addEventListener('click', exportWord);
     els.exportPdf.addEventListener('click', exportPdf);
     setLanguage(currentLang);
+    window.lucide?.createIcons();
 
     loadCv().catch(error => {
       console.error('Failed to load CV:', error);
