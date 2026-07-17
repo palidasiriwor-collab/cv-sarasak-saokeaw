@@ -399,6 +399,250 @@
       .premium-loading-shine,.premium-loading-progress::after { animation-duration:2.4s; }
     }
 
+
+    /* User selective PDF and publication filtering */
+    .feature-hidden { display:none !important; }
+
+    .print-section-heading-row,
+    .section-heading-row {
+      display:flex;
+      align-items:center;
+      min-width:0;
+    }
+
+    .print-section-selector {
+      display:none;
+      flex:0 0 auto;
+      align-items:center;
+      justify-content:center;
+      width:2.65rem;
+      min-height:2.65rem;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    body.print-selection-mode .print-section-selector {
+      display:inline-flex;
+      animation:selectorAppear .2s ease-out both;
+    }
+
+    .print-section-selector input {
+      width:1.15rem;
+      height:1.15rem;
+      margin:0;
+      accent-color:#1e3a5f;
+      cursor:pointer;
+      filter:drop-shadow(0 2px 4px rgba(15,41,66,.12));
+    }
+
+    body.print-selection-mode [data-print-key] {
+      outline:1px solid rgba(49,95,136,.12);
+      outline-offset:2px;
+      transition:outline-color .18s ease, opacity .18s ease, background .18s ease;
+    }
+
+    body.print-selection-mode [data-print-key]:has(.print-section-checkbox:not(:checked)) {
+      opacity:.54;
+      background:#f8fafc;
+    }
+
+    #print-selection-toolbar {
+      position:fixed;
+      left:50%;
+      bottom:1rem;
+      z-index:75;
+      width:min(calc(100vw - 2rem), 720px);
+      transform:translateX(-50%);
+      border:1px solid rgba(203,213,225,.92);
+      border-radius:1rem;
+      padding:.75rem;
+      background:rgba(255,255,255,.94);
+      box-shadow:0 20px 55px rgba(15,23,42,.20);
+      backdrop-filter:blur(14px) saturate(130%);
+      -webkit-backdrop-filter:blur(14px) saturate(130%);
+      animation:selectionToolbarIn .28s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .print-selection-toolbar-inner {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:.65rem;
+    }
+
+    .user-feature-btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.38rem;
+      border:1px solid #cbd5e1;
+      border-radius:.65rem;
+      padding:.5rem .72rem;
+      color:#334155;
+      background:#fff;
+      font-size:.78rem;
+      font-weight:600;
+      line-height:1;
+      transition:transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    .user-feature-btn:hover {
+      transform:translateY(-1px);
+      border-color:#94a3b8;
+      background:#f8fafc;
+    }
+
+    .user-feature-btn.primary {
+      border-color:#1e3a5f;
+      color:#fff;
+      background:linear-gradient(145deg,#1e3a5f,#315f88);
+      box-shadow:0 8px 18px rgba(30,58,95,.18);
+    }
+
+    #publication-filter-button {
+      position:fixed;
+      right:1.15rem;
+      bottom:4.45rem;
+      z-index:69;
+      width:2.75rem;
+      height:2.75rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(148,163,184,.42);
+      border-radius:999px;
+      color:#0f2942;
+      background:rgba(255,255,255,.76);
+      box-shadow:0 9px 26px rgba(15,23,42,.13);
+      backdrop-filter:blur(11px);
+      -webkit-backdrop-filter:blur(11px);
+      transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    #publication-filter-button:hover,
+    #publication-filter-button:focus-visible {
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.98);
+      box-shadow:0 13px 32px rgba(15,23,42,.18);
+    }
+
+    #publication-filter-button.is-active {
+      color:#fff;
+      border-color:#1e3a5f;
+      background:linear-gradient(145deg,#1e3a5f,#315f88);
+    }
+
+    #publication-filter-count {
+      position:absolute;
+      top:-.28rem;
+      right:-.38rem;
+      min-width:1.35rem;
+      height:1.35rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 .3rem;
+      border:2px solid #fff;
+      border-radius:999px;
+      color:#fff;
+      background:#b45309;
+      font-size:.58rem;
+      font-weight:700;
+      line-height:1;
+      box-shadow:0 4px 10px rgba(15,23,42,.15);
+    }
+
+    .feature-modal-overlay {
+      position:fixed;
+      inset:0;
+      z-index:85;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:1rem;
+      background:rgba(15,23,42,.46);
+      backdrop-filter:blur(5px);
+      -webkit-backdrop-filter:blur(5px);
+    }
+
+    .feature-modal-card {
+      width:min(100%, 32rem);
+      max-height:92vh;
+      overflow:auto;
+      border:1px solid rgba(226,232,240,.96);
+      border-radius:1.15rem;
+      background:#fff;
+      box-shadow:0 28px 90px rgba(15,23,42,.28);
+      animation:featureModalIn .27s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .filter-active-summary {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:.65rem;
+      margin:0 0 .8rem;
+      padding:.65rem .8rem;
+      border:1px solid #cbd5e1;
+      border-radius:.75rem;
+      color:#334155;
+      background:#f8fafc;
+      font-size:.76rem;
+    }
+
+    .filter-summary-badge {
+      display:inline-flex;
+      align-items:center;
+      gap:.3rem;
+      border-radius:999px;
+      padding:.25rem .55rem;
+      color:#1e3a5f;
+      background:#e7f0f8;
+      font-weight:700;
+    }
+
+    .print-excluded { display:none !important; }
+
+    @keyframes selectorAppear {
+      from { opacity:0; transform:scale(.72); }
+      to { opacity:1; transform:scale(1); }
+    }
+
+    @keyframes selectionToolbarIn {
+      from { opacity:0; transform:translate(-50%, 14px) scale(.97); }
+      to { opacity:1; transform:translate(-50%, 0) scale(1); }
+    }
+
+    @keyframes featureModalIn {
+      from { opacity:0; transform:translateY(10px) scale(.97); }
+      to { opacity:1; transform:none; }
+    }
+
+    @media (max-width:640px) {
+      #print-selection-toolbar { bottom:.65rem; }
+      .print-selection-toolbar-inner { align-items:stretch; }
+      .print-selection-toolbar-actions { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:.45rem; }
+      .print-selection-toolbar-actions .primary { grid-column:1 / -1; }
+    }
+
+    @media print {
+      .print-section-selector,
+      #print-selection-toolbar,
+      #publication-filter-button,
+      #publication-filter-overlay {
+        display:none !important;
+      }
+
+      .print-excluded { display:none !important; }
+
+      .print-section-heading-row,
+      .section-heading-row {
+        display:block !important;
+      }
+    }
+
     /* Integrated Password Admin */
     body.admin-open { overflow:hidden; }
     .admin-ui { font-family:'Prompt',sans-serif; }
@@ -544,7 +788,29 @@
   <div id="export-controls" class="fixed top-4 left-4 z-50 flex flex-wrap gap-2 print:hidden">
     <button id="export-word" type="button" class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm">Word</button>
     <button id="export-pdf" type="button" class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm">PDF A4</button>
+    <button id="export-pdf-selected" type="button" class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm">
+      <span id="export-pdf-selected-label">Select PDF</span>
+    </button>
   </div>
+
+  <div id="print-selection-toolbar" class="feature-hidden print:hidden">
+    <div class="print-selection-toolbar-inner">
+      <div>
+        <div id="print-selection-title" class="text-sm font-bold text-slate-900">Select CV sections</div>
+        <div id="print-selection-count" class="mt-1 text-xs text-slate-500">0 selected</div>
+      </div>
+      <div class="print-selection-toolbar-actions flex flex-wrap gap-2">
+        <button id="print-select-all" class="user-feature-btn" type="button">Select all</button>
+        <button id="print-clear-all" class="user-feature-btn" type="button">Clear</button>
+        <button id="print-selection-cancel" class="user-feature-btn" type="button">Cancel</button>
+        <button id="print-selection-confirm" class="user-feature-btn primary" type="button">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span id="print-selection-confirm-label">Print selected PDF</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="fixed top-4 right-4 z-50 flex rounded-lg overflow-hidden shadow border border-gray-200 bg-white" aria-label="Language selector">
     <button id="btn-en" class="lang-btn px-3 py-1.5 text-sm font-medium active" type="button">EN</button>
     <button id="btn-th" class="lang-btn px-3 py-1.5 text-sm font-medium text-gray-600" type="button">TH</button>
@@ -578,16 +844,26 @@
         </aside>
       </div>
 
-      <section id="bio-section" class="mb-8 hidden">
-        <h2 id="bio-heading" class="text-lg font-bold border-b border-gray-300 pb-1 mb-3">Bio-sketch</h2>
+      <section id="bio-section" class="mb-8 hidden" data-print-key="bio">
+        <div class="print-section-heading-row">
+          <label class="print-section-selector" title="Select Bio-sketch">
+            <input class="print-section-checkbox" type="checkbox" data-print-key="bio" checked aria-label="Select Bio-sketch">
+          </label>
+          <h2 id="bio-heading" class="min-w-0 flex-1 text-lg font-bold border-b border-gray-300 pb-1 mb-3">Bio-sketch</h2>
+        </div>
         <p id="bio-text" class="text-sm leading-relaxed"></p>
       </section>
 
-<section id="publications-dashboard-top" class="mb-8 hidden">
+<section id="publications-dashboard-top" class="mb-8 hidden" data-print-key="dashboard">
         <div class="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-slate-300 pb-2">
-          <div>
-            <p id="publications-dashboard-eyebrow" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Research Impact</p>
-            <h2 id="publications-dashboard-heading" class="text-xl md:text-2xl font-bold text-slate-900">Publications Dashboard</h2>
+          <div class="flex min-w-0 items-start gap-1">
+            <label class="print-section-selector" title="Select Publications Dashboard">
+              <input class="print-section-checkbox" type="checkbox" data-print-key="dashboard" checked aria-label="Select Publications Dashboard">
+            </label>
+            <div class="min-w-0">
+              <p id="publications-dashboard-eyebrow" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Research Impact</p>
+              <h2 id="publications-dashboard-heading" class="text-xl md:text-2xl font-bold text-slate-900">Publications Dashboard</h2>
+            </div>
           </div>
           <span id="publications-dashboard-updated" class="text-xs text-slate-400"></span>
         </div>
@@ -605,6 +881,73 @@
     <p id="footer-text"></p>
   </footer>
 
+
+
+  <button id="publication-filter-button" class="print:hidden" type="button" aria-label="Filter publications" title="Filter publications">
+    <i data-lucide="list-filter" class="w-5 h-5"></i>
+    <span id="publication-filter-count">0</span>
+  </button>
+
+  <div id="publication-filter-overlay" class="feature-modal-overlay feature-hidden" role="dialog" aria-modal="true" aria-labelledby="publication-filter-title">
+    <div class="feature-modal-card p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[.17em] text-slate-400">Publications</p>
+          <h2 id="publication-filter-title" class="mt-1 text-xl font-bold text-slate-900">Filter publications</h2>
+          <p id="publication-filter-description" class="mt-1 text-sm text-slate-500">Choose a recent period or define a year range.</p>
+        </div>
+        <button id="publication-filter-close" class="admin-icon-btn" type="button" aria-label="Close">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form id="publication-filter-form" class="mt-5 space-y-4">
+        <div class="admin-field">
+          <label id="publication-filter-mode-label">Filter method</label>
+          <select name="mode" id="publication-filter-mode">
+            <option value="recent">Recent number of years</option>
+            <option value="range">Custom year range</option>
+          </select>
+        </div>
+
+        <div id="publication-filter-recent-fields" class="admin-field">
+          <label id="publication-filter-years-label">Number of yearsย้อนหลัง</label>
+          <input name="years_back" type="number" min="1" max="50" value="5">
+        </div>
+
+        <div id="publication-filter-range-fields" class="admin-grid-2 feature-hidden">
+          <div class="admin-field">
+            <label id="publication-filter-from-label">From year</label>
+            <input name="from_year" type="number" min="1900" max="2200">
+          </div>
+          <div class="admin-field">
+            <label id="publication-filter-to-label">To year</label>
+            <input name="to_year" type="number" min="1900" max="2200">
+          </div>
+        </div>
+
+        <div class="admin-field">
+          <label id="publication-filter-category-label">Publication type</label>
+          <select name="category">
+            <option value="all">All publications</option>
+            <option value="article_review">Article & Review</option>
+            <option value="book">Book</option>
+          </select>
+        </div>
+
+        <div id="publication-filter-available-years" class="rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500"></div>
+
+        <div class="flex flex-wrap justify-end gap-2 pt-1">
+          <button id="publication-filter-reset" class="user-feature-btn" type="button">Reset</button>
+          <button id="publication-filter-cancel" class="user-feature-btn" type="button">Cancel</button>
+          <button id="publication-filter-apply" class="user-feature-btn primary" type="submit">
+            <i data-lucide="filter" class="w-4 h-4"></i>
+            <span>Apply filter</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <button id="admin-key" class="admin-ui print:hidden" type="button" aria-label="เปิดระบบผู้ดูแล" title="Admin">
     <i data-lucide="key-round" class="w-5 h-5"></i>
@@ -892,6 +1235,16 @@
     let sections = [];
     let publicationEntries = [];
     let sectionEntries = [];
+    let printSelectionMode = false;
+    let selectedPrintSections = new Set();
+    let publicationFilter = {
+      active:false,
+      mode:'recent',
+      yearsBack:5,
+      fromYear:null,
+      toYear:null,
+      category:'all'
+    };
 
     const els = {
       status: document.getElementById('status'),
@@ -918,7 +1271,28 @@
       btnEn: document.getElementById('btn-en'),
       btnTh: document.getElementById('btn-th'),
       exportWord: document.getElementById('export-word'),
-      exportPdf: document.getElementById('export-pdf')
+      exportPdf: document.getElementById('export-pdf'),
+      exportPdfSelected: document.getElementById('export-pdf-selected'),
+      exportPdfSelectedLabel: document.getElementById('export-pdf-selected-label'),
+      printSelectionToolbar: document.getElementById('print-selection-toolbar'),
+      printSelectionTitle: document.getElementById('print-selection-title'),
+      printSelectionCount: document.getElementById('print-selection-count'),
+      printSelectAll: document.getElementById('print-select-all'),
+      printClearAll: document.getElementById('print-clear-all'),
+      printSelectionCancel: document.getElementById('print-selection-cancel'),
+      printSelectionConfirm: document.getElementById('print-selection-confirm'),
+      printSelectionConfirmLabel: document.getElementById('print-selection-confirm-label'),
+      publicationFilterButton: document.getElementById('publication-filter-button'),
+      publicationFilterCount: document.getElementById('publication-filter-count'),
+      publicationFilterOverlay: document.getElementById('publication-filter-overlay'),
+      publicationFilterClose: document.getElementById('publication-filter-close'),
+      publicationFilterCancel: document.getElementById('publication-filter-cancel'),
+      publicationFilterReset: document.getElementById('publication-filter-reset'),
+      publicationFilterForm: document.getElementById('publication-filter-form'),
+      publicationFilterMode: document.getElementById('publication-filter-mode'),
+      publicationFilterRecentFields: document.getElementById('publication-filter-recent-fields'),
+      publicationFilterRangeFields: document.getElementById('publication-filter-range-fields'),
+      publicationFilterAvailableYears: document.getElementById('publication-filter-available-years')
     };
 
     const escapeHtml = (value = '') => String(value)
@@ -1036,12 +1410,291 @@
       return currentLang === 'th' ? (th || en || '') : (en || th || '');
     }
 
+
+    function printableSectionKeys() {
+      const keys = [];
+      const bio = localized(profile?.bio_en, profile?.bio_th);
+      if (bio) keys.push('bio');
+
+      const publicationSection = sections.find(section => section.section_key === 'publications');
+      const dashboardContent = publicationSection?.content || {};
+      if (Array.isArray(dashboardContent.items) && dashboardContent.items.length) {
+        keys.push('dashboard');
+      }
+
+      sections.forEach(section => keys.push(`section:${section.section_key}`));
+      return keys;
+    }
+
+    function printSelectorMarkup(key, label) {
+      const checked = selectedPrintSections.size === 0 || selectedPrintSections.has(key);
+      return `<label class="print-section-selector" title="${escapeHtml(label)}">
+        <input class="print-section-checkbox" type="checkbox" data-print-key="${escapeHtml(key)}" ${checked ? 'checked' : ''} aria-label="${escapeHtml(label)}">
+      </label>`;
+    }
+
+    function syncPrintSelectionCheckboxes() {
+      document.querySelectorAll('.print-section-checkbox').forEach(input => {
+        const key = input.dataset.printKey;
+        input.checked = selectedPrintSections.size === 0 || selectedPrintSections.has(key);
+      });
+      updatePrintSelectionToolbar();
+    }
+
+    function updatePrintSelectionToolbar() {
+      const keys = printableSectionKeys();
+      const selected = keys.filter(key => selectedPrintSections.has(key)).length;
+      els.printSelectionCount.textContent = currentLang === 'th'
+        ? `เลือกแล้ว ${selected} จาก ${keys.length} หัวข้อ`
+        : `${selected} of ${keys.length} sections selected`;
+    }
+
+    function setPrintSelectionMode(enabled, { reset = false } = {}) {
+      printSelectionMode = enabled;
+      document.body.classList.toggle('print-selection-mode', enabled);
+      els.printSelectionToolbar.classList.toggle('feature-hidden', !enabled);
+
+      if (enabled && (reset || selectedPrintSections.size === 0)) {
+        selectedPrintSections = new Set(printableSectionKeys());
+      }
+
+      syncPrintSelectionCheckboxes();
+      window.lucide?.createIcons();
+    }
+
+    function applySelectedPrintVisibility() {
+      const states = Array.from(document.querySelectorAll('#cv-export [data-print-key]')).map(node => ({
+        node,
+        wasExcluded:node.classList.contains('print-excluded')
+      }));
+
+      states.forEach(({ node }) => {
+        const key = node.dataset.printKey;
+        node.classList.toggle('print-excluded', !selectedPrintSections.has(key));
+      });
+
+      return () => {
+        states.forEach(({ node, wasExcluded }) => {
+          node.classList.toggle('print-excluded', wasExcluded);
+        });
+      };
+    }
+
+    async function exportSelectedPdf() {
+      const keys = printableSectionKeys();
+      const selected = keys.filter(key => selectedPrintSections.has(key));
+
+      if (!selected.length) {
+        showPremiumToast(
+          currentLang === 'th'
+            ? 'กรุณาเลือกอย่างน้อย 1 หัวข้อก่อนพิมพ์ PDF'
+            : 'Select at least one CV section before printing.',
+          'warning'
+        );
+        return;
+      }
+
+      const restoreVisibility = applySelectedPrintVisibility();
+      setPrintSelectionMode(false);
+
+      try {
+        await exportPdf();
+      } finally {
+        restoreVisibility();
+      }
+    }
+
+    function publicationYear(item) {
+      const explicit = Number(item?.year);
+      if (Number.isInteger(explicit) && explicit >= 1900 && explicit <= 2200) return explicit;
+
+      const published = String(item?.published_at || '');
+      const publishedMatch = published.match(/^(\d{4})/);
+      if (publishedMatch) return Number(publishedMatch[1]);
+
+      const citationYears = String(item?.citation || '').match(/\b(?:19|20)\d{2}\b/g);
+      if (citationYears?.length) return Number(citationYears[citationYears.length - 1]);
+      return null;
+    }
+
+    function publicationAvailableYears() {
+      return publicationEntries
+        .map(publicationYear)
+        .filter(Number.isInteger)
+        .sort((a, b) => a - b);
+    }
+
+    function filteredPublicationEntries() {
+      if (!publicationFilter.active) return [...publicationEntries];
+
+      let fromYear = publicationFilter.fromYear;
+      let toYear = publicationFilter.toYear;
+
+      if (publicationFilter.mode === 'recent') {
+        toYear = new Date().getFullYear();
+        fromYear = toYear - publicationFilter.yearsBack + 1;
+      }
+
+      return publicationEntries.filter(item => {
+        if (publicationFilter.category !== 'all' && item.category !== publicationFilter.category) {
+          return false;
+        }
+
+        const year = publicationYear(item);
+        if (!year) return false;
+        return year >= fromYear && year <= toYear;
+      });
+    }
+
+    function publicationFilterSummaryText() {
+      if (!publicationFilter.active) return '';
+
+      const typeLabel = {
+        all:currentLang === 'th' ? 'ทุกประเภท' : 'All types',
+        article_review:currentLang === 'th' ? 'บทความและบทความปริทัศน์' : 'Article & Review',
+        book:currentLang === 'th' ? 'หนังสือ' : 'Book'
+      }[publicationFilter.category];
+
+      let period = '';
+      if (publicationFilter.mode === 'recent') {
+        period = currentLang === 'th'
+          ? `ย้อนหลัง ${publicationFilter.yearsBack} ปี`
+          : `Last ${publicationFilter.yearsBack} years`;
+      } else {
+        period = `${publicationFilter.fromYear}–${publicationFilter.toYear}`;
+      }
+
+      return `${period} · ${typeLabel}`;
+    }
+
+    function updatePublicationFilterButton() {
+      const filteredCount = filteredPublicationEntries().length;
+      const totalCount = publicationEntries.length;
+      els.publicationFilterCount.textContent = publicationFilter.active
+        ? `${filteredCount}`
+        : `${totalCount}`;
+      els.publicationFilterButton.classList.toggle('is-active', publicationFilter.active);
+      els.publicationFilterButton.title = publicationFilter.active
+        ? `${publicationFilterSummaryText()} (${filteredCount}/${totalCount})`
+        : (currentLang === 'th' ? 'คัดกรองผลงานตีพิมพ์' : 'Filter publications');
+    }
+
+    function updatePublicationFilterFields() {
+      const isRecent = els.publicationFilterMode.value === 'recent';
+      els.publicationFilterRecentFields.classList.toggle('feature-hidden', !isRecent);
+      els.publicationFilterRangeFields.classList.toggle('feature-hidden', isRecent);
+    }
+
+    function openPublicationFilter() {
+      const form = els.publicationFilterForm;
+      form.elements.mode.value = publicationFilter.mode;
+      form.elements.years_back.value = publicationFilter.yearsBack || 5;
+      form.elements.from_year.value = publicationFilter.fromYear || '';
+      form.elements.to_year.value = publicationFilter.toYear || '';
+      form.elements.category.value = publicationFilter.category || 'all';
+
+      const years = publicationAvailableYears();
+      const minYear = years.length ? years[0] : '';
+      const maxYear = years.length ? years[years.length - 1] : '';
+      els.publicationFilterAvailableYears.textContent = years.length
+        ? (currentLang === 'th'
+            ? `ข้อมูลผลงานที่ระบุปีอยู่ในช่วง ${minYear}–${maxYear}`
+            : `Publications with known years range from ${minYear} to ${maxYear}.`)
+        : (currentLang === 'th'
+            ? 'ยังไม่พบข้อมูลปีของผลงาน'
+            : 'No publication year data is available.');
+
+      updatePublicationFilterFields();
+      els.publicationFilterOverlay.classList.remove('feature-hidden');
+      document.body.classList.add('admin-open');
+      window.lucide?.createIcons();
+    }
+
+    function closePublicationFilter() {
+      els.publicationFilterOverlay.classList.add('feature-hidden');
+      if (document.getElementById('admin-panel-overlay')?.classList.contains('admin-hidden')) {
+        document.body.classList.remove('admin-open');
+      }
+    }
+
+    function resetPublicationFilter() {
+      publicationFilter = {
+        active:false,
+        mode:'recent',
+        yearsBack:5,
+        fromYear:null,
+        toYear:null,
+        category:'all'
+      };
+      closePublicationFilter();
+      renderSections();
+      updatePublicationFilterButton();
+      showPremiumToast(
+        currentLang === 'th' ? 'ยกเลิกตัวกรองและแสดงผลงานทั้งหมดแล้ว' : 'Publication filter cleared.',
+        'success'
+      );
+    }
+
+    function updateUserFeatureLabels() {
+      els.exportPdfSelectedLabel.textContent = currentLang === 'th' ? 'PDF เลือกหัวข้อ' : 'Select PDF';
+      els.printSelectionTitle.textContent = currentLang === 'th'
+        ? 'เลือกหัวข้อที่ต้องการพิมพ์'
+        : 'Select CV sections to print';
+      els.printSelectAll.textContent = currentLang === 'th' ? 'เลือกทั้งหมด' : 'Select all';
+      els.printClearAll.textContent = currentLang === 'th' ? 'ล้างทั้งหมด' : 'Clear';
+      els.printSelectionCancel.textContent = currentLang === 'th' ? 'ยกเลิก' : 'Cancel';
+      els.printSelectionConfirmLabel.textContent = currentLang === 'th'
+        ? 'พิมพ์ PDF ที่เลือก'
+        : 'Print selected PDF';
+
+      document.getElementById('publication-filter-title').textContent = currentLang === 'th'
+        ? 'คัดกรองผลงานย้อนหลัง'
+        : 'Filter publications';
+      document.getElementById('publication-filter-description').textContent = currentLang === 'th'
+        ? 'เลือกจำนวนปีย้อนหลัง หรือกำหนดช่วงปีที่ต้องการ'
+        : 'Choose a recent period or define a custom year range.';
+      document.getElementById('publication-filter-mode-label').textContent = currentLang === 'th'
+        ? 'รูปแบบการคัดกรอง'
+        : 'Filter method';
+      document.getElementById('publication-filter-years-label').textContent = currentLang === 'th'
+        ? 'จำนวนปีย้อนหลัง'
+        : 'Number of recent years';
+      document.getElementById('publication-filter-from-label').textContent = currentLang === 'th'
+        ? 'ตั้งแต่ปี'
+        : 'From year';
+      document.getElementById('publication-filter-to-label').textContent = currentLang === 'th'
+        ? 'ถึงปี'
+        : 'To year';
+      document.getElementById('publication-filter-category-label').textContent = currentLang === 'th'
+        ? 'ประเภทผลงาน'
+        : 'Publication type';
+
+      const mode = els.publicationFilterForm.elements.mode;
+      mode.options[0].textContent = currentLang === 'th' ? 'ย้อนหลังตามจำนวนปี' : 'Recent number of years';
+      mode.options[1].textContent = currentLang === 'th' ? 'กำหนดช่วงปีเอง' : 'Custom year range';
+
+      const category = els.publicationFilterForm.elements.category;
+      category.options[0].textContent = currentLang === 'th' ? 'ผลงานทั้งหมด' : 'All publications';
+      category.options[1].textContent = currentLang === 'th' ? 'บทความและบทความปริทัศน์' : 'Article & Review';
+      category.options[2].textContent = currentLang === 'th' ? 'หนังสือ' : 'Book';
+
+      els.publicationFilterReset.textContent = currentLang === 'th' ? 'ล้างตัวกรอง' : 'Reset';
+      els.publicationFilterCancel.textContent = currentLang === 'th' ? 'ยกเลิก' : 'Cancel';
+      document.querySelector('#publication-filter-apply span').textContent = currentLang === 'th'
+        ? 'ใช้ตัวกรอง'
+        : 'Apply filter';
+
+      updatePrintSelectionToolbar();
+      updatePublicationFilterButton();
+    }
+
     function setLanguage(lang) {
       currentLang = lang;
       localStorage.setItem('cv-language', lang);
       document.documentElement.lang = lang;
       els.btnEn.className = `lang-btn px-3 py-1.5 text-sm font-medium ${lang === 'en' ? 'active' : 'text-gray-600'}`;
       els.btnTh.className = `lang-btn px-3 py-1.5 text-sm font-medium ${lang === 'th' ? 'active' : 'text-gray-600'}`;
+      updateUserFeatureLabels();
       if (profile) render();
     }
 
@@ -1382,6 +2035,8 @@
 
 
     function renderPublicationGroups() {
+      const filteredEntries = filteredPublicationEntries();
+      const filterSummary = publicationFilterSummaryText();
       const groups = [
         { key: 'book', label: 'Book', labelTh: 'หนังสือ' },
         { key: 'article_review', label: 'Article & Review', labelTh: 'บทความและบทความปริทัศน์' }
@@ -1395,8 +2050,12 @@
       };
 
       return `<div class="mt-7 space-y-4">
+        ${publicationFilter.active ? `<div class="filter-active-summary">
+          <span class="filter-summary-badge"><i data-lucide="list-filter" class="w-3.5 h-3.5"></i>${escapeHtml(filterSummary)}</span>
+          <span>${filteredEntries.length.toLocaleString('en-US')} / ${publicationEntries.length.toLocaleString('en-US')} ${currentLang === 'th' ? 'รายการ' : 'items'}</span>
+        </div>` : ''}
         ${groups.map((group, index) => {
-          const items = publicationEntries
+          const items = filteredEntries
             .filter(item => item.category === group.key)
             .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
 
@@ -1527,25 +2186,34 @@
       els.sections.innerHTML = sections.map(section => {
         const title = localized(section.title_en, section.title_th);
         const open = Boolean(section.default_open);
-        return `<section class="border border-gray-200 rounded-lg overflow-hidden bg-white" data-section="${escapeHtml(section.section_key)}">
-          <button class="accordion-btn w-full flex items-center justify-between px-5 py-3 text-left font-semibold text-sm hover:bg-gray-50 transition" type="button" aria-expanded="${open}">
-            <span>${escapeHtml(title)}</span>
-            <i data-lucide="${open ? 'chevron-up' : 'chevron-down'}" class="w-4 h-4 opacity-50"></i>
-          </button>
+        const printKey = `section:${section.section_key}`;
+        return `<section class="border border-gray-200 rounded-lg overflow-hidden bg-white" data-section="${escapeHtml(section.section_key)}" data-print-key="${escapeHtml(printKey)}">
+          <div class="section-heading-row">
+            ${printSelectorMarkup(printKey, `${currentLang === 'th' ? 'เลือกพิมพ์' : 'Select for print'}: ${title}`)}
+            <button class="accordion-btn min-w-0 flex-1 flex items-center justify-between px-5 py-3 text-left font-semibold text-sm hover:bg-gray-50 transition" type="button" aria-expanded="${open}">
+              <span>${escapeHtml(title)}</span>
+              <i data-lucide="${open ? 'chevron-up' : 'chevron-down'}" class="w-4 h-4 opacity-50"></i>
+            </button>
+          </div>
           <div class="section-content ${open ? 'open' : ''}"><div class="section-inner"><div class="px-5 pb-4">${renderContent(section)}</div></div></div>
         </section>`;
       }).join('');
 
       document.querySelectorAll('.accordion-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const content = btn.nextElementSibling;
+          const headingRow = btn.closest('.section-heading-row');
+          const content = headingRow?.nextElementSibling;
+          if (!content) return;
           const isOpen = content.classList.toggle('open');
           btn.setAttribute('aria-expanded', String(isOpen));
           const icon = btn.querySelector('i');
-          icon.setAttribute('data-lucide', isOpen ? 'chevron-up' : 'chevron-down');
+          if (icon) icon.setAttribute('data-lucide', isOpen ? 'chevron-up' : 'chevron-down');
           window.lucide?.createIcons();
         });
       });
+
+      syncPrintSelectionCheckboxes();
+      updatePublicationFilterButton();
     }
 
     function render() {
@@ -1565,6 +2233,8 @@
         }).format(new Date());
         printGeneratedDateEl.textContent = `${generatedLabel} ${generatedDate}`;
       }
+      syncPrintSelectionCheckboxes();
+      updatePublicationFilterButton();
       window.lucide?.createIcons();
     }
 
@@ -1599,7 +2269,7 @@
 
       const { data: publicationData, error: publicationError } = await supabase
         .from('cv_publication_entries')
-        .select('id,category,citation,impact_factor,ranking,is_author,is_first_author,is_corresponding_author,display_order,doi')
+        .select('id,category,year,published_at,citation,impact_factor,ranking,is_author,is_first_author,is_corresponding_author,display_order,doi')
         .eq('profile_id', profileData.id)
         .eq('is_published', true)
         .in('category', ['book', 'article_review'])
@@ -1672,7 +2342,7 @@
     function prepareProfessionalWordClone() {
       const clone = prepareExportClone();
 
-      clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer').forEach(node => node.remove());
+      clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer, .print-section-selector').forEach(node => node.remove());
       clone.querySelectorAll('svg, i').forEach(node => node.remove());
 
       clone.querySelectorAll('.accordion-btn').forEach(button => {
@@ -2832,11 +3502,105 @@
     });
 
 
+
+    document.addEventListener('change', event => {
+      const checkbox = event.target.closest('.print-section-checkbox');
+      if (!checkbox) return;
+      const key = checkbox.dataset.printKey;
+      if (checkbox.checked) selectedPrintSections.add(key);
+      else selectedPrintSections.delete(key);
+      updatePrintSelectionToolbar();
+    });
+
+    els.exportPdfSelected.addEventListener('click', () => {
+      setPrintSelectionMode(true, { reset:true });
+      window.scrollTo({ top:0, behavior:'smooth' });
+    });
+
+    els.printSelectAll.addEventListener('click', () => {
+      selectedPrintSections = new Set(printableSectionKeys());
+      syncPrintSelectionCheckboxes();
+    });
+
+    els.printClearAll.addEventListener('click', () => {
+      selectedPrintSections.clear();
+      syncPrintSelectionCheckboxes();
+    });
+
+    els.printSelectionCancel.addEventListener('click', () => {
+      setPrintSelectionMode(false);
+    });
+
+    els.printSelectionConfirm.addEventListener('click', () => {
+      withPremiumLoading(() => exportSelectedPdf(), { context:'pdf' });
+    });
+
+    els.publicationFilterButton.addEventListener('click', openPublicationFilter);
+    els.publicationFilterClose.addEventListener('click', closePublicationFilter);
+    els.publicationFilterCancel.addEventListener('click', closePublicationFilter);
+    els.publicationFilterReset.addEventListener('click', resetPublicationFilter);
+    els.publicationFilterMode.addEventListener('change', updatePublicationFilterFields);
+
+    els.publicationFilterOverlay.addEventListener('click', event => {
+      if (event.target === els.publicationFilterOverlay) closePublicationFilter();
+    });
+
+    els.publicationFilterForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const mode = form.elements.mode.value;
+      const category = form.elements.category.value;
+      let yearsBack = Math.max(1, Math.min(50, Number(form.elements.years_back.value) || 5));
+      let fromYear = Number(form.elements.from_year.value);
+      let toYear = Number(form.elements.to_year.value);
+
+      if (mode === 'range') {
+        if (!Number.isInteger(fromYear) || !Number.isInteger(toYear)) {
+          showPremiumToast(
+            currentLang === 'th' ? 'กรุณากรอกปีเริ่มต้นและปีสิ้นสุด' : 'Enter both the start and end year.',
+            'warning'
+          );
+          return;
+        }
+        if (fromYear > toYear) {
+          [fromYear, toYear] = [toYear, fromYear];
+        }
+      } else {
+        fromYear = null;
+        toYear = null;
+      }
+
+      publicationFilter = {
+        active:true,
+        mode,
+        yearsBack,
+        fromYear,
+        toYear,
+        category
+      };
+
+      closePublicationFilter();
+      renderSections();
+      updatePublicationFilterButton();
+
+      const count = filteredPublicationEntries().length;
+      showPremiumToast(
+        currentLang === 'th'
+          ? `แสดงผลงานตามตัวกรองจำนวน ${count} รายการ`
+          : `${count} publications match the selected filter.`,
+        'success'
+      );
+
+      const publicationSection = document.querySelector('[data-section="publications"]');
+      publicationSection?.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+
     els.btnEn.addEventListener('click', () => setLanguage('en'));
     els.btnTh.addEventListener('click', () => setLanguage('th'));
     els.exportWord.addEventListener('click', () => withPremiumLoading(() => exportWord(), { context:'word' }));
     els.exportPdf.addEventListener('click', () => withPremiumLoading(() => exportPdf(), { context:'pdf' }));
     setLanguage(currentLang);
+    updateUserFeatureLabels();
     window.lucide?.createIcons();
 
     withPremiumLoading(() => loadCv(), { context:'load' }).catch(error => {
