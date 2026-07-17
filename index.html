@@ -29,8 +29,8 @@
     .export-btn { background:#fff; border:1px solid #cbd5e1; color:#334155; }
     .export-btn:hover { background:#f8fafc; }
     .export-a4 { width:210mm; min-height:297mm; box-sizing:border-box; background:#fff; padding:12mm; }
-    .black-bullet-list { list-style-type:disc; padding-left:1.25rem; }
-    .black-bullet-list li::marker { color:#000; font-size:1em; }
+    .references-list { list-style-type:disc; padding-left:1.25rem; }
+    .references-list li::marker { color:#000; font-size:1em; }
     .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
 
     @page { size:A4 portrait; margin:10mm; }
@@ -165,15 +165,6 @@
 
       .accordion-btn {
         cursor:default !important;
-      }
-
-      .black-bullet-list {
-        list-style-type:disc !important;
-        padding-left:5mm !important;
-      }
-
-      .black-bullet-list li::marker {
-        color:#000 !important;
       }
 
       a {
@@ -426,31 +417,6 @@
         }).join('')}</tbody></table></div>`;
       }
 
-      const blackBulletSections = new Set([
-        'memberships',
-        'skills',
-        'editorial_boards',
-        'journal_reviewer',
-        'proposal_reviewer',
-        'expert_committees',
-        'references'
-      ]);
-
-      if (blackBulletSections.has(section.section_key)) {
-        return `<ul class="black-bullet-list space-y-3 text-sm">${entries.map(entry => {
-          const title = localized(entry.title_en, entry.title_th);
-          const subtitle = localized(entry.subtitle_en, entry.subtitle_th);
-          const description = localized(entry.description_en, entry.description_th);
-          const date = formatEntryDate(entry);
-          return `<li class="pl-1 page-break-avoid">
-            <div class="whitespace-pre-line">${escapeHtml(title)}</div>
-            ${subtitle ? `<div class="text-slate-600 whitespace-pre-line">${escapeHtml(subtitle)}</div>` : ''}
-            ${description ? `<div class="text-slate-500 whitespace-pre-line">${escapeHtml(description)}</div>` : ''}
-            ${date ? `<div class="mt-1 text-xs text-slate-400">${escapeHtml(date)}</div>` : ''}
-          </li>`;
-        }).join('')}</ul>`;
-      }
-
       if (section.content_type === 'skills') {
         return `<div class="grid md:grid-cols-2 gap-2 text-sm">${entries.map(entry => {
           const title = localized(entry.title_en, entry.title_th);
@@ -472,19 +438,10 @@
         }).join('')}</div>`;
       }
 
-      const blackBulletSections = new Set([
-        'memberships',
-        'skills',
-        'editorial_boards',
-        'journal_reviewer',
-        'proposal_reviewer',
-        'expert_committees',
-        'references'
-      ]);
-      const useBlackBullets = blackBulletSections.has(section.section_key);
-      const listTag = useBlackBullets ? 'ul' : 'ol';
-      const listClass = useBlackBullets
-        ? 'black-bullet-list space-y-3 text-sm'
+      const isReferences = section.section_key === 'references';
+      const listTag = isReferences ? 'ul' : 'ol';
+      const listClass = isReferences
+        ? 'references-list space-y-4 text-sm'
         : 'list-decimal pl-5 space-y-2 text-sm';
 
       return `<${listTag} class="${listClass}">${entries.map(entry => {
@@ -805,8 +762,8 @@
         details > * { display:block !important; }
         summary { font-weight:bold; margin:10pt 0 6pt; }
         a { color:#1d4ed8; }
-        .black-bullet-list { list-style-type:disc; padding-left:18pt; }
-        .black-bullet-list li::marker { color:#000; }
+        .references-list { list-style-type:disc; padding-left:18pt; }
+        .references-list li::marker { color:#000; }
       `;
       const html = `<!doctype html><html><head><meta charset="utf-8"><style>${wordCss}</style></head><body>${clone.outerHTML}</body></html>`;
 
