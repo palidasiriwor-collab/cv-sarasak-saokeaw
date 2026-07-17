@@ -32,6 +32,14 @@
     .black-bullet-list { list-style-type:disc; padding-left:1.25rem; }
     .black-bullet-list li::marker { color:#000; font-size:1em; }
     .invited-speaking-title { font-weight:400 !important; }
+    .publication-entry { break-inside:avoid; page-break-inside:avoid; }
+    .publication-links { display:flex; flex-wrap:wrap; gap:.45rem 1rem; margin-top:.4rem; }
+    .publication-doi-link, .publication-journal-link {
+      color:#1d4ed8; font-size:.76rem; font-weight:500; text-decoration:none;
+      overflow-wrap:anywhere; word-break:break-word;
+    }
+    .publication-doi-link:hover, .publication-journal-link:hover { text-decoration:underline; }
+    .cv-print-running-header, .cv-print-running-footer { display:none; }
 
     .teaching-group + .teaching-group { margin-top:1.75rem; }
     .teaching-group-title {
@@ -73,194 +81,156 @@
     }
     .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
 
-    @page { size:A4 portrait; margin:10mm; }
+    @page { size:A4 portrait; margin:17mm 14mm 18mm; }
     @media print {
       html, body {
-        width:auto !important;
-        min-width:0 !important;
-        margin:0 !important;
-        padding:0 !important;
-        background:#fff !important;
-        color:#0f172a !important;
-        -webkit-print-color-adjust:exact;
-        print-color-adjust:exact;
+        width:auto !important; min-width:0 !important;
+        margin:0 !important; padding:0 !important;
+        background:#fff !important; color:#111827 !important;
+        font-family:Arial, "Noto Sans Thai", "TH Sarabun New", sans-serif !important;
+        font-size:9.6pt !important; line-height:1.42 !important;
+        -webkit-print-color-adjust:exact; print-color-adjust:exact;
       }
 
-      #export-controls,
-      .lang-btn,
-      #status,
-      footer {
-        display:none !important;
+      #export-controls, .lang-btn, #status, footer, .admin-ui { display:none !important; }
+      .cv-print-running-header, .cv-print-running-footer {
+        display:flex !important; position:fixed; left:0; right:0;
+        align-items:center; justify-content:space-between;
+        color:#64748b; font-size:7.5pt; letter-spacing:.02em;
+      }
+      .cv-print-running-header {
+        top:-11mm; padding-bottom:2mm; border-bottom:.4pt solid #cbd5e1;
+        text-transform:uppercase; font-weight:700; letter-spacing:.12em;
+      }
+      .cv-print-running-footer {
+        bottom:-12mm; padding-top:2mm; border-top:.4pt solid #cbd5e1;
       }
 
       #cv-export {
-        width:100% !important;
-        max-width:none !important;
-        min-height:0 !important;
-        margin:0 !important;
-        box-shadow:none !important;
-        overflow:visible !important;
+        width:100% !important; max-width:none !important; min-height:0 !important;
+        margin:0 !important; box-shadow:none !important; overflow:visible !important;
       }
-
-      #cv-export > main {
-        padding:0 !important;
-        overflow:visible !important;
-      }
+      #cv-export > main { padding:0 !important; overflow:visible !important; }
 
       #header {
-        grid-template-columns:38mm minmax(0,1fr) !important;
-        gap:5mm !important;
-        margin-bottom:6mm !important;
-        align-items:start !important;
+        display:grid !important;
+        grid-template-columns:34mm minmax(0,1fr) !important;
+        gap:5mm !important; align-items:start !important;
+        margin:0 0 6mm !important; padding:0 0 5mm !important;
+        border-bottom:1.6pt solid #1e3a5f !important;
       }
-
       #header > aside {
         grid-column:1 / -1 !important;
+        margin-top:1mm !important; padding:3mm 0 0 !important;
+        border:0 !important; border-top:.5pt solid #cbd5e1 !important;
+        border-radius:0 !important; box-shadow:none !important;
       }
-
       #profile-photo {
-        width:36mm !important;
-        height:46mm !important;
+        display:block !important; width:32mm !important; height:42mm !important;
+        border:.5pt solid #cbd5e1 !important; border-radius:2mm !important;
+        box-shadow:none !important; object-fit:cover !important; object-position:top !important;
       }
+      #photo-placeholder { display:none !important; }
+      #prof-name { margin:0 !important; font-size:20pt !important; line-height:1.1 !important; color:#0f2942 !important; }
+      #prof-credentials { margin-top:1.5mm !important; font-size:9pt !important; color:#475569 !important; }
+      #prof-name-th { margin-top:2mm !important; font-size:10pt !important; }
+      #identifiers { margin-top:3mm !important; font-size:8pt !important; line-height:1.3 !important; }
+      #contacts-heading { margin:0 0 2mm !important; padding:0 0 1mm !important; font-size:10pt !important; border-bottom:.5pt solid #94a3b8 !important; }
+      #contact-groups { display:grid !important; grid-template-columns:1fr 1fr !important; gap:2mm 8mm !important; font-size:8pt !important; }
+      #website-wrap { margin-top:2mm !important; font-size:8pt !important; }
+      .sidebar { background:#fff !important; }
 
-      .sidebar {
-        background:#fff !important;
-        box-shadow:none !important;
+      #bio-section, #publications-dashboard-top { margin-bottom:5mm !important; }
+      #bio-heading, #publications-dashboard-heading {
+        margin:0 0 2mm !important; padding:0 0 1.4mm !important;
+        font-size:12.5pt !important; line-height:1.2 !important;
+        color:#0f2942 !important; border-bottom:1pt solid #1e3a5f !important;
       }
+      #publications-dashboard-eyebrow { display:none !important; }
+      #publications-dashboard-updated { font-size:7.5pt !important; }
+      #bio-text { font-size:9pt !important; line-height:1.5 !important; text-align:justify !important; }
 
-      /* Force all accordion content to become normal printable flow. */
-      .section-content,
-      .section-content.open {
-        display:block !important;
-        grid-template-rows:none !important;
-        height:auto !important;
-        max-height:none !important;
-        overflow:visible !important;
-        opacity:1 !important;
-        visibility:visible !important;
-        transition:none !important;
-      }
-
-      .section-inner {
-        display:block !important;
-        height:auto !important;
-        max-height:none !important;
-        overflow:visible !important;
-      }
-
-      details,
-      details[open] {
-        display:block !important;
-        height:auto !important;
-        max-height:none !important;
-        overflow:visible !important;
-        break-inside:auto !important;
-        page-break-inside:auto !important;
-      }
-
-      details > summary {
-        display:block !important;
-        list-style:none !important;
-      }
-
-      details > summary::-webkit-details-marker {
-        display:none !important;
-      }
-
-      details > :not(summary) {
-        display:block !important;
-        height:auto !important;
-        max-height:none !important;
-        overflow:visible !important;
-      }
-
-      #main-sections,
-      #main-sections > section,
-      #publications-dashboard-top,
-      #bio-section {
-        display:block !important;
-        height:auto !important;
-        max-height:none !important;
-        overflow:visible !important;
-        break-inside:auto !important;
-        page-break-inside:auto !important;
-      }
-
-      /* Keep each record together, but allow long sections to continue on later pages. */
-      tr,
-      .page-break-avoid,
-      .metric-card,
-      #header,
-      #bio-section {
+      #publications-dashboard-content .metric-card {
+        display:inline-block !important; width:47.5% !important;
+        box-sizing:border-box !important; margin:0 1.5% 2.5mm 0 !important;
+        padding:2.4mm !important; vertical-align:top !important;
+        border:.5pt solid #cbd5e1 !important; border-radius:1.5mm !important;
+        box-shadow:none !important; background:#fff !important;
         break-inside:avoid !important;
-        page-break-inside:avoid !important;
       }
+      .metric-value { font-size:18pt !important; color:#0f2942 !important; }
 
-      article,
-      section,
-      details {
-        orphans:3;
-        widows:3;
+      #main-sections { display:block !important; }
+      #main-sections > section {
+        display:block !important; margin:0 0 3.5mm !important;
+        border:0 !important; border-radius:0 !important; overflow:visible !important;
+        background:#fff !important; break-inside:auto !important;
       }
-
       .accordion-btn {
-        cursor:default !important;
+        display:block !important; width:100% !important;
+        margin:0 0 1.7mm !important; padding:2.2mm 0 1.4mm !important;
+        border:0 !important; border-bottom:.8pt solid #94a3b8 !important;
+        background:#fff !important; color:#0f2942 !important;
+        font-family:inherit !important; font-size:11.5pt !important;
+        font-weight:700 !important; line-height:1.2 !important; text-align:left !important;
+        cursor:default !important; break-after:avoid !important; page-break-after:avoid !important;
+      }
+      .accordion-btn i, .accordion-btn svg { display:none !important; }
+      .section-content, .section-content.open, .section-inner {
+        display:block !important; grid-template-rows:none !important;
+        height:auto !important; max-height:none !important; overflow:visible !important;
+        opacity:1 !important; visibility:visible !important; transition:none !important;
+      }
+      .section-inner > div { padding:0 !important; }
+
+      details, details[open] {
+        display:block !important; height:auto !important; max-height:none !important;
+        margin:0 0 3mm !important; overflow:visible !important;
+        border:0 !important; border-radius:0 !important;
+        break-inside:auto !important; page-break-inside:auto !important;
+      }
+      details > summary {
+        display:block !important; margin:0 0 1.5mm !important; padding:1.5mm 0 !important;
+        border-bottom:.5pt solid #cbd5e1 !important; list-style:none !important;
+        color:#334155 !important; font-size:10.5pt !important; font-weight:700 !important;
+        break-after:avoid !important; page-break-after:avoid !important;
+      }
+      details > summary::-webkit-details-marker { display:none !important; }
+      details > :not(summary) {
+        display:block !important; height:auto !important; max-height:none !important;
+        padding:0 !important; overflow:visible !important;
       }
 
-      .black-bullet-list {
-        list-style-type:disc !important;
-        padding-left:5mm !important;
+      p, li, td { orphans:3; widows:3; }
+      tr, .page-break-avoid, .publication-entry, #header, #bio-section {
+        break-inside:avoid !important; page-break-inside:avoid !important;
       }
-
-      .black-bullet-list li::marker {
-        color:#000 !important;
+      .publication-entry { margin-bottom:2.5mm !important; font-size:8.8pt !important; line-height:1.45 !important; }
+      .publication-links { margin-top:1mm !important; gap:1mm 4mm !important; }
+      .publication-doi-link, .publication-journal-link {
+        color:#1d4ed8 !important; font-size:7.8pt !important; text-decoration:underline !important;
       }
+      .black-bullet-list { list-style-type:disc !important; padding-left:5mm !important; }
+      .black-bullet-list li::marker { color:#000 !important; }
+      .invited-speaking-title { font-weight:400 !important; }
 
-      .invited-speaking-title {
-        font-weight:400 !important;
-      }
-
-      .teaching-group {
-        break-inside:auto !important;
-        page-break-inside:auto !important;
-        margin-top:0 !important;
-        margin-bottom:5mm !important;
-      }
-
+      .teaching-group { margin:0 0 5mm !important; break-inside:auto !important; }
       .teaching-group-title {
-        break-after:avoid !important;
-        page-break-after:avoid !important;
+        margin:0 0 1.5mm !important; font-size:10.5pt !important; color:#334155 !important;
+        break-after:avoid !important; page-break-after:avoid !important;
       }
+      .teaching-table { width:100% !important; min-width:0 !important; table-layout:fixed !important; font-size:8.5pt !important; }
+      .teaching-table thead { display:table-header-group !important; }
+      .teaching-table tr { break-inside:avoid !important; page-break-inside:avoid !important; }
+      .teaching-table th {
+        padding:1.6mm 1.8mm !important; background:#eef2f7 !important;
+        color:#0f2942 !important; border-top:.6pt solid #94a3b8 !important;
+        border-bottom:.8pt solid #64748b !important;
+      }
+      .teaching-table td { padding:1.6mm 1.8mm !important; border-bottom:.35pt solid #dbe3ec !important; }
+      .teaching-table .repeat-year { color:transparent !important; }
 
-      .teaching-table {
-        width:100% !important;
-        min-width:0 !important;
-        table-layout:fixed !important;
-        font-size:9pt !important;
-      }
-
-      .teaching-table thead {
-        display:table-header-group !important;
-      }
-
-      .teaching-table tr {
-        break-inside:avoid !important;
-        page-break-inside:avoid !important;
-      }
-
-      .teaching-table th,
-      .teaching-table td {
-        padding:2.2mm 2mm !important;
-      }
-
-      .teaching-table .repeat-year {
-        color:transparent !important;
-      }
-
-      a {
-        color:inherit !important;
-        text-decoration:none !important;
-      }
+      a { color:#1d4ed8 !important; text-decoration:underline !important; }
     }
   
     /* Integrated PIN Admin */
@@ -404,6 +374,8 @@
   <div id="status" class="max-w-6xl mx-auto px-6 pt-6 text-sm" role="status" aria-live="polite"></div>
 
   <div id="cv-export" class="max-w-6xl mx-auto min-h-screen bg-white shadow-sm">
+    <div class="cv-print-running-header"><span>Academic Curriculum Vitae</span><span id="cv-print-name"></span></div>
+    <div class="cv-print-running-footer"><span id="cv-print-footer-name"></span><span>Academic CV</span></div>
     <main class="p-6 md:p-10">
       <div id="header" class="grid grid-cols-1 md:grid-cols-[180px_minmax(0,1fr)] xl:grid-cols-[180px_minmax(0,1fr)_320px] gap-6 xl:gap-8 items-start mb-8">
         <div class="flex justify-center md:justify-start">
@@ -602,6 +574,8 @@
                 <select name="ranking"><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option><option>TCI1</option><option>TCI2</option><option>TCI3</option><option value="-">-</option></select>
               </div>
               <div class="admin-field md:col-span-2"><label>Citation (NLM)</label><textarea name="citation" rows="5" required></textarea></div>
+              <div class="admin-field md:col-span-2"><label>DOI Link</label><input name="doi" type="url" placeholder="https://doi.org/10.1007/s41999-025-01398-3"></div>
+              <div class="admin-field md:col-span-2"><label>Journal URL (ไม่บังคับ)</label><input name="url" type="url" placeholder="https://journal.example/article"></div>
               <div class="admin-field"><label>Impact factor</label><input name="impact_factor" inputmode="decimal"></div>
               <div class="admin-field"><label>ลำดับ</label><input name="display_order" type="number"></div>
               <label class="flex items-center gap-2 text-sm"><input name="is_first_author" type="checkbox"> First Author</label>
@@ -1042,6 +1016,42 @@
     }
 
 
+    function safeExternalUrl(value) {
+      if (!value) return '';
+      try {
+        const url = new URL(String(value).trim(), window.location.href);
+        if (!['http:', 'https:'].includes(url.protocol)) return '';
+        return url.href;
+      } catch (_) {
+        return '';
+      }
+    }
+
+    function normalizeDoiUrl(value) {
+      if (!value) return '';
+      let raw = String(value).trim().replace(/^doi:\s*/i, '');
+      if (!/^https?:\/\//i.test(raw)) raw = `https://doi.org/${raw}`;
+      try {
+        const url = new URL(raw);
+        const host = url.hostname.toLowerCase();
+        if (!['doi.org', 'www.doi.org', 'dx.doi.org'].includes(host)) return '';
+        if (!/^\/10\.\d{4,9}\/.+/i.test(url.pathname)) return '';
+        return `https://doi.org${url.pathname}${url.search}${url.hash}`;
+      } catch (_) {
+        return '';
+      }
+    }
+
+    function doiDisplayText(url) {
+      if (!url) return '';
+      try {
+        return decodeURIComponent(new URL(url).pathname.replace(/^\//, ''));
+      } catch (_) {
+        return String(url).replace(/^https?:\/\/(dx\.)?doi\.org\//i, '');
+      }
+    }
+
+
     function renderPublicationGroups() {
       const groups = [
         { key: 'book', label: 'Book', labelTh: 'หนังสือ' },
@@ -1075,8 +1085,16 @@
                     item.impact_factor !== null && item.impact_factor !== undefined ? `IF ${item.impact_factor}` : null,
                     authorRole(item)
                   ].filter(Boolean);
-                  return `<li class="pl-1 text-sm leading-relaxed text-slate-700">
+                  const doiUrl = normalizeDoiUrl(item.doi || (String(item.url || '').includes('doi.org/') ? item.url : ''));
+                  const journalUrl = safeExternalUrl(item.url);
+                  const separateJournalUrl = journalUrl && journalUrl !== doiUrl ? journalUrl : '';
+                  const links = [
+                    doiUrl ? `<a class="publication-doi-link" href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener noreferrer">DOI: ${escapeHtml(doiDisplayText(doiUrl))}</a>` : '',
+                    separateJournalUrl ? `<a class="publication-journal-link" href="${escapeHtml(separateJournalUrl)}" target="_blank" rel="noopener noreferrer">${currentLang === 'th' ? 'ดูบทความในวารสาร' : 'View journal article'}</a>` : ''
+                  ].filter(Boolean);
+                  return `<li class="publication-entry pl-1 text-sm leading-relaxed text-slate-700">
                     <div>${escapeHtml(item.citation || '')}</div>
+                    ${links.length ? `<div class="publication-links">${links.join('')}</div>` : ''}
                     ${badges.length ? `<div class="mt-2 flex flex-wrap gap-2">${badges.map(badge => `<span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">${escapeHtml(badge)}</span>`).join('')}</div>` : ''}
                   </li>`;
                 }).join('')}
@@ -1209,6 +1227,11 @@
       renderTopPublicationDashboard();
       renderSections();
       els.footer.textContent = localized(profile.footer_en, profile.footer_th);
+      const printName = profile.name_en || profile.name_th || 'Academic CV';
+      const printNameEl = document.getElementById('cv-print-name');
+      const printFooterNameEl = document.getElementById('cv-print-footer-name');
+      if (printNameEl) printNameEl.textContent = printName;
+      if (printFooterNameEl) printFooterNameEl.textContent = printName;
       window.lucide?.createIcons();
     }
 
@@ -1243,7 +1266,7 @@
 
       const { data: publicationData, error: publicationError } = await supabase
         .from('cv_publication_entries')
-        .select('id,category,citation,impact_factor,ranking,is_first_author,is_corresponding_author,display_order')
+        .select('id,category,citation,impact_factor,ranking,is_first_author,is_corresponding_author,display_order,doi,url')
         .eq('profile_id', profileData.id)
         .eq('is_published', true)
         .in('category', ['book', 'article_review'])
@@ -1313,6 +1336,78 @@
       return clone;
     }
 
+    function prepareProfessionalWordClone() {
+      const clone = prepareExportClone();
+
+      clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer').forEach(node => node.remove());
+      clone.querySelectorAll('svg, i').forEach(node => node.remove());
+
+      clone.querySelectorAll('.accordion-btn').forEach(button => {
+        const heading = document.createElement('h2');
+        heading.className = 'word-section-heading';
+        heading.textContent = button.textContent.trim();
+        button.replaceWith(heading);
+      });
+
+      clone.querySelectorAll('details').forEach(detail => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'word-publication-group';
+        const summary = detail.querySelector(':scope > summary');
+        if (summary) {
+          const heading = document.createElement('h3');
+          heading.className = 'word-subheading';
+          heading.textContent = summary.textContent.trim();
+          wrapper.appendChild(heading);
+        }
+        Array.from(detail.children).forEach(child => {
+          if (child !== summary) wrapper.appendChild(child);
+        });
+        detail.replaceWith(wrapper);
+      });
+
+      const oldHeader = clone.querySelector('#header');
+      if (oldHeader) {
+        const photo = oldHeader.querySelector('#profile-photo');
+        const identifiers = oldHeader.querySelector('#identifiers');
+        const contacts = oldHeader.querySelector('#contact-groups');
+        const website = oldHeader.querySelector('#website-wrap');
+        const header = document.createElement('div');
+        header.className = 'word-profile-header';
+        header.innerHTML = `
+          <div class="word-document-kicker">ACADEMIC CURRICULUM VITAE</div>
+          <table class="word-profile-table" role="presentation">
+            <tr>
+              <td class="word-photo-cell">${photo && !photo.classList.contains('hidden') ? photo.outerHTML : ''}</td>
+              <td class="word-profile-cell">
+                <h1>${escapeHtml(profile?.name_en || '')}</h1>
+                <p class="word-credentials">${escapeHtml(profile?.credentials_en || '')}</p>
+                ${profile?.name_th ? `<p class="word-name-th">${escapeHtml(profile.name_th)}</p>` : ''}
+                <div class="word-identifiers">${identifiers ? identifiers.innerHTML : ''}</div>
+              </td>
+            </tr>
+          </table>
+          <div class="word-contact-block">
+            <div class="word-contact-title">${currentLang === 'th' ? 'ข้อมูลติดต่อ' : 'Contact Information'}</div>
+            ${contacts ? contacts.innerHTML : ''}
+            ${website ? website.innerHTML : ''}
+          </div>`;
+        oldHeader.replaceWith(header);
+      }
+
+      clone.querySelectorAll('a').forEach(link => {
+        link.setAttribute('target', '_blank');
+        link.style.color = '#1d4ed8';
+        link.style.textDecoration = 'underline';
+      });
+
+      const generated = document.createElement('p');
+      generated.className = 'word-generated-note';
+      generated.textContent = `${currentLang === 'th' ? 'เอกสารปรับปรุงเมื่อ' : 'Document generated'} ${new Intl.DateTimeFormat(currentLang === 'th' ? 'th-TH' : 'en-GB', { day:'2-digit', month:'long', year:'numeric' }).format(new Date())}`;
+      clone.appendChild(generated);
+      clone.classList.add('WordSection1');
+      return clone;
+    }
+
     function exportFileName(ext) {
       const safe = (profile?.name_en || 'academic-cv').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       return `${safe || 'academic-cv'}.${ext}`;
@@ -1330,41 +1425,97 @@
     }
 
     async function exportWord() {
-      const clone = prepareExportClone();
+      if (!profile) {
+        setStatus(currentLang === 'th' ? 'กรุณารอให้ข้อมูล CV โหลดเสร็จก่อนส่งออก Word' : 'Please wait until the CV has finished loading before exporting Word.', 'error');
+        return;
+      }
+
+      const clone = prepareProfessionalWordClone();
       const wordCss = `
-        @page { size: A4; margin: 14mm; }
-        body { font-family: Arial, sans-serif; color:#0f172a; font-size:10.5pt; line-height:1.45; }
-        h1 { font-size:22pt; margin:0 0 4pt; }
-        h2 { font-size:15pt; border-bottom:1px solid #cbd5e1; padding-bottom:4pt; margin:14pt 0 8pt; }
-        h3 { font-size:11pt; margin:8pt 0 4pt; }
+        @page WordSection1 {
+          size:595.3pt 841.9pt;
+          margin:42.5pt 42.5pt 50pt 42.5pt;
+          mso-header-margin:20pt;
+          mso-footer-margin:20pt;
+        }
+        div.WordSection1 { page:WordSection1; }
+        body {
+          font-family:Aptos, Arial, "Noto Sans Thai", "TH Sarabun New", sans-serif;
+          color:#111827; font-size:9.5pt; line-height:1.42;
+        }
+        #cv-export { width:100%; margin:0; padding:0; }
+        main { padding:0; }
+        .word-document-kicker {
+          margin:0 0 8pt; padding:0 0 5pt;
+          border-bottom:1.5pt solid #1e3a5f;
+          color:#1e3a5f; font-size:8pt; font-weight:700; letter-spacing:1.4pt;
+        }
+        .word-profile-table { width:100%; border-collapse:collapse; margin:0 0 8pt; }
+        .word-profile-table td { border:0; vertical-align:top; padding:0; }
+        .word-photo-cell { width:105pt; padding-right:12pt !important; }
+        .word-photo-cell img { width:90pt; height:118pt; object-fit:cover; border:.5pt solid #cbd5e1; }
+        .word-profile-cell h1 { margin:1pt 0 3pt; color:#0f2942; font-size:21pt; line-height:1.08; }
+        .word-credentials { margin:0 0 5pt; color:#475569; font-size:9pt; }
+        .word-name-th { margin:0 0 7pt; font-weight:700; }
+        .word-identifiers { font-size:8pt; line-height:1.3; }
+        .word-contact-block { margin:0 0 12pt; padding:7pt 8pt; border:.5pt solid #cbd5e1; background:#f8fafc; }
+        .word-contact-title { margin:0 0 5pt; color:#0f2942; font-weight:700; }
+        #contact-groups { display:table; width:100%; }
+        #contact-groups > * { display:table-cell; width:50%; padding-right:10pt; vertical-align:top; }
+        #website-wrap { margin-top:5pt; }
+        #bio-section { margin:0 0 12pt; }
+        #bio-heading, #publications-dashboard-heading, .word-section-heading {
+          margin:12pt 0 6pt; padding:0 0 4pt;
+          border-bottom:1pt solid #1e3a5f;
+          color:#0f2942; font-size:13pt; font-weight:700; line-height:1.2;
+          page-break-after:avoid;
+        }
+        #publications-dashboard-eyebrow { display:none; }
+        #bio-text { margin:0; text-align:justify; font-size:9pt; }
+        .section-content, .section-inner { display:block !important; height:auto !important; overflow:visible !important; }
+        .section-inner > div { padding:0 !important; }
+        .word-subheading, .teaching-group-title {
+          margin:8pt 0 4pt; color:#334155; font-size:10.5pt; font-weight:700; page-break-after:avoid;
+        }
+        .word-publication-group { margin:0 0 8pt; }
         table { width:100%; border-collapse:collapse; }
-        td { vertical-align:top; padding:5pt 4pt; border-bottom:1px solid #e2e8f0; }
-        img { max-width:140px; height:auto; }
-        section, article, tr { page-break-inside:avoid; }
-        .section-content { display:block !important; }
-        details > * { display:block !important; }
-        summary { font-weight:bold; margin:10pt 0 6pt; }
-        a { color:#1d4ed8; }
-        .black-bullet-list { list-style-type:disc; padding-left:18pt; }
-        .black-bullet-list li::marker { color:#000; }
-        .invited-speaking-title { font-weight:400 !important; }
-        .teaching-group { margin-bottom:14pt; }
-        .teaching-group-title { font-size:11pt; font-weight:700; margin:8pt 0 5pt; }
-        .teaching-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:9.5pt; }
-        .teaching-table th { padding:5pt; border-bottom:1pt solid #94a3b8; text-align:left; font-weight:700; }
-        .teaching-table td { padding:4pt 5pt; border-bottom:.5pt solid #e2e8f0; vertical-align:top; }
+        th { padding:4pt 5pt; background:#eef2f7; color:#0f2942; border-top:.5pt solid #94a3b8; border-bottom:.8pt solid #64748b; text-align:left; }
+        td { padding:4pt 5pt; vertical-align:top; border-bottom:.35pt solid #dbe3ec; }
+        tr, li, .publication-entry, .metric-card { page-break-inside:avoid; }
+        ol { margin:0 0 6pt; padding-left:20pt; }
+        ul { margin:0 0 6pt; padding-left:18pt; }
+        li { margin:0 0 4pt; }
+        .black-bullet-list { list-style-type:disc; }
+        .publication-entry { margin-bottom:7pt; font-size:8.8pt; line-height:1.4; }
+        .publication-links { margin-top:2pt; }
+        .publication-doi-link, .publication-journal-link { color:#1d4ed8; text-decoration:underline; font-size:8pt; }
+        .metric-card {
+          display:inline-block; width:45%; margin:0 2% 7pt 0; padding:6pt;
+          border:.5pt solid #cbd5e1; vertical-align:top;
+        }
+        .metric-value { color:#0f2942; font-size:17pt; font-weight:700; }
+        .teaching-table { table-layout:fixed; font-size:8.5pt; }
         .teaching-table .academic-year-col { width:17%; }
         .teaching-table .course-code-col { width:18%; }
         .teaching-table .course-title-col { width:65%; }
         .teaching-table .external-course-col { width:58%; }
         .teaching-table .institution-col { width:42%; }
         .teaching-table .repeat-year { color:#fff; }
+        .invited-speaking-title { font-weight:400; }
+        a { color:#1d4ed8; text-decoration:underline; }
+        .word-generated-note {
+          margin-top:16pt; padding-top:5pt; border-top:.5pt solid #cbd5e1;
+          color:#64748b; font-size:7.5pt; text-align:right;
+        }
       `;
-      const html = `<!doctype html><html><head><meta charset="utf-8"><style>${wordCss}</style></head><body>${clone.outerHTML}</body></html>`;
+      const documentHtml = `<!doctype html><html><head><meta charset="utf-8"><style>${wordCss}</style></head><body><div class="WordSection1">${clone.outerHTML}</div></body></html>`;
 
       try {
         if (window.htmlDocx?.asBlob) {
-          const blob = window.htmlDocx.asBlob(html, { orientation:'portrait', margins:{ top:720, right:720, bottom:720, left:720 } });
+          const blob = window.htmlDocx.asBlob(documentHtml, {
+            orientation:'portrait',
+            margins:{ top:680, right:680, bottom:800, left:680, header:300, footer:300 }
+          });
           saveBlob(blob, exportFileName('docx'));
           return;
         }
@@ -1372,7 +1523,7 @@
         console.warn('DOCX export library failed, using Word-compatible HTML fallback.', error);
       }
 
-      saveBlob(new Blob(['\ufeff', html], { type:'application/msword' }), exportFileName('doc'));
+      saveBlob(new Blob(['\ufeff', documentHtml], { type:'application/msword' }), exportFileName('doc'));
     }
 
     function expandLiveDocumentForPrint() {
@@ -1762,6 +1913,8 @@
       form.elements.id.value = item.id;
       form.elements.category.value = item.category || 'article_review';
       form.elements.citation.value = item.citation || '';
+      form.elements.doi.value = item.doi || '';
+      form.elements.url.value = item.url || '';
       form.elements.ranking.value = item.ranking || '-';
       form.elements.impact_factor.value = item.impact_factor ?? '';
       form.elements.display_order.value = item.display_order ?? '';
@@ -1773,9 +1926,10 @@
 
     function renderAdminPublications() {
       const query = (adminEls.publicationSearch.value || '').trim().toLowerCase();
-      const rows = (adminSnapshot?.publications || []).filter(item =>
-        !query || String(item.citation || '').toLowerCase().includes(query)
-      );
+      const rows = (adminSnapshot?.publications || []).filter(item => {
+        const haystack = [item.citation, item.doi, item.url].filter(Boolean).join(' ').toLowerCase();
+        return !query || haystack.includes(query);
+      });
       adminEls.publicationsList.innerHTML = rows.length ? rows.map(item => `
         <article class="admin-row ${item.is_published ? '' : 'is-private'}" data-publication-id="${escapeHtml(item.id)}">
           <div>
@@ -1785,6 +1939,7 @@
               ${item.impact_factor !== null ? `<span class="admin-badge">IF ${escapeHtml(item.impact_factor)}</span>` : ''}
             </div>
             <p class="mt-2 text-sm leading-relaxed">${escapeHtml(item.citation || '')}</p>
+            ${normalizeDoiUrl(item.doi) ? `<a class="publication-doi-link mt-2 inline-block" href="${escapeHtml(normalizeDoiUrl(item.doi))}" target="_blank" rel="noopener noreferrer">DOI: ${escapeHtml(doiDisplayText(normalizeDoiUrl(item.doi)))}</a>` : ''}
           </div>
           <div class="admin-row-actions">
             <button class="admin-icon-btn ${item.is_published ? 'eye-on' : 'eye-off'}" data-publication-action="toggle" type="button"><i data-lucide="${item.is_published ? 'eye' : 'eye-off'}" class="w-4 h-4"></i></button>
@@ -2030,6 +2185,8 @@
         id:form.elements.id.value || null,
         category:form.elements.category.value,
         citation:form.elements.citation.value,
+        doi:form.elements.doi.value.trim(),
+        url:form.elements.url.value.trim(),
         ranking:form.elements.ranking.value,
         impact_factor:form.elements.impact_factor.value,
         display_order:form.elements.display_order.value,
@@ -2038,7 +2195,13 @@
         is_published:form.elements.is_published.checked
       };
       try {
-        await adminAction('publication_save', payload);
+        const { data: saveResult, error: saveError } = await supabase.rpc('cv_pin_publication_save', {
+          p_token: adminToken,
+          p_profile_slug: PROFILE_SLUG,
+          p_payload: payload
+        });
+        if (saveError) throw saveError;
+        if (!saveResult?.ok) throw new Error('Unable to save publication');
         resetPublicationForm();
         await refreshAdminSnapshot({ reloadPublic:true });
         adminSetStatus('บันทึก Publication แล้ว', 'success');
