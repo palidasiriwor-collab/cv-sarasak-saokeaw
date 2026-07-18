@@ -32,7 +32,32 @@
     .black-bullet-list { list-style-type:disc; padding-left:1.25rem; }
     .black-bullet-list li::marker { color:#000; font-size:1em; }
     .invited-speaking-title { font-weight:400 !important; }
-    .publication-entry { break-inside:avoid; page-break-inside:avoid; }
+    .publication-entry {
+      break-inside:avoid;
+      page-break-inside:avoid;
+      padding-bottom:.85rem;
+      border-bottom:1px solid #eef2f7;
+    }
+    .publication-entry:last-child { border-bottom:0; }
+    .publication-date-row {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:baseline;
+      gap:.35rem;
+      margin:0 0 .35rem;
+      color:#64748b;
+      font-size:.74rem;
+      line-height:1.4;
+    }
+    .publication-date-label {
+      color:#334155;
+      font-weight:700;
+      letter-spacing:.02em;
+    }
+    .publication-citation {
+      color:#334155;
+      line-height:1.58;
+    }
     .publication-links { display:flex; flex-wrap:wrap; gap:.45rem 1rem; margin-top:.4rem; }
     .publication-doi-link {
       color:#1d4ed8; font-size:.76rem; font-weight:600; text-decoration:none;
@@ -81,14 +106,14 @@
     }
     .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
 
-    @page { size:A4 portrait; margin:14mm 14mm 16mm; }
+    @page { size:A4 portrait; margin:15mm 15mm 24mm; }
     @media print {
       html, body {
         width:auto !important; min-width:0 !important;
         margin:0 !important; padding:0 !important;
         background:#fff !important; color:#111827 !important;
         font-family:Arial, "Noto Sans Thai", "TH Sarabun New", sans-serif !important;
-        font-size:9.6pt !important; line-height:1.42 !important;
+        font-size:9.35pt !important; line-height:1.46 !important;
         -webkit-print-color-adjust:exact; print-color-adjust:exact;
       }
 
@@ -129,9 +154,15 @@
         letter-spacing:.035em;
       }
       .cv-print-running-footer {
-        margin:9mm 0 0 !important;
-        padding:2.8mm 0 0 !important;
+        position:fixed !important;
+        left:0 !important;
+        right:0 !important;
+        bottom:-16mm !important;
+        min-height:7mm !important;
+        margin:0 !important;
+        padding:2.4mm 0 0 !important;
         border-top:.65pt solid #9fb1c2;
+        background:#fff !important;
         break-inside:avoid !important;
         page-break-inside:avoid !important;
       }
@@ -224,13 +255,23 @@
         background:#fff !important; break-inside:auto !important;
       }
       .accordion-btn {
-        display:block !important; width:100% !important;
-        margin:0 0 1.7mm !important; padding:2.2mm 0 1.4mm !important;
-        border:0 !important; border-bottom:.8pt solid #94a3b8 !important;
-        background:#fff !important; color:#0f2942 !important;
-        font-family:inherit !important; font-size:11.5pt !important;
-        font-weight:700 !important; line-height:1.2 !important; text-align:left !important;
-        cursor:default !important; break-after:avoid !important; page-break-after:avoid !important;
+        display:block !important;
+        width:100% !important;
+        margin:0 0 2mm !important;
+        padding:2.1mm 0 1.7mm 3mm !important;
+        border:0 !important;
+        border-left:2.2pt solid #1e3a5f !important;
+        border-bottom:.55pt solid #b8c5d2 !important;
+        background:#fff !important;
+        color:#0f2942 !important;
+        font-family:inherit !important;
+        font-size:11.6pt !important;
+        font-weight:700 !important;
+        line-height:1.2 !important;
+        text-align:left !important;
+        cursor:default !important;
+        break-after:avoid !important;
+        page-break-after:avoid !important;
       }
       .accordion-btn i, .accordion-btn svg { display:none !important; }
       .section-content, .section-content.open, .section-inner {
@@ -259,10 +300,24 @@
       }
 
       p, li, td { orphans:3; widows:3; }
+      ol, ul { margin-top:0 !important; margin-bottom:2mm !important; }
       tr, .page-break-avoid, .publication-entry, #header, #bio-section {
         break-inside:avoid !important; page-break-inside:avoid !important;
       }
-      .publication-entry { margin-bottom:2.5mm !important; font-size:8.8pt !important; line-height:1.45 !important; }
+      .publication-entry {
+        margin:0 0 2.8mm !important;
+        padding:0 0 2.2mm !important;
+        border-bottom:.35pt solid #e2e8f0 !important;
+        font-size:8.7pt !important;
+        line-height:1.48 !important;
+      }
+      .publication-date-row {
+        margin:0 0 .8mm !important;
+        color:#64748b !important;
+        font-size:7.4pt !important;
+      }
+      .publication-date-label { color:#334155 !important; font-weight:700 !important; }
+      .publication-citation { color:#1f2937 !important; }
       .publication-links { margin-top:1mm !important; gap:1mm 4mm !important; }
       .publication-doi-link {
         color:#1d4ed8 !important; font-size:7.8pt !important; text-decoration:underline !important;
@@ -636,6 +691,16 @@
       }
 
       .print-excluded { display:none !important; }
+
+      body.print-selected-output #bio-section[data-print-selected="false"],
+      body.print-selected-output #publications-dashboard-top[data-print-selected="false"],
+      body.print-selected-output #main-sections > section[data-print-selected="false"] {
+        display:none !important;
+        break-before:auto !important;
+        page-break-before:auto !important;
+        break-after:auto !important;
+        page-break-after:auto !important;
+      }
 
       .print-section-heading-row,
       .section-heading-row {
@@ -1158,8 +1223,9 @@
                 <select name="ranking"><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option><option>TCI1</option><option>TCI2</option><option>TCI3</option><option value="-">-</option></select>
               </div>
               <div class="admin-field md:col-span-2"><label>Citation (NLM)</label><textarea name="citation" rows="5" required></textarea></div>
+              <div class="admin-field"><label>Date Published</label><input name="published_at" type="date"></div>
+              <div class="admin-field"><label>Impact factor</label><input name="impact_factor" inputmode="decimal"></div>
               <div class="admin-field md:col-span-2"><label>DOI Link</label><input name="doi" type="url" placeholder="https://doi.org/10.1007/s41999-025-01398-3"></div>
-                            <div class="admin-field"><label>Impact factor</label><input name="impact_factor" inputmode="decimal"></div>
               <div class="admin-field"><label>ลำดับ</label><input name="display_order" type="number"></div>
               <label class="flex items-center gap-2 text-sm"><input name="is_author" type="checkbox" checked> Author</label>
               <label class="flex items-center gap-2 text-sm"><input name="is_first_author" type="checkbox"> First Author</label>
@@ -1427,7 +1493,7 @@
     }
 
     function printSelectorMarkup(key, label) {
-      const checked = selectedPrintSections.size === 0 || selectedPrintSections.has(key);
+      const checked = selectedPrintSections.has(key);
       return `<label class="print-section-selector" title="${escapeHtml(label)}">
         <input class="print-section-checkbox" type="checkbox" data-print-key="${escapeHtml(key)}" ${checked ? 'checked' : ''} aria-label="${escapeHtml(label)}">
       </label>`;
@@ -1436,7 +1502,7 @@
     function syncPrintSelectionCheckboxes() {
       document.querySelectorAll('.print-section-checkbox').forEach(input => {
         const key = input.dataset.printKey;
-        input.checked = selectedPrintSections.size === 0 || selectedPrintSections.has(key);
+        input.checked = selectedPrintSections.has(key);
       });
       updatePrintSelectionToolbar();
     }
@@ -1463,19 +1529,32 @@
     }
 
     function applySelectedPrintVisibility() {
-      const states = Array.from(document.querySelectorAll('#cv-export [data-print-key]')).map(node => ({
+      const selector = [
+        '#bio-section[data-print-key]',
+        '#publications-dashboard-top[data-print-key]',
+        '#main-sections > section[data-print-key]'
+      ].join(',');
+
+      const states = Array.from(document.querySelectorAll(selector)).map(node => ({
         node,
-        wasExcluded:node.classList.contains('print-excluded')
+        wasExcluded:node.classList.contains('print-excluded'),
+        previousSelected:node.getAttribute('data-print-selected')
       }));
 
+      document.body.classList.add('print-selected-output');
+
       states.forEach(({ node }) => {
-        const key = node.dataset.printKey;
-        node.classList.toggle('print-excluded', !selectedPrintSections.has(key));
+        const selected = selectedPrintSections.has(node.dataset.printKey);
+        node.setAttribute('data-print-selected', selected ? 'true' : 'false');
+        node.classList.toggle('print-excluded', !selected);
       });
 
       return () => {
-        states.forEach(({ node, wasExcluded }) => {
+        document.body.classList.remove('print-selected-output');
+        states.forEach(({ node, wasExcluded, previousSelected }) => {
           node.classList.toggle('print-excluded', wasExcluded);
+          if (previousSelected === null) node.removeAttribute('data-print-selected');
+          else node.setAttribute('data-print-selected', previousSelected);
         });
       };
     }
@@ -1495,7 +1574,10 @@
       }
 
       const restoreVisibility = applySelectedPrintVisibility();
-      setPrintSelectionMode(false);
+
+      printSelectionMode = false;
+      document.body.classList.remove('print-selection-mode');
+      els.printSelectionToolbar.classList.add('feature-hidden');
 
       try {
         await exportPdf();
@@ -2034,6 +2116,27 @@
     }
 
 
+    function publicationPublishedDateValue(item) {
+      const rawDate = String(item?.published_at || '').slice(0, 10);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
+        return {
+          iso:rawDate,
+          display:new Intl.DateTimeFormat(currentLang === 'th' ? 'th-TH' : 'en-GB', {
+            day:'2-digit',
+            month:'short',
+            year:'numeric'
+          }).format(new Date(`${rawDate}T00:00:00`))
+        };
+      }
+
+      const year = Number(item?.year);
+      if (Number.isInteger(year) && year >= 1900 && year <= 2200) {
+        return { iso:String(year), display:String(year) };
+      }
+
+      return null;
+    }
+
     function renderPublicationGroups() {
       const filteredEntries = filteredPublicationEntries();
       const filterSummary = publicationFilterSummaryText();
@@ -2075,11 +2178,14 @@
                     authorRole(item)
                   ].filter(Boolean);
                   const doiUrl = normalizeDoiUrl(item.doi);
+                  const publishedDate = publicationPublishedDateValue(item);
+                  const dateLabel = currentLang === 'th' ? 'วันที่เผยแพร่' : 'Date Published';
                   const links = [
                     doiUrl ? `<a class="publication-doi-link" href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener noreferrer">DOI: ${escapeHtml(doiDisplayText(doiUrl))}</a>` : ''
                   ].filter(Boolean);
                   return `<li class="publication-entry pl-1 text-sm leading-relaxed text-slate-700">
-                    <div>${escapeHtml(item.citation || '')}</div>
+                    ${publishedDate ? `<div class="publication-date-row"><span class="publication-date-label">${escapeHtml(dateLabel)}:</span><time datetime="${escapeHtml(publishedDate.iso)}">${escapeHtml(publishedDate.display)}</time></div>` : ''}
+                    <div class="publication-citation">${escapeHtml(item.citation || '')}</div>
                     ${links.length ? `<div class="publication-links">${links.join('')}</div>` : ''}
                     ${badges.length ? `<div class="mt-2 flex flex-wrap gap-2">${badges.map(badge => `<span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">${escapeHtml(badge)}</span>`).join('')}</div>` : ''}
                   </li>`;
@@ -2403,6 +2509,12 @@
         link.style.textDecoration = 'underline';
       });
 
+      const dashboard = clone.querySelector('#publications-dashboard-top');
+      if (dashboard) dashboard.classList.add('word-dashboard-page');
+
+      const publicationsSection = clone.querySelector('[data-section="publications"]');
+      if (publicationsSection) publicationsSection.classList.add('word-publications-section');
+
       const generated = document.createElement('p');
       generated.className = 'word-generated-note';
       generated.textContent = `${currentLang === 'th' ? 'เอกสารปรับปรุงเมื่อ' : 'Document generated'} ${new Intl.DateTimeFormat(currentLang === 'th' ? 'th-TH' : 'en-GB', { day:'2-digit', month:'long', year:'numeric' }).format(new Date())}`;
@@ -2437,14 +2549,14 @@
       const wordCss = `
         @page WordSection1 {
           size:595.3pt 841.9pt;
-          margin:50pt 46pt 54pt 46pt;
+          margin:50pt 48pt 56pt 48pt;
           mso-header-margin:24pt;
           mso-footer-margin:24pt;
         }
         div.WordSection1 { page:WordSection1; }
         body {
           font-family:Aptos, Arial, "Noto Sans Thai", "TH Sarabun New", sans-serif;
-          color:#111827; font-size:9.5pt; line-height:1.42;
+          color:#1f2937; font-size:9.35pt; line-height:1.46;
         }
         #cv-export { width:100%; margin:0; padding:0; }
         main { padding:0; }
@@ -2468,10 +2580,16 @@
         #website-wrap { margin-top:5pt; }
         #bio-section { margin:0 0 12pt; }
         #bio-heading, #publications-dashboard-heading, .word-section-heading {
-          margin:12pt 0 6pt; padding:0 0 4pt;
-          border-bottom:1pt solid #1e3a5f;
-          color:#0f2942; font-size:13pt; font-weight:700; line-height:1.2;
+          margin:13pt 0 6pt;
+          padding:0 0 4pt 7pt;
+          border-left:2.2pt solid #1e3a5f;
+          border-bottom:.65pt solid #9fb1c2;
+          color:#0f2942;
+          font-size:13pt;
+          font-weight:700;
+          line-height:1.2;
           page-break-after:avoid;
+          keep-with-next:always;
         }
         #publications-dashboard-eyebrow { display:none; }
         #bio-text { margin:0; text-align:justify; font-size:9pt; }
@@ -2480,17 +2598,46 @@
         .word-subheading, .teaching-group-title {
           margin:8pt 0 4pt; color:#334155; font-size:10.5pt; font-weight:700; page-break-after:avoid;
         }
-        .word-publication-group { margin:0 0 8pt; }
+        .word-dashboard-page {
+          page-break-before:always;
+          page-break-after:always;
+        }
+        .word-publications-section { page-break-before:always; }
+        .word-publication-group { margin:0 0 9pt; }
         table { width:100%; border-collapse:collapse; }
         th { padding:4pt 5pt; background:#eef2f7; color:#0f2942; border-top:.5pt solid #94a3b8; border-bottom:.8pt solid #64748b; text-align:left; }
         td { padding:4pt 5pt; vertical-align:top; border-bottom:.35pt solid #dbe3ec; }
         tr, li, .publication-entry, .metric-card { page-break-inside:avoid; }
+        h1, h2, h3 { page-break-after:avoid; }
         ol { margin:0 0 6pt; padding-left:20pt; }
         ul { margin:0 0 6pt; padding-left:18pt; }
         li { margin:0 0 4pt; }
         .black-bullet-list { list-style-type:disc; }
-        .publication-entry { margin-bottom:7pt; font-size:8.8pt; line-height:1.4; }
+        .publication-entry {
+          margin:0 0 7pt;
+          padding:0 0 6pt;
+          border-bottom:.35pt solid #e2e8f0;
+          font-size:8.75pt;
+          line-height:1.44;
+          page-break-inside:avoid;
+        }
+        .publication-date-row {
+          margin:0 0 2pt;
+          color:#64748b;
+          font-size:7.8pt;
+        }
+        .publication-date-label { color:#334155; font-weight:700; }
+        .publication-citation { color:#1f2937; }
         .publication-links { margin-top:2pt; }
+        .publication-entry > div:last-child span {
+          display:inline-block;
+          margin:3pt 3pt 0 0;
+          padding:1.5pt 4pt;
+          border:.35pt solid #d6e0ea;
+          color:#475569;
+          background:#f4f7fa;
+          font-size:7.2pt;
+        }
         .publication-doi-link { display:inline-block; margin-top:2pt; color:#1d4ed8; text-decoration:underline; font-size:8pt; font-weight:600; }
         .metric-card {
           display:inline-block; width:45%; margin:0 2% 7pt 0; padding:6pt;
@@ -2630,6 +2777,42 @@
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     }
 
+    function openPrintDialogAndWait() {
+      return new Promise(resolve => {
+        let finished = false;
+        let printMediaEntered = false;
+        const media = window.matchMedia?.('print');
+
+        const cleanup = () => {
+          window.removeEventListener('afterprint', finish);
+          if (media?.removeEventListener) media.removeEventListener('change', onMediaChange);
+          clearTimeout(fallbackTimer);
+        };
+
+        const finish = () => {
+          if (finished) return;
+          finished = true;
+          cleanup();
+          resolve();
+        };
+
+        const onMediaChange = event => {
+          if (event.matches) {
+            printMediaEntered = true;
+          } else if (printMediaEntered) {
+            finish();
+          }
+        };
+
+        window.addEventListener('afterprint', finish);
+        if (media?.addEventListener) media.addEventListener('change', onMediaChange);
+
+        // The preview has already captured the document well before this fallback.
+        const fallbackTimer = setTimeout(finish, 30000);
+        requestAnimationFrame(() => window.print());
+      });
+    }
+
     async function exportPdf() {
       if (!profile) {
         setStatus(currentLang === 'th'
@@ -2655,7 +2838,7 @@
          * It supports long CVs across many A4 pages without canvas-height truncation,
          * and preserves selectable/searchable text.
          */
-        window.print();
+        await openPrintDialogAndWait();
       } catch (error) {
         console.error('PDF print export failed:', error);
         setStatus(currentLang === 'th'
@@ -2994,6 +3177,7 @@
       safeReset(adminEls.publicationForm);
       adminEls.publicationForm.elements.id.value = '';
       adminEls.publicationForm.elements.ranking.value = '-';
+      adminEls.publicationForm.elements.published_at.value = '';
       adminEls.publicationForm.elements.is_author.checked = true;
       adminEls.publicationForm.elements.is_published.checked = true;
       adminEls.publicationForm.classList.add('admin-hidden');
@@ -3006,6 +3190,7 @@
       form.elements.category.value = item.category || 'article_review';
       form.elements.citation.value = item.citation || '';
       form.elements.doi.value = item.doi || '';
+      form.elements.published_at.value = item.published_at ? String(item.published_at).slice(0, 10) : '';
       form.elements.ranking.value = item.ranking || '-';
       form.elements.impact_factor.value = item.impact_factor ?? '';
       form.elements.display_order.value = item.display_order ?? '';
@@ -3031,6 +3216,7 @@
               ${item.is_author ? '<span class="admin-badge">Author</span>' : ''}
               ${item.impact_factor !== null ? `<span class="admin-badge">IF ${escapeHtml(item.impact_factor)}</span>` : ''}
             </div>
+            ${publicationPublishedDateValue(item) ? `<p class="admin-muted mt-2"><strong>Date Published:</strong> ${escapeHtml(publicationPublishedDateValue(item).display)}</p>` : ''}
             <p class="mt-2 text-sm leading-relaxed">${escapeHtml(item.citation || '')}</p>
             ${normalizeDoiUrl(item.doi) ? `<a class="publication-doi-link mt-2 inline-block" href="${escapeHtml(normalizeDoiUrl(item.doi))}" target="_blank" rel="noopener noreferrer">DOI: ${escapeHtml(doiDisplayText(normalizeDoiUrl(item.doi)))}</a>` : ''}
           </div>
@@ -3372,6 +3558,7 @@
         id:form.elements.id.value || null,
         category:form.elements.category.value,
         citation:form.elements.citation.value,
+        published_at:form.elements.published_at.value,
         doi:form.elements.doi.value.trim(),
         ranking:form.elements.ranking.value,
         impact_factor:form.elements.impact_factor.value,
