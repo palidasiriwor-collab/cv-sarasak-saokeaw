@@ -304,6 +304,14 @@
       #header .reference-identifier-rule {
         display:none !important;
       }
+
+      /* Contacts are a final CV section only; never show a legacy contact block under the header. */
+      #header .word-contact-block,
+      #header #contact-panel,
+      #header #contact-groups,
+      #header #website-wrap {
+        display:none !important;
+      }
       #cv-export > main { padding:0 !important; overflow:visible !important; }
       #cv-export::before { content:""; display:block; height:.1mm; }
       #main-sections > section:first-child { margin-top:1mm !important; }
@@ -5603,8 +5611,6 @@
         oldHeader.querySelectorAll('.reference-kicker, .reference-photo-caption, .reference-identifier-rule').forEach(node => node.remove());
         const photo = oldHeader.querySelector('#profile-photo');
         const identifiers = oldHeader.querySelector('#identifiers');
-        const contacts = oldHeader.querySelector('#contact-groups');
-        const website = oldHeader.querySelector('#website-wrap');
         const header = document.createElement('div');
         header.className = 'word-profile-header';
         header.innerHTML = `
@@ -5619,12 +5625,7 @@
                 <div class="word-identifiers">${identifiers ? identifiers.innerHTML : ''}</div>
               </td>
             </tr>
-          </table>
-          <div class="word-contact-block">
-            <div class="word-contact-title">${currentLang === 'th' ? 'ข้อมูลติดต่อ' : 'Contact Information'}</div>
-            ${contacts ? contacts.innerHTML : ''}
-            ${website ? website.innerHTML : ''}
-          </div>`;
+          </table>`;
         oldHeader.replaceWith(header);
       }
 
@@ -5680,6 +5681,7 @@
     // - Single line spacing
     // - Date Published omitted from Publications
     // - Article & Review export omits Ranking/Author badges and the separate DOI link
+    // - Contacts appear only once, at the end of the CV; no Contact Information block under the header
     // Word falls back to a system font if Prompt is not installed on the opening device.
     async function exportWord() {
       if (!profile) {
@@ -5721,8 +5723,6 @@
         .word-credentials { margin:0 0 5pt; color:#475569; font-size:9pt; }
         .word-name-th { margin:0 0 7pt; font-weight:700; }
         .word-identifiers { font-size:8pt; line-height:1.3; }
-        .word-contact-block { margin:0 0 12pt; padding:7pt 8pt; border:.5pt solid #cbd5e1; background:#f8fafc; }
-        .word-contact-title { margin:0 0 5pt; color:#0f2942; font-weight:700; }
         #contact-groups { display:table; width:100%; }
         #contact-groups > * { display:table-cell; width:50%; padding-right:10pt; vertical-align:top; }
         #website-wrap { margin-top:5pt; }
