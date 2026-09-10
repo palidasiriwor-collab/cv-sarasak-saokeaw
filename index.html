@@ -8,11 +8,14 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
   <style>
-    body { font-family: 'Prompt', sans-serif; background:#f8fafc; color:#0f172a; }
+    html, body, button, input, select, textarea {
+      font-family:'Prompt', sans-serif;
+    }
+    body { background:#f8fafc; color:#0f172a; }
     .section-content { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
     .section-content.open { grid-template-rows:1fr; }
     .section-inner { overflow:hidden; }
@@ -148,9 +151,13 @@
         width:auto !important; min-width:0 !important;
         margin:0 !important; padding:0 !important;
         background:#fff !important; color:#111827 !important;
-        font-family:Arial, "Noto Sans Thai", "TH Sarabun New", sans-serif !important;
+        font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
         font-size:9.35pt !important; line-height:1.46 !important;
         -webkit-print-color-adjust:exact; print-color-adjust:exact;
+      }
+
+      body, body * {
+        font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
       }
 
       #export-controls, .lang-btn, #status, footer, .admin-ui, #premium-loading, #premium-toast-stack { display:none !important; }
@@ -5072,6 +5079,8 @@
       setTimeout(() => URL.revokeObjectURL(url), 1500);
     }
 
+    // Font policy: public web, print/PDF and Word exports use Prompt for Thai and English.
+    // Word will fall back to a system font if Prompt is not installed on the device opening the file.
     async function exportWord() {
       if (!profile) {
         setStatus(currentLang === 'th' ? 'กรุณารอให้ข้อมูล CV โหลดเสร็จก่อนส่งออก Word' : 'Please wait until the CV has finished loading before exporting Word.', 'error');
@@ -5088,8 +5097,12 @@
         }
         div.WordSection1 { page:WordSection1; }
         body {
-          font-family:Aptos, Arial, "Noto Sans Thai", "TH Sarabun New", sans-serif;
+          font-family:'Prompt', "Leelawadee UI", Arial, sans-serif;
           color:#1f2937; font-size:9.35pt; line-height:1.46;
+        }
+        #cv-export, #cv-export * {
+          font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
+          mso-font-alt:Arial;
         }
         #cv-export { width:100%; margin:0; padding:0; }
         main { padding:0; }
@@ -5213,7 +5226,7 @@
           color:#64748b; font-size:7.5pt; text-align:right;
         }
       `;
-      const documentHtml = `<!doctype html><html><head><meta charset="utf-8"><style>${wordCss}</style></head><body><div class="WordSection1">${clone.outerHTML}</div></body></html>`;
+      const documentHtml = `<!doctype html><html><head><meta charset="utf-8"><meta name="generator" content="Flower CV Export"><style>${wordCss}</style></head><body><div class="WordSection1">${clone.outerHTML}</div></body></html>`;
 
       try {
         if (window.htmlDocx?.asBlob) {
