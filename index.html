@@ -250,7 +250,7 @@
         margin:0 0 6mm !important; padding:0 0 5mm !important;
         border-bottom:1.6pt solid #1e3a5f !important;
       }
-      #header > aside {
+      #header > .header-inline-contact-unused {
         grid-column:1 / -1 !important;
         margin-top:1mm !important; padding:3mm 0 0 !important;
         border:0 !important; border-top:.5pt solid #cbd5e1 !important;
@@ -270,6 +270,31 @@
       #contact-groups { display:grid !important; grid-template-columns:1fr 1fr !important; gap:2mm 8mm !important; font-size:8pt !important; }
       #website-wrap { margin-top:2mm !important; font-size:8pt !important; }
       .sidebar { background:#fff !important; }
+
+      #contact-panel.contact-final-section {
+        display:block !important;
+        width:100% !important;
+        margin:4mm 0 0 !important;
+        padding:3mm 0 0 !important;
+        border:0 !important;
+        border-top:1pt solid #1e3a5f !important;
+        border-radius:0 !important;
+        background:#fff !important;
+        box-shadow:none !important;
+        break-inside:avoid !important;
+        page-break-inside:avoid !important;
+      }
+
+      #contact-panel.contact-final-section #contacts-heading {
+        margin:0 0 2mm !important;
+        padding:0 0 1.4mm !important;
+        border-bottom:.55pt solid #b8c5d2 !important;
+        font-size:11.6pt !important;
+        font-weight:700 !important;
+        text-align:left !important;
+        text-transform:none !important;
+        letter-spacing:0 !important;
+      }
 
       #bio-section, #publications-dashboard-top { margin-bottom:5mm !important; }
       #bio-heading, #publications-dashboard-heading {
@@ -1315,8 +1340,7 @@
         display:grid !important;
         grid-template-columns:minmax(0,1fr) 310px;
         grid-template-areas:
-          "copy photo"
-          "contact photo";
+          "copy photo";
         gap:1.4rem 3.5rem !important;
         margin:0 !important;
         padding:4.2rem 4.3rem 3.6rem;
@@ -1843,8 +1867,7 @@
         grid-template-columns:1fr;
         grid-template-areas:
           "photo"
-          "copy"
-          "contact";
+          "copy";
         padding:2rem 1.35rem 2.35rem;
       }
 
@@ -2489,6 +2512,53 @@
       color:#0f2942;
     }
 
+
+    .contact-final-section {
+      display:block;
+      width:100%;
+      margin:3.5rem 0 0 !important;
+      padding:3rem 4.3rem 3.5rem !important;
+      border:0 !important;
+      border-top:1px solid #e5e9ed !important;
+      border-radius:0 !important;
+      background:#f7f7f4 !important;
+      box-shadow:none !important;
+    }
+
+    .contact-final-section #contacts-heading {
+      margin:0 0 1.25rem !important;
+      padding:0 0 .8rem !important;
+      border:0 !important;
+      border-bottom:1px solid #cbd5e1 !important;
+      color:#102b44 !important;
+      font-size:1.35rem !important;
+      font-weight:600 !important;
+      letter-spacing:-.015em !important;
+      text-transform:none !important;
+      text-align:left !important;
+    }
+
+    .contact-final-section #contact-groups {
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:1.2rem 2rem !important;
+    }
+
+    .contact-final-section #website-wrap {
+      margin-top:1rem !important;
+    }
+
+    @media (max-width: 767px) {
+      .contact-final-section {
+        margin-top:2rem !important;
+        padding:2.2rem 1.5rem 2.5rem !important;
+      }
+
+      .contact-final-section #contact-groups {
+        grid-template-columns:1fr !important;
+      }
+    }
+
 /* Integrated Password Admin */
     body.admin-open { overflow:hidden; }
     .admin-ui { font-family:'Prompt',sans-serif; }
@@ -2730,14 +2800,6 @@
           <div id="reference-photo-caption" class="reference-photo-caption">Academic · Research · Teaching</div>
         </div>
 
-        <aside id="contact-panel" class="sidebar reference-contact-panel">
-          <h2 id="contacts-heading">Contacts</h2>
-          <div id="contact-groups"></div>
-          <div id="website-wrap" class="mt-5 hidden items-start gap-2 text-sm">
-            <i data-lucide="globe" class="w-4 h-4 mt-0.5 shrink-0"></i>
-            <a id="website-link" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline break-all"></a>
-          </div>
-        </aside>
       </div>
 
       <section id="bio-section" class="reference-biography hidden" data-print-key="bio">
@@ -2784,6 +2846,15 @@
       
 
       <div id="main-sections" class="space-y-3"></div>
+
+      <section id="contact-panel" class="sidebar reference-contact-panel contact-final-section">
+        <h2 id="contacts-heading">Contacts</h2>
+        <div id="contact-groups"></div>
+        <div id="website-wrap" class="mt-5 hidden items-start gap-2 text-sm">
+          <i data-lucide="globe" class="w-4 h-4 mt-0.5 shrink-0"></i>
+          <a id="website-link" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline break-all"></a>
+        </div>
+      </section>
     </main>
     <div class="cv-print-running-footer"><span>School of Pharmaceutical Sciences · University of Phayao</span><span id="cv-print-generated-date"></span></div>
   </div>
@@ -5563,6 +5634,26 @@
           text-align:left !important;
           font-weight:700 !important;
           padding-left:0 !important;
+        }
+
+        #cv-export #contact-panel.contact-final-section {
+          display:block !important;
+          width:100% !important;
+          margin:10pt 0 0 !important;
+          padding:8pt 0 0 !important;
+          border-top:1pt solid #1e3a5f !important;
+          background:#fff !important;
+          page-break-inside:avoid;
+        }
+
+        #cv-export #contact-panel.contact-final-section #contacts-heading {
+          margin:0 0 6pt !important;
+          padding:0 0 4pt !important;
+          border-bottom:.5pt solid #b8c5d2 !important;
+          text-align:left !important;
+          font-weight:700 !important;
+          text-transform:none !important;
+          letter-spacing:0 !important;
         }
       `;
       const documentHtml = `<!doctype html><html><head><meta charset="utf-8"><meta name="generator" content="Flower CV Export"><style>${wordCss}</style></head><body><div class="WordSection1">${clone.outerHTML}</div></body></html>`;
