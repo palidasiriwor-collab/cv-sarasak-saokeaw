@@ -145,14 +145,14 @@
     }
     .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
 
-    @page { size:A4 portrait; margin:15mm 15mm 24mm; }
+    @page { size:A4 portrait; margin:10mm; }
     @media print {
       html, body {
         width:auto !important; min-width:0 !important;
         margin:0 !important; padding:0 !important;
         background:#fff !important; color:#111827 !important;
         font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
-        font-size:9.35pt !important; line-height:1.46 !important;
+        font-size:14pt !important; line-height:1.5 !important;
         -webkit-print-color-adjust:exact; print-color-adjust:exact;
       }
 
@@ -200,7 +200,7 @@
         position:fixed !important;
         left:0 !important;
         right:0 !important;
-        bottom:-16mm !important;
+        bottom:-7mm !important;
         min-height:7mm !important;
         margin:0 !important;
         padding:2.4mm 0 0 !important;
@@ -281,15 +281,48 @@
       #publications-dashboard-updated { font-size:7.5pt !important; }
       #bio-text { font-size:9pt !important; line-height:1.5 !important; text-align:justify !important; }
 
-      #publications-dashboard-content .metric-card {
-        display:inline-block !important; width:47.5% !important;
-        box-sizing:border-box !important; margin:0 1.5% 2.5mm 0 !important;
-        padding:2.4mm !important; vertical-align:top !important;
-        border:.5pt solid #cbd5e1 !important; border-radius:1.5mm !important;
-        box-shadow:none !important; background:#fff !important;
-        break-inside:avoid !important;
+      .screen-dashboard-only {
+        display:none !important;
       }
-      .metric-value { font-size:17pt !important; color:#0f2942 !important; }
+      .download-dashboard-only {
+        display:block !important;
+      }
+      .download-dashboard-table,
+      .download-dashboard-distribution-table {
+        display:table !important;
+        width:100% !important;
+        border-collapse:collapse !important;
+        table-layout:fixed !important;
+        margin:0 0 4mm !important;
+        page-break-inside:avoid !important;
+      }
+      .download-dashboard-table th,
+      .download-dashboard-distribution-table th {
+        padding:2.2mm 2.5mm !important;
+        border:.6pt solid #94a3b8 !important;
+        background:#eef2f7 !important;
+        color:#0f2942 !important;
+        font-weight:700 !important;
+        text-align:left !important;
+        vertical-align:middle !important;
+      }
+      .download-dashboard-table td,
+      .download-dashboard-distribution-table td {
+        padding:2.1mm 2.5mm !important;
+        border:.45pt solid #cbd5e1 !important;
+        vertical-align:top !important;
+        background:#fff !important;
+      }
+      .download-dashboard-table th:nth-child(1) { width:38% !important; }
+      .download-dashboard-table th:nth-child(2) { width:14% !important; text-align:center !important; }
+      .download-dashboard-table th:nth-child(3) { width:20% !important; }
+      .download-dashboard-table th:nth-child(4) { width:28% !important; }
+      .download-dashboard-value {
+        font-weight:700 !important;
+        color:#0f2942 !important;
+        text-align:center !important;
+      }
+      .metric-value { color:#0f2942 !important; }
       .metric-auto-badge {
         border:.4pt solid #cbd5e1 !important;
         background:#fff !important;
@@ -406,6 +439,14 @@
       }
 
       a { color:#1d4ed8 !important; text-decoration:underline !important; }
+
+      /* Downloaded PDF typography specification */
+      #cv-export,
+      #cv-export * {
+        font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
+        font-size:14pt !important;
+        line-height:1.5 !important;
+      }
     }
   
 
@@ -2391,6 +2432,17 @@
 
     .admin-auto-metrics-banner strong {
       color:#134e4a;
+    }
+
+
+    .download-dashboard-only {
+      display:none;
+    }
+
+    .download-dashboard-table,
+    .download-dashboard-distribution-table {
+      width:100%;
+      border-collapse:collapse;
     }
 
 /* Integrated Password Admin */
@@ -4731,13 +4783,81 @@
         </section>`;
       };
 
+      const downloadMetricRows = items.map(item => {
+        const label = metricLabel(item);
+        const source = item.source || ([
+          'total_papers',
+          'sum_impact_factors',
+          'highest_impact_factor',
+          'highest_single_paper_citations',
+          'authorship'
+        ].includes(item.key) ? 'Article & Review · Auto' : '');
+        return `<tr>
+          <td>${escapeHtml(label)}</td>
+          <td class="download-dashboard-value">${escapeHtml(numberValue(item.value))}</td>
+          <td>${escapeHtml(item.as_of || '—')}</td>
+          <td>${escapeHtml(source || '—')}</td>
+        </tr>`;
+      }).join('');
+
+      const downloadDistributionRows = (rows) => rows.map(row => `
+        <tr>
+          <td>${escapeHtml(row.label || '')}</td>
+          <td class="download-dashboard-value">${Number(row.value || 0).toLocaleString('en-US')}</td>
+        </tr>`).join('');
+
+      const downloadDashboardTable = `
+        <div class="download-dashboard-only">
+          <table class="download-dashboard-table">
+            <thead>
+              <tr>
+                <th>${currentLang === 'th' ? 'ตัวชี้วัด' : 'Indicator'}</th>
+                <th>${currentLang === 'th' ? 'ค่า' : 'Value'}</th>
+                <th>${currentLang === 'th' ? 'วันที่รายงาน' : 'Reporting date'}</th>
+                <th>${currentLang === 'th' ? 'แหล่งข้อมูล' : 'Source'}</th>
+              </tr>
+            </thead>
+            <tbody>${downloadMetricRows}</tbody>
+          </table>
+
+          <table class="download-dashboard-distribution-table">
+            <thead>
+              <tr>
+                <th colspan="2">Quartiles</th>
+                <th colspan="2">TCI</th>
+              </tr>
+              <tr>
+                <th>${currentLang === 'th' ? 'ระดับ' : 'Level'}</th>
+                <th>${currentLang === 'th' ? 'จำนวน' : 'Count'}</th>
+                <th>${currentLang === 'th' ? 'ระดับ' : 'Level'}</th>
+                <th>${currentLang === 'th' ? 'จำนวน' : 'Count'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${Array.from({ length: Math.max(quartiles.length, tci.length) }, (_, index) => {
+                const q = quartiles[index];
+                const t = tci[index];
+                return `<tr>
+                  <td>${q ? escapeHtml(q.label || '') : ''}</td>
+                  <td class="download-dashboard-value">${q ? Number(q.value || 0).toLocaleString('en-US') : ''}</td>
+                  <td>${t ? escapeHtml(t.label || '') : ''}</td>
+                  <td class="download-dashboard-value">${t ? Number(t.value || 0).toLocaleString('en-US') : ''}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>`;
+
       return `<div class="space-y-5">
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">${metricCards}</div>
-        <div class="grid md:grid-cols-2 gap-4">
-          ${renderDistribution('Quartiles', quartiles)}
-          ${renderDistribution('TCI', tci)}
+        <div class="screen-dashboard-only">
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">${metricCards}</div>
+          <div class="grid md:grid-cols-2 gap-4">
+            ${renderDistribution('Quartiles', quartiles)}
+            ${renderDistribution('TCI', tci)}
+          </div>
+          <p class="text-xs text-slate-400">${currentLang === 'th' ? 'ตัวชี้วัดแต่ละรายการแสดงวันที่รายงานและแหล่งข้อมูลของตนเอง' : 'Each metric retains its own reporting date and source.'}</p>
         </div>
-        <p class="text-xs text-slate-400">${currentLang === 'th' ? 'ตัวชี้วัดแต่ละรายการแสดงวันที่รายงานและแหล่งข้อมูลของตนเอง' : 'Each metric retains its own reporting date and source.'}</p>
+        ${downloadDashboardTable}
       </div>`;
     }
 
@@ -5050,7 +5170,13 @@
       });
 
       const dashboard = clone.querySelector('#publications-dashboard-top');
-      if (dashboard) dashboard.classList.add('word-dashboard-page');
+      if (dashboard) {
+        dashboard.classList.add('word-dashboard-page');
+        dashboard.querySelectorAll('.screen-dashboard-only').forEach(node => node.remove());
+        dashboard.querySelectorAll('.download-dashboard-only').forEach(node => {
+          node.style.display = 'block';
+        });
+      }
 
       const publicationsSection = clone.querySelector('[data-section="publications"]');
       if (publicationsSection) publicationsSection.classList.add('word-publications-section');
@@ -5079,8 +5205,11 @@
       setTimeout(() => URL.revokeObjectURL(url), 1500);
     }
 
-    // Font policy: public web, print/PDF and Word exports use Prompt for Thai and English.
-    // Word will fall back to a system font if Prompt is not installed on the device opening the file.
+    // Download export policy:
+    // - Prompt for Thai and English
+    // - 14 pt throughout the exported CV
+    // - A4 with 1 cm margins on all four sides
+    // Word falls back to a system font if Prompt is not installed on the opening device.
     async function exportWord() {
       if (!profile) {
         setStatus(currentLang === 'th' ? 'กรุณารอให้ข้อมูล CV โหลดเสร็จก่อนส่งออก Word' : 'Please wait until the CV has finished loading before exporting Word.', 'error');
@@ -5091,14 +5220,14 @@
       const wordCss = `
         @page WordSection1 {
           size:595.3pt 841.9pt;
-          margin:50pt 48pt 56pt 48pt;
-          mso-header-margin:24pt;
-          mso-footer-margin:24pt;
+          margin:28.35pt 28.35pt 28.35pt 28.35pt;
+          mso-header-margin:14.17pt;
+          mso-footer-margin:14.17pt;
         }
         div.WordSection1 { page:WordSection1; }
         body {
           font-family:'Prompt', "Leelawadee UI", Arial, sans-serif;
-          color:#1f2937; font-size:9.35pt; line-height:1.46;
+          color:#1f2937; font-size:14pt; line-height:1.5;
         }
         #cv-export, #cv-export * {
           font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
@@ -5147,6 +5276,42 @@
         .word-dashboard-page {
           page-break-before:always;
           page-break-after:always;
+        }
+        .screen-dashboard-only { display:none !important; }
+        .download-dashboard-only { display:block !important; }
+        .download-dashboard-table,
+        .download-dashboard-distribution-table {
+          width:100%;
+          border-collapse:collapse;
+          table-layout:fixed;
+          margin:0 0 10pt;
+          page-break-inside:avoid;
+        }
+        .download-dashboard-table th,
+        .download-dashboard-distribution-table th {
+          padding:5pt 6pt;
+          border:.6pt solid #94a3b8;
+          background:#eef2f7;
+          color:#0f2942;
+          font-weight:700;
+          text-align:left;
+          vertical-align:middle;
+        }
+        .download-dashboard-table td,
+        .download-dashboard-distribution-table td {
+          padding:5pt 6pt;
+          border:.45pt solid #cbd5e1;
+          vertical-align:top;
+          background:#fff;
+        }
+        .download-dashboard-table th:nth-child(1) { width:38%; }
+        .download-dashboard-table th:nth-child(2) { width:14%; text-align:center; }
+        .download-dashboard-table th:nth-child(3) { width:20%; }
+        .download-dashboard-table th:nth-child(4) { width:28%; }
+        .download-dashboard-value {
+          font-weight:700;
+          color:#0f2942;
+          text-align:center;
         }
         .word-publications-section { page-break-before:always; }
         .word-publication-group { margin:0 0 9pt; }
@@ -5225,6 +5390,15 @@
           margin-top:16pt; padding-top:5pt; border-top:.5pt solid #cbd5e1;
           color:#64748b; font-size:7.5pt; text-align:right;
         }
+
+        /* Downloaded Word typography specification */
+        #cv-export,
+        #cv-export * {
+          font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
+          font-size:14pt !important;
+          line-height:1.5 !important;
+          mso-font-alt:Arial;
+        }
       `;
       const documentHtml = `<!doctype html><html><head><meta charset="utf-8"><meta name="generator" content="Flower CV Export"><style>${wordCss}</style></head><body><div class="WordSection1">${clone.outerHTML}</div></body></html>`;
 
@@ -5232,7 +5406,7 @@
         if (window.htmlDocx?.asBlob) {
           const blob = window.htmlDocx.asBlob(documentHtml, {
             orientation:'portrait',
-            margins:{ top:680, right:680, bottom:800, left:680, header:300, footer:300 }
+            margins:{ top:567, right:567, bottom:567, left:567, header:283, footer:283 }
           });
           saveBlob(blob, exportFileName('docx'));
           return;
