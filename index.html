@@ -405,6 +405,14 @@
       .publication-doi-link {
         color:#1d4ed8 !important; font-size:7.8pt !important; text-decoration:underline !important;
       }
+
+      /* Downloaded PDF: Article & Review shows citation/date only.
+         Hide public Ranking/Author badges and the separate DOI link line. */
+      details[data-publication-group="article_review"] .publication-badges,
+      details[data-publication-group="article_review"] .publication-links,
+      details[data-publication-group="article_review"] .publication-doi-link {
+        display:none !important;
+      }
       .black-bullet-list { list-style-type:disc !important; padding-left:5mm !important; }
       .black-bullet-list li::marker { color:#000 !important; }
       .invited-speaking-title { font-weight:400 !important; }
@@ -4640,7 +4648,7 @@
 
           const title = currentLang === 'th' ? group.labelTh : group.label;
           const shouldOpen = selectedYear ? items.length > 0 : index === 0;
-          return `<details class="rounded-xl border border-slate-200 bg-white ${selectedYear && items.length ? 'publication-group-auto-open' : ''}" ${shouldOpen ? 'open' : ''}>
+          return `<details data-publication-group="${escapeHtml(group.key)}" class="rounded-xl border border-slate-200 bg-white ${selectedYear && items.length ? 'publication-group-auto-open' : ''}" ${shouldOpen ? 'open' : ''}>
             <summary class="cursor-pointer select-none px-5 py-4 font-bold text-slate-800 flex items-center justify-between gap-3">
               <span>${escapeHtml(title)}</span>
               <span class="text-xs font-medium text-slate-400">${items.length.toLocaleString('en-US')} items</span>
@@ -4662,7 +4670,7 @@
                     ${publishedDate ? `<div class="publication-date-row"><span class="publication-date-label">${escapeHtml(dateLabel)}:</span><time datetime="${escapeHtml(publishedDate.iso)}">${escapeHtml(publishedDate.display)}</time></div>` : ''}
                     <div class="publication-citation">${escapeHtml(item.citation || '')}</div>
                     ${links.length ? `<div class="publication-links">${links.join('')}</div>` : ''}
-                    ${badges.length ? `<div class="mt-2 flex flex-wrap gap-2">${badges.map(badge => `<span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">${escapeHtml(badge)}</span>`).join('')}</div>` : ''}
+                    ${badges.length ? `<div class="publication-badges mt-2 flex flex-wrap gap-2">${badges.map(badge => `<span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">${escapeHtml(badge)}</span>`).join('')}</div>` : ''}
                   </li>`;
                 }).join('')}
               </ol>` : `<p class="text-sm text-slate-400">${selectedYear
@@ -4689,6 +4697,16 @@
         return /^\d+$/.test(raw) ? Number(raw).toLocaleString('en-US') : raw;
       };
 
+      const dashboardMetricLabel = item => {
+        if (item.key === 'i10_index') {
+          return currentLang === 'th' ? 'ดัชนี i10 (ทั้งหมด)' : 'i10-index (All-time)';
+        }
+        if (item.key === 'total_citations') {
+          return currentLang === 'th' ? 'การอ้างอิงทั้งหมด' : 'Total citations (All-time)';
+        }
+        return item.label || '';
+      };
+
       const metricCards = items.map(item => {
         const isI10 = item.key === 'i10_index';
         const isHIndex = item.key === 'h_index';
@@ -4700,11 +4718,7 @@
           'highest_single_paper_citations',
           'authorship'
         ].includes(item.key);
-        const label = isI10
-          ? (currentLang === 'th' ? 'ดัชนี i10 (ทั้งหมด)' : 'i10-index (All-time)')
-          : isTotalCitations
-            ? (currentLang === 'th' ? 'การอ้างอิงทั้งหมด' : 'Total citations (All-time)')
-            : (item.label || '');
+        const label = dashboardMetricLabel(item);
 
         let metaHtml = '';
         let referenceHtml = '';
@@ -4715,7 +4729,7 @@
           parts.push(`<a class="metric-source-link" href="${escapeHtml(GOOGLE_SCHOLAR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Google Scholar</a>`);
           metaHtml = parts.length ? `<div class="mt-2 text-xs text-slate-400">${parts.join(' • ')}</div>` : '';
           referenceHtml = `<div class="metric-reference-note">
-            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : 'Reference:'}</strong>
+            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : ''}</strong>
             <a class="metric-source-link" href="${escapeHtml(GOOGLE_SCHOLAR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Google Scholar</a>
             · ${currentLang === 'th'
               ? 'ตาราง i10-index: “ทั้งหมด / ตั้งแต่ปี 2021” — Dashboard ใช้ค่า “ทั้งหมด”'
@@ -4727,7 +4741,7 @@
           parts.push(`<a class="metric-source-link" href="${escapeHtml(SCOPUS_AUTHOR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Scopus · Author ID 34969613100</a>`);
           metaHtml = `<div class="mt-2 text-xs text-slate-400">${parts.join(' • ')}</div>`;
           referenceHtml = `<div class="metric-reference-note">
-            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : 'Reference:'}</strong>
+            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : ''}</strong>
             <a class="metric-source-link" href="${escapeHtml(SCOPUS_AUTHOR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Scopus</a>
             · Surasak Saokaew · h-index · Author ID 34969613100
           </div>`;
@@ -4737,7 +4751,7 @@
           parts.push(`<a class="metric-source-link" href="${escapeHtml(GOOGLE_SCHOLAR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Google Scholar · All-time</a>`);
           metaHtml = `<div class="mt-2 text-xs text-slate-400">${parts.join(' • ')}</div>`;
           referenceHtml = `<div class="metric-reference-note">
-            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : 'Reference:'}</strong>
+            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : ''}</strong>
             <a class="metric-source-link" href="${escapeHtml(GOOGLE_SCHOLAR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Google Scholar</a>
             · ${currentLang === 'th'
               ? 'ตาราง “อ้างโดย”: “ทั้งหมด / ตั้งแต่ปี 2021” — Dashboard ใช้จำนวนการอ้างอิง “ทั้งหมด”'
@@ -4784,7 +4798,7 @@
       };
 
       const downloadMetricRows = items.map(item => {
-        const label = metricLabel(item);
+        const label = dashboardMetricLabel(item);
         const source = item.source || ([
           'total_papers',
           'sum_impact_factors',
@@ -5042,7 +5056,14 @@
       sectionEntries = entryData || [];
       publicationEntries = publicationData || [];
       setStatus('');
-      render();
+      try {
+        render();
+      } catch (renderError) {
+        console.error('Failed to render CV:', renderError);
+        const wrapped = new Error(`CV_RENDER_ERROR: ${renderError?.message || renderError}`);
+        wrapped.cause = renderError;
+        throw wrapped;
+      }
 
       // Never delay the CV opening for Google Scholar.
       // The last verified Supabase value appears immediately; any newly
@@ -5109,6 +5130,12 @@
 
       clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer, .print-section-selector, #cv-directory, #cv-return-button, .cv-download-menu, .publication-inline-explorer, .publication-year-results-head').forEach(node => node.remove());
       clone.querySelectorAll('svg, i').forEach(node => node.remove());
+
+      // Downloaded Word: Article & Review should contain the publication date
+      // and citation only; omit Ranking/Author badges and the separate DOI link.
+      clone.querySelectorAll('details[data-publication-group="article_review"]').forEach(group => {
+        group.querySelectorAll('.publication-badges, .publication-links, .publication-doi-link').forEach(node => node.remove());
+      });
 
       clone.querySelectorAll('.accordion-btn').forEach(button => {
         const heading = document.createElement('h2');
@@ -5209,6 +5236,7 @@
     // - Prompt for Thai and English
     // - 14 pt throughout the exported CV
     // - A4 with 1 cm margins on all four sides
+    // - Article & Review export omits Ranking/Author badges and the separate DOI link
     // Word falls back to a system font if Prompt is not installed on the opening device.
     async function exportWord() {
       if (!profile) {
@@ -6576,10 +6604,15 @@
     }
 
     withPremiumLoading(() => loadCv(), { context:'load' }).catch(error => {
-      console.error('Failed to load CV:',error);
-      const message = currentLang === 'th'
-        ? 'ไม่สามารถโหลดข้อมูล CV จากฐานข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อ'
-        : 'Unable to load CV data. Please check the database connection.';
+      console.error('Failed to load CV:', error);
+      const isRenderError = String(error?.message || '').startsWith('CV_RENDER_ERROR:');
+      const message = isRenderError
+        ? (currentLang === 'th'
+            ? 'เกิดข้อผิดพลาดในการแสดงผล CV กรุณารีเฟรชหน้าอีกครั้ง'
+            : 'Unable to render CV data. Please refresh the page and try again.')
+        : (currentLang === 'th'
+            ? 'ไม่สามารถโหลดข้อมูล CV จากฐานข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อ'
+            : 'Unable to load CV data. Please check the database connection.');
       setStatus(message,'error');
       showPremiumToast(message,'error');
     });
