@@ -145,14 +145,14 @@
     }
     .page-break-avoid { break-inside:avoid; page-break-inside:avoid; }
 
-    @page { size:A4 portrait; margin:10mm; }
+    @page { size:A4 portrait; margin:15mm; }
     @media print {
       html, body {
         width:auto !important; min-width:0 !important;
         margin:0 !important; padding:0 !important;
         background:#fff !important; color:#111827 !important;
         font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
-        font-size:14pt !important; line-height:1.5 !important;
+        font-size:10pt !important; line-height:1 !important;
         -webkit-print-color-adjust:exact; print-color-adjust:exact;
       }
 
@@ -452,8 +452,26 @@
       #cv-export,
       #cv-export * {
         font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
-        font-size:14pt !important;
-        line-height:1.5 !important;
+        font-size:10pt !important;
+        line-height:1 !important;
+      }
+
+      /* No paragraph spacing before/after in downloaded PDF */
+      #cv-export p,
+      #cv-export li,
+      #cv-export h1,
+      #cv-export h2,
+      #cv-export h3,
+      #cv-export h4,
+      #cv-export h5,
+      #cv-export h6 {
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      /* Date Published is screen-only; never include it in downloaded PDF */
+      #cv-export .publication-date-row {
+        display:none !important;
       }
     }
   
@@ -5131,8 +5149,10 @@
       clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer, .print-section-selector, #cv-directory, #cv-return-button, .cv-download-menu, .publication-inline-explorer, .publication-year-results-head').forEach(node => node.remove());
       clone.querySelectorAll('svg, i').forEach(node => node.remove());
 
-      // Downloaded Word: Article & Review should contain the publication date
-      // and citation only; omit Ranking/Author badges and the separate DOI link.
+      // Downloaded Word: Date Published is not included in Publications.
+      clone.querySelectorAll('.publication-date-row').forEach(node => node.remove());
+
+      // Downloaded Word: Article & Review omits Ranking/Author badges and the separate DOI link.
       clone.querySelectorAll('details[data-publication-group="article_review"]').forEach(group => {
         group.querySelectorAll('.publication-badges, .publication-links, .publication-doi-link').forEach(node => node.remove());
       });
@@ -5234,8 +5254,11 @@
 
     // Download export policy:
     // - Prompt for Thai and English
-    // - 14 pt throughout the exported CV
-    // - A4 with 1 cm margins on all four sides
+    // - 10 pt throughout the exported CV
+    // - A4 with 1.5 cm margins on all four sides
+    // - Paragraph spacing before/after: 0 pt
+    // - Single line spacing
+    // - Date Published omitted from Publications
     // - Article & Review export omits Ranking/Author badges and the separate DOI link
     // Word falls back to a system font if Prompt is not installed on the opening device.
     async function exportWord() {
@@ -5248,14 +5271,14 @@
       const wordCss = `
         @page WordSection1 {
           size:595.3pt 841.9pt;
-          margin:28.35pt 28.35pt 28.35pt 28.35pt;
+          margin:42.52pt 42.52pt 42.52pt 42.52pt;
           mso-header-margin:14.17pt;
           mso-footer-margin:14.17pt;
         }
         div.WordSection1 { page:WordSection1; }
         body {
           font-family:'Prompt', "Leelawadee UI", Arial, sans-serif;
-          color:#1f2937; font-size:14pt; line-height:1.5;
+          color:#1f2937; font-size:10pt; line-height:1;
         }
         #cv-export, #cv-export * {
           font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
@@ -5423,9 +5446,30 @@
         #cv-export,
         #cv-export * {
           font-family:'Prompt', "Leelawadee UI", Arial, sans-serif !important;
-          font-size:14pt !important;
-          line-height:1.5 !important;
+          font-size:10pt !important;
+          line-height:1 !important;
+          mso-line-height-rule:auto;
           mso-font-alt:Arial;
+        }
+
+        /* Word paragraph spacing: Before 0 pt / After 0 pt */
+        #cv-export p,
+        #cv-export li,
+        #cv-export h1,
+        #cv-export h2,
+        #cv-export h3,
+        #cv-export h4,
+        #cv-export h5,
+        #cv-export h6 {
+          margin-top:0 !important;
+          margin-bottom:0 !important;
+          mso-margin-top-alt:0pt;
+          mso-margin-bottom-alt:0pt;
+        }
+
+        /* Date Published is omitted from downloaded Word */
+        #cv-export .publication-date-row {
+          display:none !important;
         }
       `;
       const documentHtml = `<!doctype html><html><head><meta charset="utf-8"><meta name="generator" content="Flower CV Export"><style>${wordCss}</style></head><body><div class="WordSection1">${clone.outerHTML}</div></body></html>`;
@@ -5434,7 +5478,7 @@
         if (window.htmlDocx?.asBlob) {
           const blob = window.htmlDocx.asBlob(documentHtml, {
             orientation:'portrait',
-            margins:{ top:567, right:567, bottom:567, left:567, header:283, footer:283 }
+            margins:{ top:850, right:850, bottom:850, left:850, header:425, footer:425 }
           });
           saveBlob(blob, exportFileName('docx'));
           return;
