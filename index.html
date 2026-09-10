@@ -473,6 +473,12 @@
       #cv-export .publication-date-row {
         display:none !important;
       }
+
+      #cv-export .career-history-group-heading {
+        text-align:left !important;
+        font-weight:700 !important;
+        padding-left:0 !important;
+      }
     }
   
 
@@ -2471,6 +2477,18 @@
       border-collapse:collapse;
     }
 
+
+    .career-history-group-row {
+      border-bottom:1px solid #e2e8f0;
+    }
+
+    .career-history-group-heading {
+      padding:.85rem 0 .45rem !important;
+      text-align:left !important;
+      font-weight:700;
+      color:#0f2942;
+    }
+
 /* Integrated Password Admin */
     body.admin-open { overflow:hidden; }
     .admin-ui { font-family:'Prompt',sans-serif; }
@@ -4343,6 +4361,13 @@
           const description = section.section_key === 'career_history' && isCareerHistoryAdminOnlyDetail(rawDescription)
             ? ''
             : rawDescription;
+
+          if (section.section_key === 'career_history' && entry.entry_type === 'group_heading') {
+            return `<tr class="career-history-group-row page-break-avoid">
+              <td colspan="2" class="career-history-group-heading">${escapeHtml(title)}</td>
+            </tr>`;
+          }
+
           const titleHtml = title
             ? (section.section_key === 'speaking'
                 ? `<span class="invited-speaking-title">${escapeHtml(title)}</span>`
@@ -5532,6 +5557,12 @@
         /* Date Published is omitted from downloaded Word */
         #cv-export .publication-date-row {
           display:none !important;
+        }
+
+        #cv-export .career-history-group-heading {
+          text-align:left !important;
+          font-weight:700 !important;
+          padding-left:0 !important;
         }
       `;
       const documentHtml = `<!doctype html><html><head><meta charset="utf-8"><meta name="generator" content="Flower CV Export"><style>${wordCss}</style></head><body><div class="WordSection1">${clone.outerHTML}</div></body></html>`;
