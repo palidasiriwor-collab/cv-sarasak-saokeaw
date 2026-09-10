@@ -702,61 +702,7 @@
       background:linear-gradient(145deg,#1e3a5f,#315f88);
       box-shadow:0 8px 18px rgba(30,58,95,.18);
     }
-
-    #publication-filter-button {
-      position:fixed;
-      right:1.15rem;
-      bottom:4.45rem;
-      z-index:69;
-      width:2.75rem;
-      height:2.75rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(148,163,184,.42);
-      border-radius:999px;
-      color:#0f2942;
-      background:rgba(255,255,255,.76);
-      box-shadow:0 9px 26px rgba(15,23,42,.13);
-      backdrop-filter:blur(11px);
-      -webkit-backdrop-filter:blur(11px);
-      transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
-    }
-
-    #publication-filter-button:hover,
-    #publication-filter-button:focus-visible {
-      transform:translateY(-2px);
-      background:rgba(255,255,255,.98);
-      box-shadow:0 13px 32px rgba(15,23,42,.18);
-    }
-
-    #publication-filter-button.is-active {
-      color:#fff;
-      border-color:#1e3a5f;
-      background:linear-gradient(145deg,#1e3a5f,#315f88);
-    }
-
-    #publication-filter-count {
-      position:absolute;
-      top:-.28rem;
-      right:-.38rem;
-      min-width:1.35rem;
-      height:1.35rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:0 .3rem;
-      border:2px solid #fff;
-      border-radius:999px;
-      color:#fff;
-      background:#b45309;
-      font-size:.58rem;
-      font-weight:700;
-      line-height:1;
-      box-shadow:0 4px 10px rgba(15,23,42,.15);
-    }
-
-    .feature-modal-overlay {
+.feature-modal-overlay {
       position:fixed;
       inset:0;
       z-index:85;
@@ -767,6 +713,269 @@
       background:rgba(15,23,42,.46);
       backdrop-filter:blur(5px);
       -webkit-backdrop-filter:blur(5px);
+    }
+
+    .publication-filter-layout {
+      display:grid;
+      grid-template-columns:minmax(0,1.35fr) minmax(280px,.92fr);
+      gap:1rem;
+      align-items:start;
+    }
+
+    .publication-filter-panel {
+      border:1px solid #e2e8f0;
+      border-radius:1rem;
+      padding:1rem;
+      background:linear-gradient(180deg, rgba(248,250,252,.96), rgba(255,255,255,.96));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+    }
+
+    .publication-filter-panel-kicker {
+      font-size:.72rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#94a3b8;
+    }
+
+    .publication-filter-panel-title {
+      margin-top:.35rem;
+      font-size:1.02rem;
+      font-weight:700;
+      color:#0f172a;
+    }
+
+    .publication-filter-panel-copy {
+      margin-top:.25rem;
+      font-size:.82rem;
+      line-height:1.55;
+      color:#64748b;
+    }
+
+    .publication-filter-year-summary {
+      margin-top:.9rem;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid #dbe5ee;
+      border-radius:.9rem;
+      padding:.78rem .9rem;
+      background:#fff;
+    }
+
+    .publication-filter-year-summary strong {
+      display:block;
+      font-size:1.55rem;
+      line-height:1;
+      color:#16385a;
+    }
+
+    .publication-filter-year-summary span {
+      display:block;
+      margin-top:.16rem;
+      color:#64748b;
+      font-size:.74rem;
+    }
+
+    .publication-filter-year-chart-wrap {
+      margin-top:1rem;
+      border:1px solid #e2e8f0;
+      border-radius:1rem;
+      padding:.95rem .95rem .8rem;
+      background:#fff;
+    }
+
+    .publication-filter-year-chart-head {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:.7rem;
+    }
+
+    .publication-filter-year-total {
+      font-size:.75rem;
+      color:#64748b;
+      white-space:nowrap;
+    }
+
+    .publication-filter-year-chart {
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(42px,1fr);
+      align-items:end;
+      gap:.55rem;
+      overflow-x:auto;
+      padding:.65rem 0 .35rem;
+      min-height:220px;
+      scrollbar-width:thin;
+      scroll-snap-type:x proximity;
+    }
+
+    .publication-filter-year-chart::-webkit-scrollbar {
+      height:9px;
+    }
+
+    .publication-filter-year-chart::-webkit-scrollbar-thumb {
+      border-radius:999px;
+      background:#cbd5e1;
+    }
+
+    .publication-year-bar {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-end;
+      gap:.42rem;
+      min-width:42px;
+      border:0;
+      padding:0;
+      background:transparent;
+      color:#475569;
+      cursor:pointer;
+      scroll-snap-align:end;
+      transition:transform .15s ease;
+    }
+
+    .publication-year-bar:hover,
+    .publication-year-bar:focus-visible {
+      transform:translateY(-2px);
+    }
+
+    .publication-year-bar-count {
+      font-size:.68rem;
+      font-weight:700;
+      line-height:1;
+      color:#475569;
+      opacity:.92;
+    }
+
+    .publication-year-bar-track {
+      position:relative;
+      width:100%;
+      height:132px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      border-radius:.8rem;
+      padding:4px;
+      background:linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+      outline:1px solid rgba(226,232,240,.9);
+      overflow:hidden;
+    }
+
+    .publication-year-bar-fill {
+      width:100%;
+      min-height:8px;
+      border-radius:.65rem;
+      background:linear-gradient(180deg, #9cb5ca 0%, #315f88 100%);
+      box-shadow:0 6px 16px rgba(49,95,136,.18);
+      transition:height .24s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    .publication-year-bar.is-selected .publication-year-bar-fill,
+    .publication-year-bar:hover .publication-year-bar-fill,
+    .publication-year-bar:focus-visible .publication-year-bar-fill {
+      background:linear-gradient(180deg, #3eb1a1 0%, #0f766e 100%);
+      box-shadow:0 10px 18px rgba(15,118,110,.24);
+    }
+
+    .publication-year-bar-label {
+      font-size:.74rem;
+      font-weight:700;
+      line-height:1;
+      color:#334155;
+    }
+
+    .publication-year-bar.is-selected .publication-year-bar-label,
+    .publication-year-bar.is-selected .publication-year-bar-count {
+      color:#0f766e;
+    }
+
+    .publication-filter-period-grid {
+      display:grid;
+      gap:.55rem;
+      margin-top:.85rem;
+    }
+
+    .publication-period-option {
+      display:flex;
+      align-items:center;
+      gap:.65rem;
+      border:1px solid #dbe4ed;
+      border-radius:.92rem;
+      padding:.82rem .9rem;
+      background:#fff;
+      cursor:pointer;
+      transition:border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+
+    .publication-period-option:hover {
+      transform:translateY(-1px);
+      border-color:#b8c7d8;
+      background:#fbfdff;
+    }
+
+    .publication-period-option input {
+      width:1.1rem;
+      height:1.1rem;
+      accent-color:#1e3a5f;
+      flex:0 0 auto;
+      margin:0;
+    }
+
+    .publication-period-option-title {
+      font-weight:700;
+      color:#16385a;
+      line-height:1.2;
+    }
+
+    .publication-period-option-subtitle {
+      display:block;
+      margin-top:.18rem;
+      font-size:.72rem;
+      color:#64748b;
+    }
+
+    .publication-period-option.is-active {
+      border-color:#315f88;
+      background:linear-gradient(180deg, rgba(237,244,249,.95), rgba(255,255,255,.95));
+      box-shadow:0 10px 22px rgba(30,58,95,.08);
+    }
+
+    .publication-filter-range-card {
+      margin-top:.9rem;
+      border:1px solid #dbe4ed;
+      border-radius:.92rem;
+      padding:.9rem;
+      background:#fff;
+    }
+
+    .publication-filter-meta-note {
+      margin-top:.9rem;
+      border-radius:.85rem;
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      padding:.8rem .9rem;
+      font-size:.76rem;
+      line-height:1.55;
+      color:#64748b;
+    }
+
+    .publication-filter-meta-note strong {
+      color:#334155;
+    }
+
+    @media (max-width: 960px) {
+      .publication-filter-layout {
+        grid-template-columns:1fr;
+      }
+
+      .publication-filter-year-chart {
+        min-height:190px;
+      }
     }
 
     .feature-modal-card {
@@ -833,7 +1042,6 @@
     @media print {
       .print-section-selector,
       #print-selection-toolbar,
-      #publication-filter-button,
       #publication-filter-overlay {
         display:none !important;
       }
@@ -1830,7 +2038,314 @@
       }
     }
 
-    /* Integrated Password Admin */
+
+    .publication-inline-explorer {
+      margin:0 0 1.25rem;
+      border:1px solid #dbe4ec;
+      border-radius:1rem;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:0 10px 28px rgba(15,41,66,.055);
+    }
+
+    .publication-inline-explorer-head {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:.9rem;
+      padding:1rem 1.05rem .9rem;
+      border-bottom:1px solid #e6edf2;
+      background:linear-gradient(180deg,#fbfcfd,#f7f9fb);
+    }
+
+    .publication-inline-kicker {
+      margin:0 0 .25rem;
+      color:#8191a0;
+      font-size:.66rem;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .publication-inline-title {
+      margin:0;
+      color:#153653;
+      font-size:1.05rem;
+      font-weight:700;
+      line-height:1.3;
+    }
+
+    .publication-inline-reset {
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.42rem .65rem;
+      border:1px solid #d4dee7;
+      border-radius:.65rem;
+      color:#52687a;
+      background:#fff;
+      font-size:.7rem;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .publication-inline-reset:hover {
+      border-color:#aebdca;
+      color:#153653;
+      background:#f9fbfd;
+    }
+
+    .publication-inline-body {
+      display:grid;
+      grid-template-columns:minmax(0,1.4fr) minmax(245px,.75fr);
+      gap:0;
+    }
+
+    .publication-inline-results {
+      min-width:0;
+      padding:1rem 1.05rem 1.1rem;
+      border-right:1px solid #e6edf2;
+    }
+
+    .publication-inline-period {
+      padding:1rem 1.05rem 1.1rem;
+      background:#fbfcfd;
+    }
+
+    .publication-inline-section-label {
+      margin:0 0 .6rem;
+      color:#718294;
+      font-size:.68rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .publication-inline-chart {
+      display:flex;
+      align-items:flex-end;
+      gap:.38rem;
+      min-height:148px;
+      overflow-x:auto;
+      padding:.55rem .15rem .25rem;
+      border-bottom:1px solid #cfd9e2;
+      scrollbar-width:thin;
+    }
+
+    .publication-inline-year {
+      flex:1 0 34px;
+      min-width:34px;
+      max-width:52px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-end;
+      gap:.32rem;
+      border:0;
+      padding:0;
+      color:#596d7e;
+      background:transparent;
+      cursor:pointer;
+    }
+
+    .publication-inline-year-count {
+      min-height:1rem;
+      color:#647789;
+      font-size:.62rem;
+      font-weight:700;
+      line-height:1;
+    }
+
+    .publication-inline-year-column {
+      width:100%;
+      height:94px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+    }
+
+    .publication-inline-year-fill {
+      width:min(100%,28px);
+      min-height:5px;
+      border-radius:3px 3px 0 0;
+      background:#cfd6dc;
+      transition:height .2s ease, background .16s ease;
+    }
+
+    .publication-inline-year:hover .publication-inline-year-fill,
+    .publication-inline-year.is-selected .publication-inline-year-fill {
+      background:#1fa99a;
+    }
+
+    .publication-inline-year-label {
+      color:#556979;
+      font-size:.62rem;
+      font-weight:600;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .publication-inline-year.is-selected .publication-inline-year-label,
+    .publication-inline-year.is-selected .publication-inline-year-count {
+      color:#0f766e;
+    }
+
+    .publication-inline-stat {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:.55rem;
+      margin-top:.7rem;
+      color:#64748b;
+      font-size:.7rem;
+    }
+
+    .publication-inline-stat strong {
+      color:#183b5b;
+      font-size:1rem;
+    }
+
+    .publication-inline-period-options {
+      display:grid;
+      gap:.45rem;
+    }
+
+    .publication-inline-period-option {
+      display:flex;
+      align-items:center;
+      gap:.55rem;
+      padding:.52rem .6rem;
+      border:1px solid transparent;
+      border-radius:.68rem;
+      color:#334a5e;
+      background:transparent;
+      cursor:pointer;
+      font-size:.78rem;
+      font-weight:600;
+    }
+
+    .publication-inline-period-option:hover {
+      border-color:#d8e2ea;
+      background:#fff;
+    }
+
+    .publication-inline-period-option.is-selected {
+      border-color:#aec2d2;
+      background:#fff;
+      box-shadow:0 5px 14px rgba(15,41,66,.06);
+    }
+
+    .publication-inline-period-option input {
+      width:1rem;
+      height:1rem;
+      margin:0;
+      accent-color:#1e3a5f;
+    }
+
+    .publication-inline-custom-range {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:.45rem;
+      margin-top:.65rem;
+    }
+
+    .publication-inline-custom-range input {
+      width:100%;
+      border:1px solid #cbd5e1;
+      border-radius:.55rem;
+      padding:.45rem .5rem;
+      color:#334155;
+      background:#fff;
+      font-size:.73rem;
+    }
+
+    .publication-inline-custom-apply {
+      grid-column:1 / -1;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.35rem;
+      border:1px solid #1e3a5f;
+      border-radius:.55rem;
+      padding:.5rem .6rem;
+      color:#fff;
+      background:#1e3a5f;
+      font-size:.72rem;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .publication-inline-custom-apply:hover {
+      background:#315f88;
+    }
+
+    @media (max-width:820px) {
+      .publication-inline-body {
+        grid-template-columns:1fr;
+      }
+      .publication-inline-results {
+        border-right:0;
+        border-bottom:1px solid #e6edf2;
+      }
+    }
+
+    @media print {
+      .publication-inline-explorer {
+        display:none !important;
+      }
+    }
+
+    .publication-year-results-head {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:.7rem;
+      padding:.9rem 1rem;
+      border:1px solid #cfe1dc;
+      border-radius:.85rem;
+      background:linear-gradient(180deg,#f4fbf9,#ffffff);
+    }
+
+    .publication-year-results-head strong {
+      display:block;
+      color:#134e4a;
+      font-size:1rem;
+      line-height:1.3;
+    }
+
+    .publication-year-results-head span {
+      color:#64748b;
+      font-size:.72rem;
+    }
+
+    .publication-year-results-count {
+      min-width:2.3rem;
+      height:2.3rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      color:#fff !important;
+      background:#0f766e;
+      font-size:.76rem !important;
+      font-weight:800;
+      box-shadow:0 5px 14px rgba(15,118,110,.16);
+    }
+
+    .publication-group-auto-open {
+      border-color:#d7e4e0 !important;
+    }
+
+    @media print {
+      .publication-year-results-head {
+        display:none !important;
+      }
+    }
+
+/* Integrated Password Admin */
     body.admin-open { overflow:hidden; }
     .admin-ui { font-family:'Prompt',sans-serif; }
     #admin-key {
@@ -2140,12 +2655,6 @@
     <i data-lucide="book-open"></i>
     <span id="cv-return-button-label">Curriculum Vitae</span>
   </a>
-
-  <button id="publication-filter-button" class="print:hidden" type="button" aria-label="Filter publications" title="Filter publications">
-    <i data-lucide="list-filter" class="w-5 h-5"></i>
-    <span id="publication-filter-count">0</span>
-  </button>
-
   <div id="publication-filter-overlay" class="feature-modal-overlay feature-hidden" role="dialog" aria-modal="true" aria-labelledby="publication-filter-title">
     <div class="feature-modal-card p-6">
       <div class="flex items-start justify-between gap-4">
@@ -2160,48 +2669,110 @@
       </div>
 
       <form id="publication-filter-form" class="mt-5 space-y-4">
-        <div class="admin-field">
-          <label id="publication-filter-mode-label">Filter method</label>
-          <select name="mode" id="publication-filter-mode">
-            <option value="recent">Recent number of years</option>
-            <option value="range">Custom year range</option>
-          </select>
-        </div>
+        <input type="hidden" name="mode" id="publication-filter-mode" value="recent">
+        <input type="hidden" name="years_back" id="publication-filter-years-hidden" value="3">
 
-        <div id="publication-filter-recent-fields" class="admin-field">
-          <label id="publication-filter-years-label">Number of yearsย้อนหลัง</label>
-          <input name="years_back" type="number" min="1" max="50" value="5">
-        </div>
+        <div class="publication-filter-layout">
+          <section class="publication-filter-panel">
+            <p id="publication-filter-results-kicker" class="publication-filter-panel-kicker">Results by year</p>
+            <h3 id="publication-filter-results-title" class="publication-filter-panel-title">See how many publications were published in each year</h3>
+            <p id="publication-filter-results-subtitle" class="publication-filter-panel-copy">Click a year bar to focus on that year instantly, or use the date filters on the right.</p>
 
-        <div id="publication-filter-range-fields" class="admin-grid-2 feature-hidden">
-          <div class="admin-field">
-            <label id="publication-filter-from-label">From year</label>
-            <input name="from_year" type="number" min="1900" max="2200">
-          </div>
-          <div class="admin-field">
-            <label id="publication-filter-to-label">To year</label>
-            <input name="to_year" type="number" min="1900" max="2200">
-          </div>
-        </div>
+            <div id="publication-filter-year-summary" class="publication-filter-year-summary">
+              <div>
+                <strong id="publication-filter-year-summary-value">0</strong>
+                <span id="publication-filter-year-summary-label">Publications in the selected period</span>
+              </div>
+              <div class="text-right">
+                <strong id="publication-filter-year-summary-period">All years</strong>
+                <span id="publication-filter-year-summary-hint">Use the bars below to inspect each year</span>
+              </div>
+            </div>
 
-        <div class="admin-field">
-          <label id="publication-filter-category-label">Publication type</label>
-          <select name="category">
-            <option value="all">All publications</option>
-            <option value="article_review">Article & Review</option>
-            <option value="book">Book</option>
-          </select>
-        </div>
+            <div class="publication-filter-year-chart-wrap">
+              <div class="publication-filter-year-chart-head">
+                <div>
+                  <div id="publication-filter-custom-label" class="publication-filter-panel-kicker">Publication timeline</div>
+                  <div id="publication-filter-custom-link" class="text-sm font-semibold text-slate-700">Interactive year selector</div>
+                </div>
+                <div id="publication-filter-year-total" class="publication-filter-year-total"></div>
+              </div>
+              <div id="publication-filter-year-chart" class="publication-filter-year-chart"></div>
+            </div>
 
-        <div id="publication-filter-available-years" class="rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500"></div>
+            <div id="publication-filter-available-years" class="publication-filter-meta-note"></div>
+          </section>
 
-        <div class="flex flex-wrap justify-end gap-2 pt-1">
-          <button id="publication-filter-reset" class="user-feature-btn" type="button">Reset</button>
-          <button id="publication-filter-cancel" class="user-feature-btn" type="button">Cancel</button>
-          <button id="publication-filter-apply" class="user-feature-btn primary" type="submit">
-            <i data-lucide="filter" class="w-4 h-4"></i>
-            <span>Apply filter</span>
-          </button>
+          <section class="publication-filter-panel">
+            <p id="publication-filter-date-kicker" class="publication-filter-panel-kicker">Publication date</p>
+            <h3 id="publication-filter-date-title" class="publication-filter-panel-title">Choose the period you want to review</h3>
+            <p id="publication-filter-date-subtitle" class="publication-filter-panel-copy">Quick presets help you explore recent work, while Custom Range lets you inspect a specific period or a single year.</p>
+
+            <div class="publication-filter-period-grid" id="publication-filter-period-grid">
+              <label class="publication-period-option">
+                <input type="radio" name="quick_period" value="1">
+                <span>
+                  <span class="publication-period-option-title" id="publication-filter-option-1-title">1 year</span>
+                  <span class="publication-period-option-subtitle" id="publication-filter-option-1-subtitle">Show publications from the most recent year only</span>
+                </span>
+              </label>
+
+              <label class="publication-period-option">
+                <input type="radio" name="quick_period" value="3" checked>
+                <span>
+                  <span class="publication-period-option-title" id="publication-filter-option-3-title">3 years</span>
+                  <span class="publication-period-option-subtitle" id="publication-filter-option-3-subtitle">A focused view across the last 3 years</span>
+                </span>
+              </label>
+
+              <label class="publication-period-option">
+                <input type="radio" name="quick_period" value="5">
+                <span>
+                  <span class="publication-period-option-title" id="publication-filter-option-5-title">5 years</span>
+                  <span class="publication-period-option-subtitle" id="publication-filter-option-5-subtitle">A focused view across the last 5 years</span>
+                </span>
+              </label>
+
+              <label class="publication-period-option">
+                <input type="radio" name="quick_period" value="custom">
+                <span>
+                  <span class="publication-period-option-title" id="publication-filter-option-custom-title">Custom Range</span>
+                  <span class="publication-period-option-subtitle" id="publication-filter-option-custom-subtitle">Pick any start and end year, or the same year twice</span>
+                </span>
+              </label>
+            </div>
+
+            <div id="publication-filter-range-fields" class="publication-filter-range-card feature-hidden">
+              <div class="admin-grid-2">
+                <div class="admin-field">
+                  <label id="publication-filter-from-label">From year</label>
+                  <input name="from_year" type="number" min="1900" max="2200">
+                </div>
+                <div class="admin-field">
+                  <label id="publication-filter-to-label">To year</label>
+                  <input name="to_year" type="number" min="1900" max="2200">
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-field mt-4">
+              <label id="publication-filter-category-label">Publication type</label>
+              <select name="category" id="publication-filter-category">
+                <option value="all">All publications</option>
+                <option value="article_review">Article & Review</option>
+                <option value="book">Book</option>
+              </select>
+            </div>
+
+            <div class="flex flex-wrap justify-end gap-2 pt-2">
+              <button id="publication-filter-reset" class="user-feature-btn" type="button">Reset</button>
+              <button id="publication-filter-cancel" class="user-feature-btn" type="button">Cancel</button>
+              <button id="publication-filter-apply" class="user-feature-btn primary" type="submit">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+                <span>Apply filter</span>
+              </button>
+            </div>
+          </section>
         </div>
       </form>
     </div>
@@ -2520,7 +3091,7 @@
     let publicationFilter = {
       active:false,
       mode:'recent',
-      yearsBack:5,
+      yearsBack:3,
       fromYear:null,
       toYear:null,
       category:'all'
@@ -2581,17 +3152,22 @@
       printSelectionCancel: document.getElementById('print-selection-cancel'),
       printSelectionConfirm: document.getElementById('print-selection-confirm'),
       printSelectionConfirmLabel: document.getElementById('print-selection-confirm-label'),
-      publicationFilterButton: document.getElementById('publication-filter-button'),
-      publicationFilterCount: document.getElementById('publication-filter-count'),
       publicationFilterOverlay: document.getElementById('publication-filter-overlay'),
       publicationFilterClose: document.getElementById('publication-filter-close'),
       publicationFilterCancel: document.getElementById('publication-filter-cancel'),
       publicationFilterReset: document.getElementById('publication-filter-reset'),
       publicationFilterForm: document.getElementById('publication-filter-form'),
       publicationFilterMode: document.getElementById('publication-filter-mode'),
-      publicationFilterRecentFields: document.getElementById('publication-filter-recent-fields'),
+      publicationFilterYearsHidden: document.getElementById('publication-filter-years-hidden'),
       publicationFilterRangeFields: document.getElementById('publication-filter-range-fields'),
-      publicationFilterAvailableYears: document.getElementById('publication-filter-available-years')
+      publicationFilterAvailableYears: document.getElementById('publication-filter-available-years'),
+      publicationFilterCategory: document.getElementById('publication-filter-category'),
+      publicationFilterYearChart: document.getElementById('publication-filter-year-chart'),
+      publicationFilterYearTotal: document.getElementById('publication-filter-year-total'),
+      publicationFilterYearSummaryValue: document.getElementById('publication-filter-year-summary-value'),
+      publicationFilterYearSummaryLabel: document.getElementById('publication-filter-year-summary-label'),
+      publicationFilterYearSummaryPeriod: document.getElementById('publication-filter-year-summary-period'),
+      publicationFilterYearSummaryHint: document.getElementById('publication-filter-year-summary-hint')
     };
 
     const escapeHtml = (value = '') => String(value)
@@ -2839,26 +3415,75 @@
         .sort((a, b) => a - b);
     }
 
-    function filteredPublicationEntries() {
-      if (!publicationFilter.active) return [...publicationEntries];
+    function publicationYearCounts(category = 'all') {
+      const counts = new Map();
+      publicationEntries.forEach(item => {
+        if (category !== 'all' && item.category !== category) return;
+        const year = publicationYear(item);
+        if (!year) return;
+        counts.set(year, (counts.get(year) || 0) + 1);
+      });
+      return Array.from(counts.entries())
+        .sort((a, b) => a[0] - b[0])
+        .map(([year, count]) => ({ year, count }));
+    }
 
-      let fromYear = publicationFilter.fromYear;
-      let toYear = publicationFilter.toYear;
+    function publicationFilterQuickValueFromState() {
+      if (publicationFilter.mode === 'recent' && [1, 3, 5].includes(Number(publicationFilter.yearsBack))) {
+        return String(publicationFilter.yearsBack);
+      }
+      return 'custom';
+    }
 
-      if (publicationFilter.mode === 'recent') {
+    function currentPublicationFilterDraft(form = els.publicationFilterForm) {
+      const quick = form?.querySelector('input[name="quick_period"]:checked')?.value || '3';
+      const category = form?.elements?.category?.value || 'all';
+
+      if (quick === 'custom') {
+        let fromYear = Number(form.elements.from_year.value);
+        let toYear = Number(form.elements.to_year.value);
+        if (Number.isInteger(fromYear) && Number.isInteger(toYear) && fromYear > toYear) {
+          [fromYear, toYear] = [toYear, fromYear];
+        }
+        return {
+          mode:'range',
+          yearsBack:null,
+          fromYear:Number.isInteger(fromYear) ? fromYear : null,
+          toYear:Number.isInteger(toYear) ? toYear : null,
+          category
+        };
+      }
+
+      const yearsBack = Math.max(1, Math.min(50, Number(quick) || 5));
+      return {
+        mode:'recent',
+        yearsBack,
+        fromYear:null,
+        toYear:null,
+        category
+      };
+    }
+
+    function filteredPublicationEntriesWithConfig(config) {
+      let fromYear = config.fromYear;
+      let toYear = config.toYear;
+
+      if (config.mode === 'recent') {
         toYear = new Date().getFullYear();
-        fromYear = toYear - publicationFilter.yearsBack + 1;
+        fromYear = toYear - config.yearsBack + 1;
       }
 
       return publicationEntries.filter(item => {
-        if (publicationFilter.category !== 'all' && item.category !== publicationFilter.category) {
-          return false;
-        }
-
+        if (config.category !== 'all' && item.category !== config.category) return false;
         const year = publicationYear(item);
         if (!year) return false;
         return year >= fromYear && year <= toYear;
       });
+    }
+
+    function filteredPublicationEntries() {
+      if (!publicationFilter.active) return [...publicationEntries];
+      return filteredPublicationEntriesWithConfig(publicationFilter);
     }
 
     function publicationFilterSummaryText() {
@@ -2883,43 +3508,159 @@
     }
 
     function updatePublicationFilterButton() {
-      const filteredCount = filteredPublicationEntries().length;
-      const totalCount = publicationEntries.length;
-      els.publicationFilterCount.textContent = publicationFilter.active
-        ? `${filteredCount}`
-        : `${totalCount}`;
-      els.publicationFilterButton.classList.toggle('is-active', publicationFilter.active);
-      els.publicationFilterButton.title = publicationFilter.active
-        ? `${publicationFilterSummaryText()} (${filteredCount}/${totalCount})`
-        : (currentLang === 'th' ? 'คัดกรองผลงานตีพิมพ์' : 'Filter publications');
+      // Floating publication filter button removed.
+      // Keep this helper for compatibility with existing inline filter flows.
+    }
+
+    function syncPublicationPeriodCards() {
+      els.publicationFilterForm?.querySelectorAll('.publication-period-option').forEach(option => {
+        const input = option.querySelector('input[type="radio"]');
+        option.classList.toggle('is-active', Boolean(input?.checked));
+      });
     }
 
     function updatePublicationFilterFields() {
-      const isRecent = els.publicationFilterMode.value === 'recent';
-      els.publicationFilterRecentFields.classList.toggle('feature-hidden', !isRecent);
-      els.publicationFilterRangeFields.classList.toggle('feature-hidden', isRecent);
+      const quick = els.publicationFilterForm?.querySelector('input[name="quick_period"]:checked')?.value || '3';
+      const isCustom = quick === 'custom';
+      if (els.publicationFilterMode) els.publicationFilterMode.value = isCustom ? 'range' : 'recent';
+      if (els.publicationFilterYearsHidden && !isCustom) els.publicationFilterYearsHidden.value = quick;
+      els.publicationFilterRangeFields.classList.toggle('feature-hidden', !isCustom);
+      syncPublicationPeriodCards();
+      updatePublicationFilterYearPreview();
+    }
+
+    function renderPublicationYearChart(selectedCategory = 'all') {
+      const rows = publicationYearCounts(selectedCategory);
+      const quick = els.publicationFilterForm?.querySelector('input[name="quick_period"]:checked')?.value || '3';
+      const form = els.publicationFilterForm;
+      const selectedFrom = Number(form?.elements?.from_year?.value);
+      const selectedTo = Number(form?.elements?.to_year?.value);
+      const selectedYear = quick === 'custom' && Number.isInteger(selectedFrom) && Number.isInteger(selectedTo) && selectedFrom === selectedTo
+        ? selectedFrom
+        : null;
+
+      if (!rows.length) {
+        els.publicationFilterYearChart.innerHTML = `<div class="text-sm text-slate-400">${currentLang === 'th' ? 'ยังไม่พบข้อมูลปีของผลงาน' : 'No year information is available.'}</div>`;
+        if (els.publicationFilterYearTotal) {
+          els.publicationFilterYearTotal.textContent = currentLang === 'th' ? 'รวม 0 รายการ' : 'Total 0 publications';
+        }
+        return;
+      }
+
+      const max = Math.max(...rows.map(row => row.count), 1);
+      const total = rows.reduce((sum, row) => sum + row.count, 0);
+      els.publicationFilterYearChart.innerHTML = rows.map(row => {
+        const height = Math.max(8, Math.round((row.count / max) * 100));
+        return `<button
+          type="button"
+          class="publication-year-bar ${selectedYear === row.year ? 'is-selected' : ''}"
+          data-year="${row.year}"
+          aria-label="${row.year}: ${row.count} publications"
+          aria-pressed="${selectedYear === row.year ? 'true' : 'false'}">
+            <span class="publication-year-bar-count">${row.count}</span>
+            <span class="publication-year-bar-track">
+              <span class="publication-year-bar-fill" style="height:${height}%"></span>
+            </span>
+            <span class="publication-year-bar-label">${row.year}</span>
+        </button>`;
+      }).join('');
+
+      if (els.publicationFilterYearTotal) {
+        els.publicationFilterYearTotal.textContent = currentLang === 'th'
+          ? `รวม ${total.toLocaleString('en-US')} รายการ`
+          : `Total ${total.toLocaleString('en-US')} publications`;
+      }
+
+      els.publicationFilterYearChart.querySelectorAll('.publication-year-bar').forEach(button => {
+        button.addEventListener('click', () => {
+          const year = Number(button.dataset.year);
+          if (!Number.isInteger(year)) return;
+          const customRadio = els.publicationFilterForm.querySelector('input[name="quick_period"][value="custom"]');
+          if (customRadio) customRadio.checked = true;
+          els.publicationFilterForm.elements.from_year.value = String(year);
+          els.publicationFilterForm.elements.to_year.value = String(year);
+          updatePublicationFilterFields();
+          renderPublicationYearChart(els.publicationFilterCategory?.value || 'all');
+        });
+      });
+    }
+
+    function updatePublicationFilterYearPreview() {
+      if (!els.publicationFilterYearSummaryValue) return;
+
+      const draft = currentPublicationFilterDraft();
+      const rows = filteredPublicationEntriesWithConfig({ ...draft, active:true });
+      const count = rows.length;
+
+      let periodLabel = currentLang === 'th' ? 'ทุกปี' : 'All years';
+      let hint = currentLang === 'th'
+        ? 'คลิกแท่งกราฟด้านซ้ายเพื่อดูจำนวนผลงานรายปี'
+        : 'Click the bars on the left to inspect publications year by year.';
+      let summaryLabel = currentLang === 'th'
+        ? 'ผลงานในช่วงเวลาที่เลือก'
+        : 'Publications in the selected period';
+
+      if (draft.mode === 'recent') {
+        periodLabel = currentLang === 'th'
+          ? `ย้อนหลัง ${draft.yearsBack} ปี`
+          : `Last ${draft.yearsBack} years`;
+        hint = currentLang === 'th'
+          ? 'แสดงจำนวนผลงานตามช่วงเวลาล่าสุดที่เลือก'
+          : 'Showing the publication count for the selected recent period.';
+      } else if (Number.isInteger(draft.fromYear) && Number.isInteger(draft.toYear)) {
+        if (draft.fromYear === draft.toYear) {
+          periodLabel = String(draft.fromYear);
+          hint = currentLang === 'th'
+            ? 'นี่คือจำนวนผลงานตีพิมพ์ของปีที่เลือก'
+            : 'This is the number of publications in the selected year.';
+          summaryLabel = currentLang === 'th'
+            ? 'ผลงานในปีที่เลือก'
+            : 'Publications in the selected year';
+        } else {
+          periodLabel = `${draft.fromYear}–${draft.toYear}`;
+          hint = currentLang === 'th'
+            ? 'นี่คือจำนวนผลงานในช่วงปีที่กำหนด'
+            : 'This is the number of publications within the selected year range.';
+        }
+      }
+
+      els.publicationFilterYearSummaryValue.textContent = count.toLocaleString('en-US');
+      els.publicationFilterYearSummaryLabel.textContent = summaryLabel;
+      els.publicationFilterYearSummaryPeriod.textContent = periodLabel;
+      els.publicationFilterYearSummaryHint.textContent = hint;
     }
 
     function openPublicationFilter() {
       const form = els.publicationFilterForm;
+      const quickValue = publicationFilterQuickValueFromState();
+
       form.elements.mode.value = publicationFilter.mode;
-      form.elements.years_back.value = publicationFilter.yearsBack || 5;
+      if (els.publicationFilterYearsHidden) {
+        els.publicationFilterYearsHidden.value = publicationFilter.yearsBack || 3;
+      }
       form.elements.from_year.value = publicationFilter.fromYear || '';
       form.elements.to_year.value = publicationFilter.toYear || '';
       form.elements.category.value = publicationFilter.category || 'all';
 
+      const targetRadio = form.querySelector(`input[name="quick_period"][value="${quickValue}"]`)
+        || form.querySelector('input[name="quick_period"][value="3"]');
+      if (targetRadio) targetRadio.checked = true;
+
       const years = publicationAvailableYears();
       const minYear = years.length ? years[0] : '';
       const maxYear = years.length ? years[years.length - 1] : '';
-      els.publicationFilterAvailableYears.textContent = years.length
+
+      els.publicationFilterAvailableYears.innerHTML = years.length
         ? (currentLang === 'th'
-            ? `ข้อมูลผลงานที่ระบุปีอยู่ในช่วง ${minYear}–${maxYear}`
-            : `Publications with known years range from ${minYear} to ${maxYear}.`)
+            ? `<strong>ข้อมูลปีที่มีอยู่:</strong> ${minYear}–${maxYear}<br>เลือกแท่งกราฟเพื่อดูว่าแต่ละปีมีการตีพิมพ์กี่ผลงาน หรือใช้ตัวกรองด้านขวาเพื่อเจาะช่วงเวลาที่ต้องการ`
+            : `<strong>Available publication years:</strong> ${minYear}–${maxYear}<br>Click any bar to inspect how many publications were published in that year, or use the filters on the right to focus on a broader period.`)
         : (currentLang === 'th'
             ? 'ยังไม่พบข้อมูลปีของผลงาน'
             : 'No publication year data is available.');
 
       updatePublicationFilterFields();
+      renderPublicationYearChart(form.elements.category.value || 'all');
+      updatePublicationFilterYearPreview();
       els.publicationFilterOverlay.classList.remove('feature-hidden');
       document.body.classList.add('admin-open');
       window.lucide?.createIcons();
@@ -2936,7 +3677,7 @@
       publicationFilter = {
         active:false,
         mode:'recent',
-        yearsBack:5,
+        yearsBack:3,
         fromYear:null,
         toYear:null,
         category:'all'
@@ -2984,17 +3725,35 @@
         : 'Print selected PDF';
 
       document.getElementById('publication-filter-title').textContent = currentLang === 'th'
-        ? 'คัดกรองผลงานย้อนหลัง'
-        : 'Filter publications';
+        ? 'สำรวจและคัดกรองผลงานตีพิมพ์'
+        : 'Explore and filter publications';
       document.getElementById('publication-filter-description').textContent = currentLang === 'th'
-        ? 'เลือกจำนวนปีย้อนหลัง หรือกำหนดช่วงปีที่ต้องการ'
-        : 'Choose a recent period or define a custom year range.';
-      document.getElementById('publication-filter-mode-label').textContent = currentLang === 'th'
-        ? 'รูปแบบการคัดกรอง'
-        : 'Filter method';
-      document.getElementById('publication-filter-years-label').textContent = currentLang === 'th'
-        ? 'จำนวนปีย้อนหลัง'
-        : 'Number of recent years';
+        ? 'ดูจำนวนผลงานตีพิมพ์ในแต่ละปี แล้วเลือกช่วงเวลาที่ต้องการได้ทันที'
+        : 'See how many publications were published each year, then focus on the period you want.';
+      document.getElementById('publication-filter-results-kicker').textContent = currentLang === 'th'
+        ? 'ผลลัพธ์แยกตามปี'
+        : 'Results by year';
+      document.getElementById('publication-filter-results-title').textContent = currentLang === 'th'
+        ? 'เลือกดูได้ว่าแต่ละปีมีการตีพิมพ์จำนวนกี่ผลงาน'
+        : 'See how many publications were published in each year';
+      document.getElementById('publication-filter-results-subtitle').textContent = currentLang === 'th'
+        ? 'คลิกแท่งกราฟเพื่อเลือกดูรายปีทันที หรือใช้ตัวกรองด้านขวาเพื่อเลือกช่วงเวลา'
+        : 'Click a year bar to focus on that year instantly, or use the filters on the right.';
+      document.getElementById('publication-filter-custom-label').textContent = currentLang === 'th'
+        ? 'ไทม์ไลน์ผลงาน'
+        : 'Publication timeline';
+      document.getElementById('publication-filter-custom-link').textContent = currentLang === 'th'
+        ? 'ตัวเลือกปีแบบโต้ตอบ'
+        : 'Interactive year selector';
+      document.getElementById('publication-filter-date-kicker').textContent = currentLang === 'th'
+        ? 'วันที่เผยแพร่'
+        : 'Publication date';
+      document.getElementById('publication-filter-date-title').textContent = currentLang === 'th'
+        ? 'เลือกช่วงเวลาที่ต้องการดูผลงาน'
+        : 'Choose the period you want to review';
+      document.getElementById('publication-filter-date-subtitle').textContent = currentLang === 'th'
+        ? 'ใช้ตัวเลือกด่วนเพื่อดูผลงานล่าสุด หรือเลือก Custom Range เพื่อกำหนดปีเอง'
+        : 'Use quick presets to explore recent work, or choose Custom Range for a specific period.';
       document.getElementById('publication-filter-from-label').textContent = currentLang === 'th'
         ? 'ตั้งแต่ปี'
         : 'From year';
@@ -3005,9 +3764,22 @@
         ? 'ประเภทผลงาน'
         : 'Publication type';
 
-      const mode = els.publicationFilterForm.elements.mode;
-      mode.options[0].textContent = currentLang === 'th' ? 'ย้อนหลังตามจำนวนปี' : 'Recent number of years';
-      mode.options[1].textContent = currentLang === 'th' ? 'กำหนดช่วงปีเอง' : 'Custom year range';
+      document.getElementById('publication-filter-option-1-title').textContent = currentLang === 'th' ? '1 ปี' : '1 year';
+      document.getElementById('publication-filter-option-1-subtitle').textContent = currentLang === 'th'
+        ? 'แสดงเฉพาะผลงานของปีล่าสุด'
+        : 'Show publications from the most recent year only';
+      document.getElementById('publication-filter-option-3-title').textContent = currentLang === 'th' ? '3 ปี' : '3 years';
+      document.getElementById('publication-filter-option-3-subtitle').textContent = currentLang === 'th'
+        ? 'ดูผลงานย้อนหลังในช่วง 3 ปีล่าสุด'
+        : 'A focused view across the last 3 years';
+      document.getElementById('publication-filter-option-5-title').textContent = currentLang === 'th' ? '5 ปี' : '5 years';
+      document.getElementById('publication-filter-option-5-subtitle').textContent = currentLang === 'th'
+        ? 'ดูผลงานย้อนหลังในช่วง 5 ปีล่าสุด'
+        : 'A focused view across the last 5 years';
+      document.getElementById('publication-filter-option-custom-title').textContent = currentLang === 'th' ? 'กำหนดช่วงปีเอง' : 'Custom Range';
+      document.getElementById('publication-filter-option-custom-subtitle').textContent = currentLang === 'th'
+        ? 'เลือกช่วงปีที่ต้องการ หรือใส่ปีเดียวกันเพื่อดูเฉพาะปีนั้น'
+        : 'Pick any start and end year, or the same year twice';
 
       const category = els.publicationFilterForm.elements.category;
       category.options[0].textContent = currentLang === 'th' ? 'ผลงานทั้งหมด' : 'All publications';
@@ -3019,6 +3791,11 @@
       document.querySelector('#publication-filter-apply span').textContent = currentLang === 'th'
         ? 'ใช้ตัวกรอง'
         : 'Apply filter';
+
+      updatePublicationFilterYearPreview();
+      if (!els.publicationFilterOverlay.classList.contains('feature-hidden')) {
+        renderPublicationYearChart(els.publicationFilterCategory?.value || 'all');
+      }
 
       updatePrintSelectionToolbar();
       updatePublicationFilterButton();
@@ -3483,11 +4260,221 @@
       return null;
     }
 
+
+    function inlinePublicationPeriodValue() {
+      if (!publicationFilter.active) return '';
+      if (publicationFilter.mode === 'recent' && [1, 3, 5].includes(Number(publicationFilter.yearsBack))) {
+        return String(publicationFilter.yearsBack);
+      }
+      return 'custom';
+    }
+
+    function inlinePublicationSelectedSingleYear() {
+      if (
+        publicationFilter.active &&
+        publicationFilter.mode === 'range' &&
+        Number.isInteger(Number(publicationFilter.fromYear)) &&
+        Number(publicationFilter.fromYear) === Number(publicationFilter.toYear)
+      ) {
+        return Number(publicationFilter.fromYear);
+      }
+      return null;
+    }
+
+    function renderInlinePublicationExplorer() {
+      const category = publicationFilter.active ? publicationFilter.category : 'all';
+      const rows = publicationYearCounts(category);
+      const max = Math.max(...rows.map(row => row.count), 1);
+      const selectedYear = inlinePublicationSelectedSingleYear();
+      const selectedPeriod = inlinePublicationPeriodValue();
+      const filteredCount = filteredPublicationEntries().length;
+
+      const chart = rows.length
+        ? rows.map(row => {
+            const height = Math.max(5, Math.round((row.count / max) * 100));
+            return `<button
+              type="button"
+              class="publication-inline-year ${selectedYear === row.year ? 'is-selected' : ''}"
+              data-inline-publication-year="${row.year}"
+              aria-label="${row.year}: ${row.count} publications">
+                <span class="publication-inline-year-count">${row.count}</span>
+                <span class="publication-inline-year-column">
+                  <span class="publication-inline-year-fill" style="height:${height}%"></span>
+                </span>
+                <span class="publication-inline-year-label">${row.year}</span>
+            </button>`;
+          }).join('')
+        : `<span class="text-sm text-slate-400">${currentLang === 'th' ? 'ยังไม่มีข้อมูลปี' : 'No year data'}</span>`;
+
+      const option = (value, en, th) => `
+        <label class="publication-inline-period-option ${selectedPeriod === value ? 'is-selected' : ''}">
+          <input type="radio" name="inline_publication_period" value="${value}" ${selectedPeriod === value ? 'checked' : ''}>
+          <span>${currentLang === 'th' ? th : en}</span>
+        </label>`;
+
+      const customFrom = publicationFilter.mode === 'range' ? (publicationFilter.fromYear || '') : '';
+      const customTo = publicationFilter.mode === 'range' ? (publicationFilter.toYear || '') : '';
+
+      return `<section class="publication-inline-explorer print:hidden" aria-label="Publication filters">
+        <div class="publication-inline-explorer-head">
+          <div>
+            <p class="publication-inline-kicker">Custom Filters</p>
+            <h3 class="publication-inline-title">${currentLang === 'th' ? 'สำรวจผลงานตีพิมพ์ตามช่วงเวลา' : 'Explore publications by date'}</h3>
+          </div>
+          <button type="button" class="publication-inline-reset" data-inline-publication-reset>
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            ${currentLang === 'th' ? 'แสดงทั้งหมด' : 'Reset'}
+          </button>
+        </div>
+
+        <div class="publication-inline-body">
+          <div class="publication-inline-results">
+            <p class="publication-inline-section-label">Results by year</p>
+            <div class="publication-inline-chart">${chart}</div>
+            <div class="publication-inline-stat">
+              <span>${currentLang === 'th' ? 'คลิกปีเพื่อกรองเฉพาะผลงานปีนั้น' : 'Click a year to show publications from that year'}</span>
+              <span><strong>${filteredCount.toLocaleString('en-US')}</strong> ${currentLang === 'th' ? 'ผลงานที่แสดง' : 'shown'}</span>
+            </div>
+          </div>
+
+          <div class="publication-inline-period">
+            <p class="publication-inline-section-label">Publication date</p>
+            <div class="publication-inline-period-options">
+              ${option('1', '1 year', '1 ปี')}
+              ${option('3', '3 years', '3 ปี')}
+              ${option('5', '5 years', '5 ปี')}
+              ${option('custom', 'Custom Range', 'กำหนดช่วงปีเอง')}
+            </div>
+
+            <div class="publication-inline-custom-range ${selectedPeriod === 'custom' ? '' : 'feature-hidden'}" data-inline-custom-range>
+              <input type="number" min="1900" max="2200" value="${escapeHtml(String(customFrom))}" placeholder="${currentLang === 'th' ? 'ตั้งแต่ปี' : 'From year'}" data-inline-from-year>
+              <input type="number" min="1900" max="2200" value="${escapeHtml(String(customTo))}" placeholder="${currentLang === 'th' ? 'ถึงปี' : 'To year'}" data-inline-to-year>
+              <button type="button" class="publication-inline-custom-apply" data-inline-custom-apply>
+                <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+                ${currentLang === 'th' ? 'ใช้ช่วงปีนี้' : 'Apply range'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>`;
+    }
+
+    function applyInlinePublicationFilter(nextFilter) {
+      publicationFilter = {
+        active:true,
+        mode:nextFilter.mode,
+        yearsBack:nextFilter.yearsBack ?? null,
+        fromYear:nextFilter.fromYear ?? null,
+        toYear:nextFilter.toYear ?? null,
+        category:nextFilter.category || (publicationFilter.category || 'all')
+      };
+      renderSections();
+      updatePublicationFilterButton();
+      window.lucide?.createIcons();
+    }
+
+    function bindInlinePublicationExplorer() {
+      const explorer = document.querySelector('.publication-inline-explorer');
+      if (!explorer) return;
+
+      explorer.querySelectorAll('[data-inline-publication-year]').forEach(button => {
+        button.addEventListener('click', () => {
+          const year = Number(button.dataset.inlinePublicationYear);
+          if (!Number.isInteger(year)) return;
+          applyInlinePublicationFilter({
+            mode:'range',
+            fromYear:year,
+            toYear:year,
+            category:publicationFilter.active ? publicationFilter.category : 'all'
+          });
+          scrollToSelectedPublicationYearResults();
+        });
+      });
+
+      explorer.querySelectorAll('input[name="inline_publication_period"]').forEach(input => {
+        input.addEventListener('change', () => {
+          const value = input.value;
+
+          if (value === 'custom') {
+            explorer.querySelector('[data-inline-custom-range]')?.classList.remove('feature-hidden');
+            explorer.querySelectorAll('.publication-inline-period-option').forEach(option => {
+              option.classList.toggle('is-selected', option.contains(input));
+            });
+            return;
+          }
+
+          applyInlinePublicationFilter({
+            mode:'recent',
+            yearsBack:Number(value),
+            category:publicationFilter.active ? publicationFilter.category : 'all'
+          });
+        });
+      });
+
+      explorer.querySelector('[data-inline-custom-apply]')?.addEventListener('click', () => {
+        let fromYear = Number(explorer.querySelector('[data-inline-from-year]')?.value);
+        let toYear = Number(explorer.querySelector('[data-inline-to-year]')?.value);
+
+        if (!Number.isInteger(fromYear) || !Number.isInteger(toYear)) {
+          showPremiumToast(
+            currentLang === 'th' ? 'กรุณาระบุปีเริ่มต้นและปีสิ้นสุด' : 'Enter both the start and end year.',
+            'warning'
+          );
+          return;
+        }
+
+        if (fromYear > toYear) [fromYear, toYear] = [toYear, fromYear];
+
+        applyInlinePublicationFilter({
+          mode:'range',
+          fromYear,
+          toYear,
+          category:publicationFilter.active ? publicationFilter.category : 'all'
+        });
+      });
+
+      explorer.querySelector('[data-inline-publication-reset]')?.addEventListener('click', () => {
+        publicationFilter = {
+          active:false,
+          mode:'recent',
+          yearsBack:3,
+          fromYear:null,
+          toYear:null,
+          category:'all'
+        };
+        renderSections();
+        updatePublicationFilterButton();
+        window.lucide?.createIcons();
+      });
+    }
+
+
+
+    function selectedPublicationYear() {
+      if (
+        publicationFilter.active &&
+        publicationFilter.mode === 'range' &&
+        Number.isInteger(Number(publicationFilter.fromYear)) &&
+        Number(publicationFilter.fromYear) === Number(publicationFilter.toYear)
+      ) {
+        return Number(publicationFilter.fromYear);
+      }
+      return null;
+    }
+
+    function scrollToSelectedPublicationYearResults() {
+      requestAnimationFrame(() => {
+        const target = document.querySelector('[data-publication-year-results]');
+        target?.scrollIntoView({ behavior:'smooth', block:'start' });
+      });
+    }
+
     // Public rule: Article & Review displays only the Author badge.
     // Q/TCI, Impact Factor, First Author and Corresponding Author remain in Admin/backend.
     function renderPublicationGroups() {
       const filteredEntries = filteredPublicationEntries();
       const filterSummary = publicationFilterSummaryText();
+      const selectedYear = selectedPublicationYear();
       const groups = [
         { key: 'book', label: 'Book', labelTh: 'หนังสือ' },
         { key: 'article_review', label: 'Article & Review', labelTh: 'บทความและบทความปริทัศน์' }
@@ -3501,6 +4488,18 @@
       };
 
       return `<div class="mt-7 space-y-4">
+        ${renderInlinePublicationExplorer()}
+        ${selectedYear ? `<div class="publication-year-results-head" data-publication-year-results>
+          <div>
+            <strong>${currentLang === 'th'
+              ? `ผลงานตีพิมพ์ปี ${selectedYear}`
+              : `Publications in ${selectedYear}`}</strong>
+            <span>${currentLang === 'th'
+              ? 'แสดงรายการผลงานทั้งหมดที่มีข้อมูลปีตรงกับปีที่เลือก'
+              : 'Showing all publication records matching the selected year.'}</span>
+          </div>
+          <span class="publication-year-results-count">${filteredEntries.length.toLocaleString('en-US')}</span>
+        </div>` : ''}
         ${publicationFilter.active ? `<div class="filter-active-summary">
           <span class="filter-summary-badge"><i data-lucide="list-filter" class="w-3.5 h-3.5"></i>${escapeHtml(filterSummary)}</span>
           <span>${filteredEntries.length.toLocaleString('en-US')} / ${publicationEntries.length.toLocaleString('en-US')} ${currentLang === 'th' ? 'รายการ' : 'items'}</span>
@@ -3511,7 +4510,8 @@
             .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
 
           const title = currentLang === 'th' ? group.labelTh : group.label;
-          return `<details class="rounded-xl border border-slate-200 bg-white" ${index === 0 ? 'open' : ''}>
+          const shouldOpen = selectedYear ? items.length > 0 : index === 0;
+          return `<details class="rounded-xl border border-slate-200 bg-white ${selectedYear && items.length ? 'publication-group-auto-open' : ''}" ${shouldOpen ? 'open' : ''}>
             <summary class="cursor-pointer select-none px-5 py-4 font-bold text-slate-800 flex items-center justify-between gap-3">
               <span>${escapeHtml(title)}</span>
               <span class="text-xs font-medium text-slate-400">${items.length.toLocaleString('en-US')} items</span>
@@ -3540,7 +4540,9 @@
                     ${badges.length ? `<div class="mt-2 flex flex-wrap gap-2">${badges.map(badge => `<span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">${escapeHtml(badge)}</span>`).join('')}</div>` : ''}
                   </li>`;
                 }).join('')}
-              </ol>` : `<p class="text-sm text-slate-400">${currentLang === 'th' ? 'ยังไม่มีข้อมูล' : 'No entries yet.'}</p>`}
+              </ol>` : `<p class="text-sm text-slate-400">${selectedYear
+                ? (currentLang === 'th' ? `ไม่มีผลงานในหมวดนี้สำหรับปี ${selectedYear}` : `No entries in this category for ${selectedYear}.`)
+                : (currentLang === 'th' ? 'ยังไม่มีข้อมูล' : 'No entries yet.')}</p>`}
             </div>
           </details>`;
         }).join('')}
@@ -3733,6 +4735,7 @@
       });
 
       renderCvDirectory();
+      bindInlinePublicationExplorer();
       syncPrintSelectionCheckboxes();
       updatePublicationFilterButton();
     }
@@ -3903,7 +4906,7 @@
     function prepareProfessionalWordClone() {
       const clone = prepareExportClone();
 
-      clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer, .print-section-selector, #cv-directory, #cv-return-button, .cv-download-menu').forEach(node => node.remove());
+      clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer, .print-section-selector, #cv-directory, #cv-return-button, .cv-download-menu, .publication-inline-explorer, .publication-year-results-head').forEach(node => node.remove());
       clone.querySelectorAll('svg, i').forEach(node => node.remove());
 
       clone.querySelectorAll('.accordion-btn').forEach(button => {
@@ -5200,11 +6203,19 @@
       withPremiumLoading(() => exportSelectedPdf(), { context:'pdf' });
     });
 
-    els.publicationFilterButton.addEventListener('click', openPublicationFilter);
     els.publicationFilterClose.addEventListener('click', closePublicationFilter);
     els.publicationFilterCancel.addEventListener('click', closePublicationFilter);
     els.publicationFilterReset.addEventListener('click', resetPublicationFilter);
-    els.publicationFilterMode.addEventListener('change', updatePublicationFilterFields);
+
+    els.publicationFilterForm.querySelectorAll('input[name="quick_period"]').forEach(input => {
+      input.addEventListener('change', updatePublicationFilterFields);
+    });
+    els.publicationFilterCategory?.addEventListener('change', () => {
+      renderPublicationYearChart(els.publicationFilterCategory.value || 'all');
+      updatePublicationFilterYearPreview();
+    });
+    els.publicationFilterForm.elements.from_year.addEventListener('input', updatePublicationFilterYearPreview);
+    els.publicationFilterForm.elements.to_year.addEventListener('input', updatePublicationFilterYearPreview);
 
     els.publicationFilterOverlay.addEventListener('click', event => {
       if (event.target === els.publicationFilterOverlay) closePublicationFilter();
@@ -5212,12 +6223,8 @@
 
     els.publicationFilterForm.addEventListener('submit', event => {
       event.preventDefault();
-      const form = event.currentTarget;
-      const mode = form.elements.mode.value;
-      const category = form.elements.category.value;
-      let yearsBack = Math.max(1, Math.min(50, Number(form.elements.years_back.value) || 5));
-      let fromYear = Number(form.elements.from_year.value);
-      let toYear = Number(form.elements.to_year.value);
+      const draft = currentPublicationFilterDraft(event.currentTarget);
+      let { mode, category, yearsBack, fromYear, toYear } = draft;
 
       if (mode === 'range') {
         if (!Number.isInteger(fromYear) || !Number.isInteger(toYear)) {
