@@ -1650,6 +1650,186 @@
       }
     }
 
+
+    .cv-download-menu-wrap {
+      position:relative;
+      display:inline-flex;
+    }
+
+    .cv-download-trigger {
+      display:inline-flex !important;
+      align-items:center;
+      gap:.4rem;
+      white-space:nowrap;
+    }
+
+    .cv-download-menu {
+      position:absolute;
+      top:calc(100% + .55rem);
+      right:0;
+      z-index:74;
+      width:250px;
+      overflow:hidden;
+      border:1px solid #dbe3ea;
+      border-radius:.85rem;
+      background:rgba(255,255,255,.98);
+      box-shadow:0 18px 48px rgba(15,23,42,.16);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      animation:featureModalIn .16s ease-out both;
+    }
+
+    .cv-download-option {
+      width:100%;
+      display:grid;
+      grid-template-columns:2rem minmax(0,1fr);
+      gap:.65rem;
+      align-items:center;
+      padding:.78rem .85rem;
+      border:0;
+      border-bottom:1px solid #edf1f4;
+      color:#24384a;
+      background:transparent;
+      text-align:left;
+      cursor:pointer;
+      transition:background .16s ease;
+    }
+
+    .cv-download-option:last-child { border-bottom:0; }
+    .cv-download-option:hover,
+    .cv-download-option:focus-visible { background:#f5f8fb; }
+
+    .cv-download-option-icon {
+      width:2rem;
+      height:2rem;
+      display:grid;
+      place-items:center;
+      border-radius:.55rem;
+      color:#183b5b;
+      background:#eef4f8;
+    }
+
+    .cv-download-option strong {
+      display:block;
+      color:#183b5b;
+      font-size:.78rem;
+      line-height:1.25;
+    }
+
+    .cv-download-option small {
+      display:block;
+      margin-top:.12rem;
+      color:#7a8a98;
+      font-size:.65rem;
+      line-height:1.35;
+    }
+
+    #cv-return-button {
+      position:fixed;
+      right:1.15rem;
+      bottom:7.8rem;
+      z-index:68;
+      min-height:2.75rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:.42rem;
+      padding:0 .78rem;
+      border:1px solid rgba(148,163,184,.42);
+      border-radius:999px;
+      color:#0f2942;
+      background:rgba(255,255,255,.88);
+      box-shadow:0 9px 26px rgba(15,23,42,.13);
+      backdrop-filter:blur(11px);
+      -webkit-backdrop-filter:blur(11px);
+      font-size:.68rem;
+      font-weight:700;
+      text-decoration:none;
+      white-space:nowrap;
+      transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    #cv-return-button:hover,
+    #cv-return-button:focus-visible {
+      transform:translateY(-2px);
+      background:#fff;
+      box-shadow:0 13px 32px rgba(15,23,42,.18);
+    }
+
+    #cv-return-button i,
+    #cv-return-button svg {
+      width:1rem;
+      height:1rem;
+    }
+
+    .metric-reference-note {
+      margin-top:.48rem;
+      padding-top:.45rem;
+      border-top:1px solid #edf1f4;
+      color:#64748b;
+      font-size:.64rem;
+      line-height:1.5;
+    }
+
+    .metric-reference-note strong {
+      color:#334155;
+      font-weight:700;
+    }
+
+    .metric-reference-note .metric-source-link {
+      font-weight:700;
+    }
+
+    @media (max-width:760px) {
+      #export-controls {
+        display:flex !important;
+        align-items:center;
+      }
+
+      #download-cv-menu-label {
+        display:none;
+      }
+
+      .cv-download-trigger {
+        width:2.6rem;
+        height:2.35rem;
+        justify-content:center;
+        padding:0 !important;
+      }
+
+      .cv-download-trigger > svg:last-child {
+        display:none;
+      }
+
+      #export-pdf-selected {
+        display:none !important;
+      }
+
+      #cv-return-button {
+        right:.8rem;
+        bottom:7.45rem;
+        width:2.75rem;
+        padding:0;
+      }
+
+      #cv-return-button-label {
+        display:none;
+      }
+    }
+
+    @media print {
+      #cv-return-button,
+      .cv-download-menu {
+        display:none !important;
+      }
+
+      .metric-reference-note {
+        border-top:.35pt solid #e2e8f0 !important;
+        color:#64748b !important;
+        font-size:6.6pt !important;
+      }
+    }
+
     /* Integrated Password Admin */
     body.admin-open { overflow:hidden; }
     .admin-ui { font-family:'Prompt',sans-serif; }
@@ -1808,11 +1988,39 @@
 
       <div class="academic-nav-actions">
         <div class="flex flex-wrap gap-2 print:hidden" id="export-controls">
-<button class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm" id="export-word" type="button">Word</button>
-<button class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm" id="export-pdf" type="button">PDF A4</button>
-<button class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm" id="export-pdf-selected" type="button">
-<span id="export-pdf-selected-label">Select PDF</span>
-</button>
+  <div class="cv-download-menu-wrap">
+    <button
+      class="export-btn cv-download-trigger rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm"
+      id="download-cv-menu-button"
+      type="button"
+      aria-haspopup="menu"
+      aria-expanded="false">
+      <i data-lucide="download" class="w-4 h-4"></i>
+      <span id="download-cv-menu-label">Download My Detailed CV</span>
+      <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+    </button>
+
+    <div id="download-cv-menu" class="cv-download-menu feature-hidden" role="menu" aria-label="Download My Detailed CV">
+      <button class="cv-download-option" id="export-word" type="button" role="menuitem">
+        <span class="cv-download-option-icon"><i data-lucide="file-text" class="w-4 h-4"></i></span>
+        <span>
+          <strong>Word</strong>
+          <small id="download-word-subtitle">Editable document</small>
+        </span>
+      </button>
+      <button class="cv-download-option" id="export-pdf" type="button" role="menuitem">
+        <span class="cv-download-option-icon"><i data-lucide="file-down" class="w-4 h-4"></i></span>
+        <span>
+          <strong>PDF</strong>
+          <small id="download-pdf-subtitle">Professional A4</small>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <button class="export-btn rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm" id="export-pdf-selected" type="button">
+    <span id="export-pdf-selected-label">Select PDF</span>
+  </button>
 </div>
         <div aria-label="Language selector" class="academic-language print:hidden">
 <button class="lang-btn px-3 py-1.5 text-sm font-medium active" id="btn-en" type="button">EN</button>
@@ -1926,6 +2134,12 @@
   </footer>
 
 
+
+
+  <a id="cv-return-button" class="print:hidden" href="#cv-directory" aria-label="Curriculum Vitae" title="Curriculum Vitae">
+    <i data-lucide="book-open"></i>
+    <span id="cv-return-button-label">Curriculum Vitae</span>
+  </a>
 
   <button id="publication-filter-button" class="print:hidden" type="button" aria-label="Filter publications" title="Filter publications">
     <i data-lucide="list-filter" class="w-5 h-5"></i>
@@ -2348,6 +2562,13 @@
       footer: document.getElementById('footer-text'),
       btnEn: document.getElementById('btn-en'),
       btnTh: document.getElementById('btn-th'),
+      downloadCvMenuButton: document.getElementById('download-cv-menu-button'),
+      downloadCvMenu: document.getElementById('download-cv-menu'),
+      downloadCvMenuLabel: document.getElementById('download-cv-menu-label'),
+      downloadWordSubtitle: document.getElementById('download-word-subtitle'),
+      downloadPdfSubtitle: document.getElementById('download-pdf-subtitle'),
+      cvReturnButton: document.getElementById('cv-return-button'),
+      cvReturnButtonLabel: document.getElementById('cv-return-button-label'),
       exportWord: document.getElementById('export-word'),
       exportPdf: document.getElementById('export-pdf'),
       exportPdfSelected: document.getElementById('export-pdf-selected'),
@@ -2730,6 +2951,27 @@
     }
 
     function updateUserFeatureLabels() {
+      if (els.downloadCvMenuLabel) {
+        els.downloadCvMenuLabel.textContent = currentLang === 'th'
+          ? 'ดาวน์โหลด CV ฉบับละเอียด'
+          : 'Download My Detailed CV';
+      }
+      if (els.downloadWordSubtitle) {
+        els.downloadWordSubtitle.textContent = currentLang === 'th'
+          ? 'เอกสารแก้ไขต่อได้'
+          : 'Editable document';
+      }
+      if (els.downloadPdfSubtitle) {
+        els.downloadPdfSubtitle.textContent = currentLang === 'th'
+          ? 'เอกสาร A4 พร้อมพิมพ์'
+          : 'Professional A4';
+      }
+      if (els.cvReturnButtonLabel) {
+        els.cvReturnButtonLabel.textContent = currentLang === 'th'
+          ? 'Curriculum Vitae'
+          : 'Curriculum Vitae';
+      }
+
       els.exportPdfSelectedLabel.textContent = currentLang === 'th' ? 'PDF เลือกหัวข้อ' : 'Select PDF';
       els.printSelectionTitle.textContent = currentLang === 'th'
         ? 'เลือกหัวข้อที่ต้องการพิมพ์'
@@ -3331,21 +3573,42 @@
             : (item.label || '');
 
         let metaHtml = '';
+        let referenceHtml = '';
+
         if (isI10) {
           const parts = [];
           if (item.as_of) parts.push(`<span>${escapeHtml(item.as_of)}</span>`);
           parts.push(`<a class="metric-source-link" href="${escapeHtml(GOOGLE_SCHOLAR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Google Scholar</a>`);
           metaHtml = parts.length ? `<div class="mt-2 text-xs text-slate-400">${parts.join(' • ')}</div>` : '';
+          referenceHtml = `<div class="metric-reference-note">
+            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : 'Reference:'}</strong>
+            <a class="metric-source-link" href="${escapeHtml(GOOGLE_SCHOLAR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+            · ${currentLang === 'th'
+              ? 'ตาราง i10-index: “ทั้งหมด / ตั้งแต่ปี 2021” — Dashboard ใช้ค่า “ทั้งหมด”'
+              : 'i10-index table: “All / Since 2021” — Dashboard uses “All”'}
+          </div>`;
         } else if (isHIndex) {
           const parts = [];
           if (item.as_of) parts.push(`<span>${escapeHtml(item.as_of)}</span>`);
           parts.push(`<a class="metric-source-link" href="${escapeHtml(SCOPUS_AUTHOR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Scopus · Author ID 34969613100</a>`);
           metaHtml = `<div class="mt-2 text-xs text-slate-400">${parts.join(' • ')}</div>`;
+          referenceHtml = `<div class="metric-reference-note">
+            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : 'Reference:'}</strong>
+            <a class="metric-source-link" href="${escapeHtml(SCOPUS_AUTHOR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Scopus</a>
+            · Surasak Saokaew · h-index · Author ID 34969613100
+          </div>`;
         } else if (isTotalCitations) {
           const parts = [];
           if (item.as_of) parts.push(`<span>${escapeHtml(item.as_of)}</span>`);
           parts.push(`<a class="metric-source-link" href="${escapeHtml(GOOGLE_SCHOLAR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Google Scholar · All-time</a>`);
           metaHtml = `<div class="mt-2 text-xs text-slate-400">${parts.join(' • ')}</div>`;
+          referenceHtml = `<div class="metric-reference-note">
+            <strong>${currentLang === 'th' ? 'อ้างอิงค่า:' : 'Reference:'}</strong>
+            <a class="metric-source-link" href="${escapeHtml(GOOGLE_SCHOLAR_PROFILE_URL)}" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+            · ${currentLang === 'th'
+              ? 'ตาราง “อ้างโดย”: “ทั้งหมด / ตั้งแต่ปี 2021” — Dashboard ใช้จำนวนการอ้างอิง “ทั้งหมด”'
+              : '“Cited by” table: “All / Since 2021” — Dashboard uses total “All” citations'}
+          </div>`;
         } else {
           const meta = [item.as_of, item.source].filter(Boolean).map(escapeHtml).join(' • ');
           metaHtml = meta ? `<div class="mt-2 text-xs text-slate-400">${meta}</div>` : '';
@@ -3355,8 +3618,8 @@
           <div class="text-xs font-medium uppercase tracking-wide text-slate-500">${escapeHtml(label)}</div>
           <div class="metric-value mt-2 text-3xl font-bold text-[#1e3a5f]">${escapeHtml(numberValue(item.value))}</div>
           ${metaHtml}
+          ${referenceHtml}
           ${isI10 ? `<div class="metric-auto-badge"><i data-lucide="refresh-cw" class="w-3 h-3"></i>${currentLang === 'th' ? 'อัปเดตอัตโนมัติ · All-time' : 'Auto sync · All-time'}</div>` : ''}
-          ${isTotalCitations ? `<div class="metric-auto-badge"><i data-lucide="database" class="w-3 h-3"></i>${currentLang === 'th' ? 'Google Scholar · ทั้งหมด' : 'Google Scholar · All-time'}</div>` : ''}
         </article>`;
       }).join('');
 
@@ -3497,6 +3760,40 @@
       window.lucide?.createIcons();
     }
 
+    let scholarI10BackgroundSyncStarted = false;
+
+    async function syncScholarI10InBackground() {
+      if (scholarI10BackgroundSyncStarted) return;
+      scholarI10BackgroundSyncStarted = true;
+
+      try {
+        const { data, error } = await supabase.functions.invoke('surasak-scholar-i10', {
+          body: { profile_slug:PROFILE_SLUG, metric:'i10_index', scope:'all_time' }
+        });
+
+        if (error || !data?.ok || data?.fallback || !Number.isFinite(Number(data.i10_index))) {
+          return;
+        }
+
+        const publicationSection = sections.find(section => section.section_key === 'publications');
+        const dashboardItem = publicationSection?.content?.items?.find(item => item.key === 'i10_index');
+        if (!dashboardItem) return;
+
+        const verifiedValue = Number(data.i10_index);
+        if (Number(dashboardItem.value) === verifiedValue) return;
+
+        dashboardItem.value = String(verifiedValue);
+        dashboardItem.as_of = data.as_of || dashboardItem.as_of;
+        dashboardItem.source = 'Google Scholar · All-time (automatic)';
+        renderTopPublicationDashboard();
+        window.lucide?.createIcons();
+      } catch (error) {
+        // Google Scholar commonly rate-limits automated retrieval.
+        // Keep the last verified Supabase value and fail silently.
+        console.info('Google Scholar i10 background sync unavailable; using verified fallback.');
+      }
+    }
+
     async function loadCv() {
       setStatus(currentLang === 'th' ? 'กำลังโหลดข้อมูล…' : 'Loading CV data…');
       const { data: profileData, error: profileError } = await supabase
@@ -3542,6 +3839,11 @@
       publicationEntries = publicationData || [];
       setStatus('');
       render();
+
+      // Never delay the CV opening for Google Scholar.
+      // The last verified Supabase value appears immediately; any newly
+      // verified all-time i10 value is applied in the background.
+      syncScholarI10InBackground();
     }
 
 
@@ -3601,7 +3903,7 @@
     function prepareProfessionalWordClone() {
       const clone = prepareExportClone();
 
-      clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer, .print-section-selector, #cv-directory').forEach(node => node.remove());
+      clone.querySelectorAll('.admin-ui, #export-controls, .lang-btn, #status, .cv-print-running-header, .cv-print-running-footer, .print-section-selector, #cv-directory, #cv-return-button, .cv-download-menu').forEach(node => node.remove());
       clone.querySelectorAll('svg, i').forEach(node => node.remove());
 
       clone.querySelectorAll('.accordion-btn').forEach(button => {
@@ -4958,10 +5260,45 @@
       publicationSection?.scrollIntoView({ behavior:'smooth', block:'start' });
     });
 
+
+    function closeDownloadCvMenu() {
+      if (!els.downloadCvMenu || !els.downloadCvMenuButton) return;
+      els.downloadCvMenu.classList.add('feature-hidden');
+      els.downloadCvMenuButton.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleDownloadCvMenu() {
+      if (!els.downloadCvMenu || !els.downloadCvMenuButton) return;
+      const willOpen = els.downloadCvMenu.classList.contains('feature-hidden');
+      els.downloadCvMenu.classList.toggle('feature-hidden', !willOpen);
+      els.downloadCvMenuButton.setAttribute('aria-expanded', String(willOpen));
+      if (willOpen) window.lucide?.createIcons();
+    }
+
+    els.downloadCvMenuButton?.addEventListener('click', event => {
+      event.stopPropagation();
+      toggleDownloadCvMenu();
+    });
+
+    els.downloadCvMenu?.addEventListener('click', event => {
+      event.stopPropagation();
+    });
+
+    document.addEventListener('click', closeDownloadCvMenu);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeDownloadCvMenu();
+    });
+
     els.btnEn.addEventListener('click', () => setLanguage('en'));
     els.btnTh.addEventListener('click', () => setLanguage('th'));
-    els.exportWord.addEventListener('click', () => withPremiumLoading(() => exportWord(), { context:'word' }));
-    els.exportPdf.addEventListener('click', () => withPremiumLoading(() => exportPdf(), { context:'pdf' }));
+    els.exportWord.addEventListener('click', () => {
+      closeDownloadCvMenu();
+      withPremiumLoading(() => exportWord(), { context:'word' });
+    });
+    els.exportPdf.addEventListener('click', () => {
+      closeDownloadCvMenu();
+      withPremiumLoading(() => exportPdf(), { context:'pdf' });
+    });
     setLanguage(currentLang);
     updateUserFeatureLabels();
     window.lucide?.createIcons();
