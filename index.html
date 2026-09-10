@@ -3046,8 +3046,8 @@
                 <h4 class="mb-3 text-sm font-bold text-slate-700">Main metrics</h4>
                 <div class="admin-auto-metrics-banner">
                   <strong>Auto from Article & Review</strong><br>
-                  Total number of papers, First/Corresponding Author, Highest citations, Highest impact factor และ Sum of impact factors
-                  จะคำนวณจากรายการ <strong>Article & Review ที่ Published</strong> โดยอัตโนมัติ
+                  Total number of papers, First/Corresponding Author, Highest citations, Highest impact factor, Sum of impact factors,
+                  Quartiles และ TCI จะคำนวณจากรายการ <strong>Article & Review ที่ Published</strong> โดยอัตโนมัติ
                 </div>
                 <div class="admin-grid-3">
                   <div class="admin-field">
@@ -3120,21 +3120,23 @@
                 </div>
               </div>
               <div>
-                <h4 class="mb-3 text-sm font-bold text-slate-700">Quartiles</h4>
+                <h4 class="mb-3 text-sm font-bold text-slate-700">Quartiles · Auto</h4>
                 <div class="admin-grid-3">
-                  <div class="admin-field"><label>Q1</label><input name="q1_count" type="number" min="0"></div>
-                  <div class="admin-field"><label>Q2</label><input name="q2_count" type="number" min="0"></div>
-                  <div class="admin-field"><label>Q3</label><input name="q3_count" type="number" min="0"></div>
-                  <div class="admin-field"><label>Q4</label><input name="q4_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>Q1</label><input class="auto-metric-field" name="q1_count" type="number" min="0" readonly></div>
+                  <div class="admin-field"><label>Q2</label><input class="auto-metric-field" name="q2_count" type="number" min="0" readonly></div>
+                  <div class="admin-field"><label>Q3</label><input class="auto-metric-field" name="q3_count" type="number" min="0" readonly></div>
+                  <div class="admin-field"><label>Q4</label><input class="auto-metric-field" name="q4_count" type="number" min="0" readonly></div>
                 </div>
+                <p class="admin-auto-metric-note"><i data-lucide="refresh-cw"></i><span>นับ Ranking Q1–Q4 จาก Article & Review ที่ Published</span></p>
               </div>
               <div>
-                <h4 class="mb-3 text-sm font-bold text-slate-700">TCI</h4>
+                <h4 class="mb-3 text-sm font-bold text-slate-700">TCI · Auto</h4>
                 <div class="admin-grid-3">
-                  <div class="admin-field"><label>TCI 1</label><input name="tci1_count" type="number" min="0"></div>
-                  <div class="admin-field"><label>TCI 2</label><input name="tci2_count" type="number" min="0"></div>
-                  <div class="admin-field"><label>TCI 3</label><input name="tci3_count" type="number" min="0"></div>
+                  <div class="admin-field"><label>TCI 1</label><input class="auto-metric-field" name="tci1_count" type="number" min="0" readonly></div>
+                  <div class="admin-field"><label>TCI 2</label><input class="auto-metric-field" name="tci2_count" type="number" min="0" readonly></div>
+                  <div class="admin-field"><label>TCI 3</label><input class="auto-metric-field" name="tci3_count" type="number" min="0" readonly></div>
                 </div>
+                <p class="admin-auto-metric-note"><i data-lucide="refresh-cw"></i><span>นับ Ranking TCI1–TCI3 จาก Article & Review ที่ Published</span></p>
               </div>
               <div class="flex flex-wrap items-center gap-3">
                 <button class="admin-btn admin-btn-primary" type="submit">
@@ -4200,14 +4202,59 @@
       return start && end && start !== end ? `${start} – ${end}` : (start || end || '');
     }
 
+
+    function formatCareerHistoryMonthYear(entry) {
+      const fmt = value => {
+        if (!value) return '';
+        const date = new Date(`${value}T00:00:00`);
+        return Number.isNaN(date.getTime())
+          ? ''
+          : new Intl.DateTimeFormat(currentLang === 'th' ? 'th-TH' : 'en-GB', {
+              month:'long',
+              year:'numeric'
+            }).format(date);
+      };
+
+      const start = fmt(entry.start_date);
+      const end = fmt(entry.end_date);
+      if (start || end) {
+        return start && end && start !== end ? `${start} – ${end}` : (start || end);
+      }
+
+      const explicit = localized(entry.date_label_en, entry.date_label_th);
+      if (!explicit) return '';
+
+      if (currentLang === 'th') {
+        return String(explicit)
+          .replace(/(^|[\s–—-])\d{1,2}\s+(?=(?:มกราคม|กุมภาพันธ์|มีนาคม|เมษายน|พฤษภาคม|มิถุนายน|กรกฎาคม|สิงหาคม|กันยายน|ตุลาคม|พฤศจิกายน|ธันวาคม)\s+\d{4})/g, '$1')
+          .trim();
+      }
+
+      return String(explicit)
+        .replace(/\b\d{1,2}\s+(?=(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})/gi, '')
+        .replace(/((?:January|February|March|April|May|June|July|August|September|October|November|December))\s+\d{1,2},\s+(\d{4})/gi, '$1 $2')
+        .trim();
+    }
+
     function entriesForSection(section) {
       return sectionEntries
         .filter(entry => entry.section_id === section.id)
         .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
     }
 
+    function normalizeTeachingCourseKey(entry) {
+      const raw = entry.title_en || entry.title_th || '';
+      return String(raw)
+        .normalize('NFKC')
+        .toLocaleLowerCase()
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        .replace(/&amp;/g, 'and')
+        .replace(/[^\p{L}\p{N}]+/gu, '');
+    }
+
     function renderTeachingExperience(entries) {
       const groups = [];
+      const seenCourses = new Set();
       let currentGroup = null;
 
       entries.forEach(entry => {
@@ -4228,11 +4275,17 @@
           groups.push(currentGroup);
         }
 
+        const courseKey = normalizeTeachingCourseKey(entry);
+        if (courseKey && seenCourses.has(courseKey)) return;
+        if (courseKey) seenCourses.add(courseKey);
+
         currentGroup.rows.push(entry);
       });
 
+      const visibleGroups = groups.filter(group => group.rows.length > 0);
+
       return `<div class="teaching-experience teaching-course-only">
-        ${groups.map(group => `
+        ${visibleGroups.map(group => `
           <section class="teaching-group">
             <h3 class="teaching-group-title">${escapeHtml(group.heading)}</h3>
             <ul class="teaching-course-list">
@@ -4250,6 +4303,9 @@
 
 
 
+    // Public/export only:
+    // Career History shows month + year; full dates stay in Admin/Supabase.
+    // Teaching Experience suppresses duplicate course titles; original rows stay in Admin/Supabase.
     function isCareerHistoryAdminOnlyDetail(value) {
       if (!value) return false;
       const normalized = String(value).replace(/\s+/g, ' ').trim();
@@ -4275,7 +4331,9 @@
 
       if (section.content_type === 'timeline') {
         return `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[620px]"><tbody>${entries.map(entry => {
-          const date = formatEntryDate(entry);
+          const date = section.section_key === 'career_history'
+            ? formatCareerHistoryMonthYear(entry)
+            : formatEntryDate(entry);
           const title = localized(entry.title_en, entry.title_th);
           const rawSubtitle = localized(entry.subtitle_en, entry.subtitle_th);
           const rawDescription = localized(entry.description_en, entry.description_th);
@@ -4705,6 +4763,9 @@
     // - h-index: Scopus Author Profile, Author ID 34969613100
     // - i10-index: Google Scholar all-time metric
     // Stored Supabase values remain the authoritative fallback values.
+    // Publications Dashboard: Article & Review controls Total papers, authorship,
+    // IF metrics, Quartiles and TCI automatically. Citation maximum uses row-level citation_count
+    // when available; the backend preserves the last verified value while those rows are unpopulated.
     function renderPublicationDashboard(content) {
       const items = Array.isArray(content.items) ? content.items : [];
       const quartiles = Array.isArray(content.quartiles) ? content.quartiles : [];
@@ -4795,10 +4856,11 @@
         const max = Math.max(...rows.map(row => Number(row.value) || 0), 1);
         const total = rows.reduce((sum, row) => sum + (Number(row.value) || 0), 0);
         return `<section class="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
-          <div class="mb-4 flex items-center justify-between gap-4">
+          <div class="mb-3 flex items-center justify-between gap-4">
             <h3 class="font-bold text-slate-800">${escapeHtml(title)}</h3>
             <span class="text-xs text-slate-500">Total ${total.toLocaleString('en-US')}</span>
           </div>
+          <div class="metric-auto-badge mb-4"><i data-lucide="refresh-cw" class="w-3 h-3"></i>${currentLang === 'th' ? 'อัตโนมัติ · Article & Review' : 'Auto · Article & Review'}</div>
           <div class="space-y-3">
             ${rows.map(row => {
               const value = Number(row.value) || 0;
